@@ -14,5 +14,12 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "@types/uuid": "^9.0.2"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
 }
