@@ -1,4 +1,29 @@
 import User from "../models/User"
+import { IRegisterData } from "@chatapp/shared"
+import { v4 as uuidv4 } from 'uuid';
+
+export const createUser = async (userData: IRegisterData) => {
+
+    const {
+        username,
+        password,
+        email
+    } = userData
+
+    const verificationId = uuidv4()
+
+    const newUser = new User({
+        username,
+        email,
+        password,
+        verified: false,
+        verificationId
+    })
+
+    await newUser.save()
+
+    return newUser
+}
 
 const getTest = async () => {
     try {

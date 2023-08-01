@@ -105,6 +105,19 @@ const Login: React.FC<ILoginProps> = () => {
         [username, password, repeatPassword, email]
     )
 
+    const test = () => {
+        fetch('http://localhost:3000/test')
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => {console.log(err)})
+        // const time = new Date()
+        // console.log(time.toUTCString() + '\n')
+    }
+
+    const test2 = () => {
+        fetch('http://localhost:3000/test2')
+    }
+
     return <div className='Login'>
 
         <input
@@ -158,6 +171,9 @@ const Login: React.FC<ILoginProps> = () => {
         <button onClick={handleSubmit}>submit</button>
 
         <button onClick={toggleFormAction}> {formAction} </button>
+
+        <button onClick={test}>test</button>
+        <button onClick={test2}>test2</button>
     </div>
 }
 

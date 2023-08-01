@@ -1,23 +1,23 @@
-import { TMiddleware } from "@/util/types";
+import { TUtilMiddleware } from "../util/types";
 import User from "@/Mongo/models/User";
 import { IRegisterData, ILoginData } from '@chatapp/shared'
 import nodemailer from 'nodemailer'
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt'
-import redis from '@/Redis/connect'
+import { client as redis } from '@/Redis/connect'
+import * as MongoAPI from '@/Mongo/API'
 
-export const register: TMiddleware = async (req, res, next) => {
-
+export const register: TUtilMiddleware = async (req, res, next) => {
     const {
         username,
         password,
         email
     } = req.body as IRegisterData
 
+    const user = await User.findOne({ username, email }).exec()
 
-    const user = await User.findOne({ username }).exec()
     if (user) {
-        res.status(400).send('username already taken')
+        res.status(422).send('username already taken')
         return
     }
 
@@ -56,7 +56,7 @@ export const register: TMiddleware = async (req, res, next) => {
     res.status(200).send('success')
 }
 
-export const login: TMiddleware = async (req, res) => {
+export const login: TUtilMiddleware = async (req, res) => {
 
     const {
         username,
@@ -96,7 +96,7 @@ export const login: TMiddleware = async (req, res) => {
 
 }
 
-export const verify: TMiddleware = async (req, res, next) => {
+export const verify: TUtilMiddleware = async (req, res, next) => {
     const verificationId = req.body.verificationId
     const user = await User.findOne({ verificationId }).exec()
 
@@ -115,5 +115,34 @@ export const verify: TMiddleware = async (req, res, next) => {
     await user.save()
 
     res.status(200).send('your email is verified')
+}
 
+export const test: TUtilMiddleware = async (req, res, next) => {
+    // console.log('test route')
+    // const user = await MONGO_USERS.createUser({
+    //     email: 'asefaef',
+    //     password: 'haha',
+    //     username: String(uuidv4())
+    // })
+
+    const newUser = MongoAPI.createUser({
+        email: 'asefaef',
+        password: 'haha',
+        username: String(uuidv4())
+    })
+
+    // try {
+    //     const user = await new User({
+    //         email: 'email',
+    //         password: 'haha',
+    //         username: 'cosikdosi'
+    //     })
+    //     user.save()
+    //     console.log(user)
+    //     res.send('success')
+    // } catch (err) {
+    //     next(err)
+    // }
+    // // const haha = await UserModel.findOne({}).exec()
+    // console.log(haha)
 }
