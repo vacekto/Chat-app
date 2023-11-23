@@ -22,10 +22,11 @@ const LoginForm: React.FC<ILoginFormProps> = () => {
     }
 
     const handleSubmit = async () => {
-        const serverURL = import.meta.env.VITE_SERVER_URL
-        const res = await fetch(serverURL)
-        const text = await res.text()
-        console.log(text)
+        console.log('submitting')
+        // const serverURL = import.meta.env.VITE_SERVER_URL
+        // const res = await fetch(serverURL)
+        // const text = await res.text()
+        // console.log(text)
     }
 
     return <div className='LoginForm'>

@@ -1,11 +1,11 @@
 import { TUtilMiddleware } from "../util/types";
-import User from "@/Mongo/models/User";
+import User from "@src/Mongo/models/User";
 import { IRegisterData, ILoginData } from '@chatapp/shared'
 import nodemailer from 'nodemailer'
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt'
-import { client as redis } from '@/Redis/connect'
-import * as MongoAPI from '@/Mongo/API'
+import { client as redis } from '@src/Redis/connect'
+import * as MongoAPI from '@src/Mongo/API/index'
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const {
@@ -118,18 +118,18 @@ export const verify: TUtilMiddleware = async (req, res, next) => {
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {
-    // console.log('test route')
+    console.log('test route')
     // const user = await MONGO_USERS.createUser({
     //     email: 'asefaef',
     //     password: 'haha',
     //     username: String(uuidv4())
     // })
 
-    const newUser = MongoAPI.createUser({
-        email: 'asefaef',
-        password: 'haha',
-        username: String(uuidv4())
-    })
+    // const newUser = MongoAPI.createUser({
+    //     email: 'asefaef',
+    //     password: 'haha',
+    //     username: String(uuidv4())
+    // })
 
     // try {
     //     const user = await new User({
@@ -145,4 +145,5 @@ export const test: TUtilMiddleware = async (req, res, next) => {
     // }
     // // const haha = await UserModel.findOne({}).exec()
     // console.log(haha)
+    next()
 }

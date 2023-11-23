@@ -1,7 +1,7 @@
 import {z} from 'zod'
-import { ILoginData } from '../util/types'
-import { IRegisterData } from '../util/types'
-import { LoginDataSchema, RegisterDataSchema } from '../util/zodSchemas'
+import { ILoginData } from '../util/types.js'
+import { IRegisterData } from '../util/types.js'
+import { loginDataSchema, registerDataSchema } from '../util/zodSchemas.js'
 
 // regex username: length 6 to 20, not starting with "_"" or ".", not containing "." or "_" next to each other,not ending with "_"" or ".", no special chars
 // regex password: length 8 to 20, at least one uppercase letter, one lowercase letter and one number

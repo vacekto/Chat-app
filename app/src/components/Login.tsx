@@ -65,6 +65,8 @@ const Login: React.FC<ILoginProps> = () => {
     }
 
     const handleSubmit = async () => {
+        console.log('submitting')
+        return
         if (!isValid) {
             console.error('NOT VALID!')
             return

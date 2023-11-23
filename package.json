@@ -9,17 +9,21 @@
     "shared"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm --prefix ./app run dev & npm --prefix ./server run dev"
+    "dev": "./bin/configureSharedPackage.sh && npm --prefix ./app run dev & npm --prefix ./server run dev",
+    "build": "npm run build --workspaces --if-present --verbose",
+    "prod": "./bin/configureSharedPackage.sh && npm --prefix ./server run prod",
+    "start": "./bin/start.sh"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.4.2",
-    "@types/uuid": "^9.0.2"
+    "@types/uuid": "^9.0.2",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "uuid": "^9.0.0"
   }
 }

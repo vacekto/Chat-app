@@ -1,4 +1,4 @@
-import { TUtilMiddleware } from '@/src/util/types'
+import { TUtilMiddleware } from '@src/util/types'
 import { registerDataSchema, loginDataSchema } from '@chatapp/shared'
 
 export const loginData: TUtilMiddleware = (req, res, next) => {

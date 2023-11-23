@@ -1,22 +1,16 @@
-FROM node:18
+FROM node:20.9.0
 
 WORKDIR /chatapp
 
-RUN npm install -g npm
-
-COPY package.json ./
-COPY app/package.json ./app/package.json
-COPY server/package.json ./server/package.json
-COPY shared/package.json ./shared/package.json
-
+COPY package.json .
+COPY app/package.json app/package.json
+COPY server/package.json server/package.json
+COPY shared/package.json shared/package.json
+COPY bin bin
+COPY bin/start.sh bin/start.sh
 
 RUN npm i
 
 COPY . .
 
-EXPOSE 5173
-
-EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
-
+CMD ["npm", "run", "start"]

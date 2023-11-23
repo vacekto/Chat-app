@@ -11,7 +11,7 @@ export const loginDataSchema = z.object({
 export const registerDataSchema = z.object({
     username: z.string().regex(regex.username),
     password: z.string().regex(regex.password),
-    email: z.string().regex(regex.email),
+    email: z.string(    ).regex(regex.email),
 })
     
     

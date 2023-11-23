@@ -1,5 +1,5 @@
 import { TUtilMiddleware } from '../util/types'
-import { client as redis } from '@/Redis/connect'
+import { client as redis } from '@src/Redis/connect'
 
 export const user: TUtilMiddleware = (req, res, next) => {
     const id = req.cookies.cookieId;

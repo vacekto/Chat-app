@@ -1,4 +1,4 @@
-import User from "../models/User"
+import User from "../models/User.js"
 import { IRegisterData } from "@chatapp/shared"
 import { v4 as uuidv4 } from 'uuid';
 

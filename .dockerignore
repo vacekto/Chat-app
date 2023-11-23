@@ -1,3 +1,5 @@
+Dockerfile.production
 Dockerfile
 docker-compose.yml
 .env
+node_modules
