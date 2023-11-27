@@ -1,18 +1,9 @@
 import { createClient } from 'redis';
 
 
-const getClient = () => {
-    if (!process.env.REDIS_CON_STRING)
-        throw new Error('redis connection string not specified')
-
-    const client = createClient({
-        url: process.env.REDIS_CON_STRING
-    })
-
-    return client
-}
-
-export const client = getClient()
+const client = createClient({
+    url: process.env.REDIS_CON_STRING
+})
 
 const connectToRedis = async () => {
     client.on('error', err => console.log('Redis Client Error', err));
@@ -25,7 +16,6 @@ const connectToRedis = async () => {
     }
     catch (err) {
         console.log('could not connect to redis')
-        process.exit(1)
     }
 }
 

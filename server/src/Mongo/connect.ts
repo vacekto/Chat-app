@@ -10,7 +10,6 @@ async function connect() {
 
     catch (err) {
         console.log("coudld not connect to MongoDB, ", err)
-        process.exit(1)
     }
 }
 
