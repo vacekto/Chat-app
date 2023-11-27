@@ -1,8 +1,6 @@
-name: Publish Docker image
+name: Continuous deployment
 
 on:
-    workflow_dispatch:
-
     push:
       branches:
         - main
@@ -26,3 +24,5 @@ jobs:
         with:
             push: true
             tags: vacekto/chat_app:latest
+  
+# docker hub further uses webhook to deploy image to Render.com
