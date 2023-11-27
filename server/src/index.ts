@@ -20,6 +20,6 @@ app.use(router)
 
 app.listen(3000, async () => {
     console.log('server running in mode: ' + process.env.NODE_ENV)
-    // connectToMongo()
-    // connectToRedis()
+    connectToMongo()
+    connectToRedis()
 })
