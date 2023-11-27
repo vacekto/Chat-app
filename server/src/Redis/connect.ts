@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
 
-const client = createClient({
+export const client = createClient({
     url: process.env.REDIS_CON_STRING
 })
 
