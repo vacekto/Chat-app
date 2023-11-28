@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "./bin/configureSharedPackage.sh && npm --prefix ./app run dev & npm --prefix ./server run dev",
-    "build": "./bin/buildApp.sh",
+    "build": "npm run build --workspaces --if-present --verbose",
     "prod": "./bin/configureSharedPackage.sh && npm --prefix ./server run prod",
     "start": "./bin/start.sh",
     "terminal": "./bin/terminal.sh"
