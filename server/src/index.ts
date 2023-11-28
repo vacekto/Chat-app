@@ -6,6 +6,8 @@ import router from './routes/router'
 import cookieParser from 'cookie-parser'
 import path from 'path'
 
+import {test} from '@chatapp/shared'
+
 const app = express()
 
 app.use('/', express.static(path.join(__dirname, 'SPA')))

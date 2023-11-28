@@ -24,5 +24,6 @@ jobs:
         with:
             push: true
             tags: vacekto/chat_app:latest
-  
+            build-args: 
+              NODE_ENV="production"
 # docker hub further uses webhook to deploy image to Render.com

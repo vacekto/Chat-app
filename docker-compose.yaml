@@ -5,6 +5,8 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile
+      args:
+        environment: "${NODE_ENV}"
     container_name: "chat_app"
     ports:
       - ${PORT_CLIENT}:5173
@@ -20,7 +22,6 @@ services:
       CLIENT_URL: "http://localhost:${PORT_CLIENT}"
       REDIS_CON_STRING: "redis://redis:${PORT_REDIS}"
       MONGO_CON_STRING: "mongodb://mongo:${PORT_MONGO}/chatapp"
-      NODE_ENV: "${NODE_ENV}"
 
   mongo:
     image: mongo

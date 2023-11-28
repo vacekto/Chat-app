@@ -8,3 +8,5 @@ export const regex = {
     // regex email: RFC 5322 Official Standard
     email: new RegExp("([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|'([]!#-[^-~ \t]|(\\[\t -~]))+')@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])"),
 }
+
+export const test = 'testing'
