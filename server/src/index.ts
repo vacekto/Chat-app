@@ -6,8 +6,6 @@ import router from './routes/router'
 import cookieParser from 'cookie-parser'
 import path from 'path'
 
-import {test} from '@chatapp/shared'
-
 const app = express()
 
 app.use('/', express.static(path.join(__dirname, 'SPA')))
@@ -23,5 +21,5 @@ app.use(router)
 app.listen(3000, async () => {
     console.log('server running in mode: ' + process.env.NODE_ENV)
     // connectToMongo()
-    // connectToRedis()
+    connectToRedis()
 })

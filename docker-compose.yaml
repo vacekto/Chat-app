@@ -20,7 +20,7 @@ services:
     environment:
       VITE_SERVER_URL: "http://localhost:${PORT_SERVER}"
       CLIENT_URL: "http://localhost:${PORT_CLIENT}"
-      REDIS_CON_STRING: "redis://redis:${PORT_REDIS}"
+      REDIS_URI: "redis://redis:${PORT_REDIS}"
       MONGO_CON_STRING: "mongodb://mongo:${PORT_MONGO}/chatapp"
 
   mongo:
