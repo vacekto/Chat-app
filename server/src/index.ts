@@ -4,8 +4,13 @@ import connectToMongo from '@src/Mongo/connect'
 import connectToRedis from '@src/Redis/connect'
 import router from './routes/router'
 import cookieParser from 'cookie-parser'
+import path from 'path'
 
 const app = express()
+
+app.get('/healthCheack', (req, res, next) => {
+    res.status(200).send('OK')
+})
 
 app.use('/', express.static(path.join(__dirname, 'SPA')))
 

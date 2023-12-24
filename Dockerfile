@@ -16,3 +16,5 @@ ENV NODE_ENV=${environment}
 COPY bin bin
 
 COPY . .
+
+CMD ["npm","run","start"]
