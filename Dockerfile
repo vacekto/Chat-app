@@ -16,7 +16,3 @@ ENV NODE_ENV=${environment}
 COPY bin bin
 
 COPY . .
-
-RUN  bin/buildApp.sh
-
-CMD ["npm", "run", "start"]

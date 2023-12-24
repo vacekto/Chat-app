@@ -13,7 +13,8 @@
     "build": "npm run build --workspaces --if-present --verbose",
     "prod": "./bin/configureSharedPackage.sh && npm --prefix ./server run prod",
     "start": "./bin/start.sh",
-    "terminal": "./bin/terminal.sh"
+    "terminal": "./bin/terminal.sh",
+    "test": "./bin/bashCheatSheet.sh"
   },
   "keywords": [],
   "author": "",

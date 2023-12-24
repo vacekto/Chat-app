@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 async function connect() {
+    console.log('connecting to mongo')
     try {
-        if(!process.env.MONGO_CON_STRING)
+        if(!process.env.MONGO_URI)
             throw new Error('mongo connection string not specified')
-        await mongoose.connect(process.env.MONGO_CON_STRING)
+        await mongoose.connect(process.env.MONGO_URI)
         console.log('connected to MongoDB')
     }
 

@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   chatapp:
-    build: 
+    tty: true
+    restart: always
+    build:
       context: ./
       dockerfile: Dockerfile
       args:
@@ -19,20 +21,16 @@ services:
       - ./bin:/chatapp/bin
     environment:
       VITE_SERVER_URL: "http://localhost:${PORT_SERVER}"
-      CLIENT_URL: "http://localhost:${PORT_CLIENT}"
-      REDIS_URI: "redis://redis:${PORT_REDIS}"
-      MONGO_CON_STRING: "mongodb://mongo:${PORT_MONGO}/chatapp"
+      REDIS_URI: "redis://redis:6379"
+      MONGO_URI: "mongodb://mongo:27017/chatapp"
 
   mongo:
     image: mongo
     container_name: "chat_app_mongo"
     restart: always
-    ports:
-      - ${PORT_MONGO}:27017
 
   redis:
     image: redis:6.2-alpine
     container_name: "chat_app_redis"
     restart: always
-    ports:
-      - ${PORT_REDIS}:6379
+    
