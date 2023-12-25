@@ -17,4 +17,9 @@ COPY bin bin
 
 COPY . .
 
+RUN <<EOF
+#!/bin/bash
+if [ ! "$NODE_ENV" = "production" ]; then npm run build; fi
+EOF
+
 CMD ["npm","run","start"]
