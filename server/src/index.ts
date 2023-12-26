@@ -9,6 +9,7 @@ import path from 'path'
 const app = express()
 
 app.get('/healthCheck', (req, res, next) => {
+    consolee.log('testing health check in production')
     res.status(200).send('OK')
 })
 
