@@ -8,7 +8,7 @@ import path from 'path'
 
 const app = express()
 
-app.get('/healthCheack', (req, res, next) => {
+app.get('/healthCheck', (req, res, next) => {
     res.status(200).send('OK')
 })
 
