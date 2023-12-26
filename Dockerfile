@@ -13,7 +13,7 @@ RUN npm i
 
 ENV NODE_ENV=${environment}
 
-COPY bin bin
+COPY bin/buildApp.sh bin/buildApp.sh
 
 COPY . .
 
