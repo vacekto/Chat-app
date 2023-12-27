@@ -15,6 +15,9 @@ ENV NODE_ENV=${environment}
 
 COPY . .
 
-RUN bin/buildApp.sh
+RUN <<EOF
+#!/bin/bash
+if [ ! "$NODE_ENV" = "production" ]; then npm run build; fi
+EOF
 
 CMD ["npm","run","start"]
