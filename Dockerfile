@@ -13,10 +13,8 @@ RUN npm i
 
 ENV NODE_ENV=${environment}
 
-COPY bin/buildApp.sh bin/buildApp.sh
-
 COPY . .
 
-RUN bash -c "bin/buildApp.sh"
+RUN bin/buildApp.sh
 
 CMD ["npm","run","start"]
