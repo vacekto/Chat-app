@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 node:20.9.0
 
-ARG environment=development
+ARG environment=production
 
 WORKDIR /chatapp
 
