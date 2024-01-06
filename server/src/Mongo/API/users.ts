@@ -1,48 +1,46 @@
-import User from "../models/User.js"
-import { IRegisterData } from "@chatapp/shared"
-import { v4 as uuidv4 } from 'uuid';
+import { IUser, TRegisterData } from "@chatapp/shared"
+import User from "../models/User"
+import { TMongoDoc, TMongoLean } from "@src/types";
 
-export const createUser = async (userData: IRegisterData) => {
+/**
+ * finds any one user in DB
+ * 
+ * @param user POJO representing user
+ * @param useLean returns POJO without virtuals 
+ * or any other ORM methods like .save, is faster and smaller
+ * @returns Promise resolving in any one Document extending requested user 
+ * or null if no user satisfies search params. Finds any user
+ * if no user argument is provided and user exists in database.
+ */
 
-    const {
-        username,
-        password,
-        email
-    } = userData
+export function getUser(user?: Partial<IUser> & { _id?: string }, useLean?: true):
+    Promise<TMongoLean<IUser & { password: string }> | null>;
 
-    const verificationId = uuidv4()
+export function getUser(user?: Partial<IUser> & { _id?: string }, useLean?: false):
+    Promise<TMongoDoc<IUser & { password: string }> | null>;
 
-    const newUser = new User({
-        username,
-        email,
-        password,
-        verified: false,
-        verificationId
-    })
-
-    await newUser.save()
-
-    return newUser
+export function getUser(user?: Partial<IUser> & { _id?: string }, useLean?: boolean) {
+    const query = User.findOne(user)
+    if (useLean) query.lean()
+    return query.exec()
 }
 
-const getTest = async () => {
-    try {
-        const test = await User.findById('64ad1dcbe8183868e689ac52')
+// /** 
+//  * finds all users satisfying params
+//  * 
+//  * @param user POJO representing user
+//  * @param useLean lean returns smaller Mognoose Document without virtuals or any other ORM methods, is faster
+//  * @returns Promise resolving in array of all Documents extending requested user
+//  */
 
-    } catch (err) {
-        console.log('err, no user')
-    }
-}
+// export const getUsers = (user?: Partial<IUser> & { _id?: ObjectId | string }) => {
+//     return User.find({
+//         $or: [],
 
+//     })
+// }
 
-const saveTest = async () => {
-    try {
-        const test = await User.findById('64ad1dcbe8183868e689ac52')
-        if (!test) throw new Error('no test')
-        // make change to document
-        const save = await test.save()
-
-    } catch (err) {
-        console.log('some err')
-    }
+export function createUser(userData: TRegisterData): Promise<TMongoDoc<IUser & { password: string }>> {
+    const newUser = new User(userData)
+    return newUser.save()
 }

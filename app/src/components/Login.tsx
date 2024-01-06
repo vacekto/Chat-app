@@ -1,181 +1,219 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useRef, FormEvent } from 'react'
 import './Login.scss'
-import { validateLoginOrRegister } from '../util/validation'
-import { ILoginState } from "../util/types"
-
-
+import {
+    usernameZodSchema,
+    passwordZodSchema,
+    emailZodSchema
+} from '@chatapp/shared'
+import clientSocketSingleton from '../util/socket'
 
 interface ILoginProps {
 
 }
 
 const Login: React.FC<ILoginProps> = () => {
-    const [formAction, setFormAction] = useState<'login' | 'register'>('login')
+    const [usernameError, setUsernameError] = useState<string>('')
+    const [emailError, setEmailError] = useState<string>('')
+    const [passwordError, setPasswordError] = useState<string>('')
+    const [repeatPasswordError, setRepeatPasswordError] = useState<string>('')
 
-    const [isValid, setIsValid] = useState<boolean>(false)
+    const [formAction, setFormAction] = useState<'register' | 'login'>('login')
 
-    const [username, setUsername] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [repeatPassword, setRepeatPassword] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [errors, setErrors] = useState<Omit<ILoginState, 'formAction'>>({
-        email: '',
-        password: '',
-        repeatPassword: '',
-        username: ''
-    })
+    const usernameRef = useRef<HTMLInputElement>({} as HTMLInputElement)
+    const emailRef = useRef<HTMLInputElement>({} as HTMLInputElement)
+    const passwordRef = useRef<HTMLInputElement>({} as HTMLInputElement)
+    const repeatPasswordRef = useRef<HTMLInputElement>({} as HTMLInputElement)
+    const validateTimer = useRef<NodeJS.Timeout | number>(-1)
 
-    const validate = () => {
-        const validateProps = {
-            formAction,
-            username,
-            password,
-            repeatPassword,
-            email
+    const validateUsername = () => {
+        const valid = usernameZodSchema.safeParse(usernameRef.current?.value)
+        if (valid.success) {
+            if (usernameError) setUsernameError('')
+            return true
         }
-        const [outcome, errors] = validateLoginOrRegister(validateProps)
-        setErrors(errors)
-        setIsValid(outcome)
+        const errMsg = valid.error.errors[0].message
+        if (usernameError !== errMsg) setUsernameError(errMsg)
+        return false
     }
 
-
-
-    const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        const value = e.target.value.trim()
-        setUsername(value)
+    const validateEmail = () => {
+        const valid = emailZodSchema.safeParse(emailRef.current?.value)
+        if (valid.success) {
+            if (emailError) setEmailError('')
+            return true
+        }
+        const errMsg = valid.error.errors[0].message
+        if (emailError !== errMsg) setEmailError(errMsg)
+        return false
     }
 
-    const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        const value = e.target.value.trim()
-        setEmail(value)
+    const validatePassword = () => {
+        const passValidation = passwordZodSchema.safeParse(passwordRef.current?.value)
+        if (passValidation.success) {
+            if (passwordError) setPasswordError('')
+            return true
+        }
+        const errMsg = passValidation.error.errors[0].message
+        if (passwordError !== errMsg) setPasswordError(errMsg)
+        return false
     }
 
-    const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        const value = e.target.value.trim()
-        setPassword(value)
+    const validateRepeatPassword = () => {
+        const p = passwordRef.current.value
+        const rp = repeatPasswordRef.current.value
+        if (p === rp) {
+            setRepeatPasswordError('')
+            return true
+        }
+        setRepeatPasswordError('Passwords must match')
+        return false
+
     }
 
-    const handleRepeatPasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        const value = e.target.value.trim()
-        setRepeatPassword(value)
+    const withDelay = (func: Function, timer: number = 500, funcArgs: any[] = []) => () => {
+        clearTimeout(validateTimer.current)
+        validateTimer.current = setTimeout(func, timer, ...funcArgs)
     }
 
-    const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-        if (e.key === 'Enter') handleSubmit()
-    }
+    const handleLogin = () => {
+        const usernameVal = validateUsername()
+        const passVal = validatePassword()
+        if (!usernameVal || !passVal) return
 
-    const handleSubmit = async () => {
-        console.log('submitting')
-        return
-        if (!isValid) {
-            console.error('NOT VALID!')
-            return
+        const payload = {
+            username: usernameRef.current.value,
+            password: passwordRef.current.value
         }
 
-        const url = `${import.meta.env.VITE_SERVER_URL}/${formAction}`
+        const url = `${import.meta.env.VITE_SERVER_URL}/login`
+        console.log(url)
 
-        const body = formAction === 'register' ? {
-            username,
-            password,
-            email
-        } : {
-            username,
-            password
-        }
-
-        const res = await fetch(url, {
+        fetch(url, {
             method: 'POST',
-            body: JSON.stringify(body),
+            body: JSON.stringify(payload),
             headers: {
                 'Content-Type': 'application/json'
             }
+        }).then(res => res.json()).then(data => {
+            if (typeof data.token === 'string') {
+                localStorage.setItem('chatAppToken', data.token)
+                if (
+                    !clientSocketSingleton.instance ||
+                    !clientSocketSingleton.instance.connected
+                ) {
+                    clientSocketSingleton.connect(data.token)
+                    console.log('connecting socket')
+                }
+            }
+
         })
 
-        const text = await res.text()
-        console.log(text)
     }
 
-    const toggleFormAction = () => {
-        setFormAction(prevState => {
-            const newState = prevState === 'login' ? 'register' : 'login'
-            return newState
-        })
+    const handleRegister = () => {
+        const usernameVal = validateUsername()
+        const passVal = validatePassword()
+        const emailVal = validateEmail()
+        const repeatPassVal = validateRepeatPassword()
+
+        if (!usernameVal || !passVal || !emailVal || !repeatPassVal) return
+
+        const payload = {
+            username: usernameRef.current.value,
+            email: emailRef.current.value,
+            password: passwordRef.current.value
+        }
+
+        const url = `${import.meta.env.VITE_SERVER_URL}/register`
+        console.log(url)
+
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.text()).then(data => console.log(data))
     }
 
-    useEffect(
-        validate,
-        [username, password, repeatPassword, email]
-    )
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (formAction === 'login') handleLogin()
+        else handleRegister()
+        console.log('sending data to server')
+    }
+
+    const toggleLogin = () => {
+        setFormAction(prevState => prevState === 'login' ? 'register' : 'login')
+    }
 
     const test = () => {
-        fetch('http://localhost:3000/test')
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => {console.log(err)})
-        // const time = new Date()
-        // console.log(time.toUTCString() + '\n')
+        const token = localStorage.getItem('chatAppToken')
+        console.log(token)
+
     }
 
-    const test2 = () => {
-        fetch('http://localhost:3000/test2')
+    const healthCheck = () => {
+        const url = `${import.meta.env.VITE_SERVER_URL}/healthCheck`
+        fetch(url, {
+            credentials: "include",
+        })
     }
 
-    return <div className='Login'>
-
-        <input
-            type="text"
-            onChange={handleUsernameChange}
-            onKeyDown={handleKeyDown}
-            value={username}
-            placeholder='username'
-            autoFocus
-        />
-        <div className="errorMessage">
-            {errors.username}
-        </div>
-        {formAction === 'register' ? <>
+    return <div className='login'>
+        <form
+            action="#"
+            onSubmit={handleSubmit}
+        >
+            username
             <input
-                onChange={handleEmailChange}
-                onKeyDown={handleKeyDown}
-                value={email}
-                placeholder='email'
+                type="text"
+                onChange={withDelay(validateUsername)}
+                onBlur={withDelay(validateUsername)}
+                ref={usernameRef}
             />
-            <div className="errorMessage">
-                {errors.email}
+            <div>
+                {usernameError}
             </div>
-        </> : null}
-
-        <input
-            type="password"
-            onChange={handlePasswordChange}
-            onKeyDown={handleKeyDown}
-            value={password}
-            placeholder='password'
-        />
-        <div className="errorMessage">
-            {errors.password}
-        </div>
-
-        {formAction === 'register' ? <>
+            {formAction === 'register' ? <>
+                email
+                <input
+                    type="email"
+                    onChange={withDelay(validateEmail)}
+                    onBlur={withDelay(validateEmail)}
+                    ref={emailRef}
+                />
+                <div>
+                    {emailError}
+                </div> </> : null}
+            password
             <input
-                type='password'
-                onChange={handleRepeatPasswordChange}
-                onKeyDown={handleKeyDown}
-                value={repeatPassword}
-                placeholder='repeat password'
+                type="password"
+                onChange={withDelay(validatePassword)}
+                onBlur={withDelay(validatePassword)}
+                ref={passwordRef}
             />
-            <div className="errorMessage">
-                {errors.repeatPassword}
+            <div>
+                {passwordError}
             </div>
-        </>
-            : null}
+            {formAction === 'register' ? <>
+                repeatPassword
+                <input
+                    type="password"
+                    onChange={withDelay(validateRepeatPassword)}
+                    onBlur={withDelay(validateRepeatPassword)}
+                    ref={repeatPasswordRef}
+                />
+                <div>
+                    {repeatPasswordError}
+                </div>
 
-        <button onClick={handleSubmit}>submit</button>
-
-        <button onClick={toggleFormAction}> {formAction} </button>
-
+            </> : null}
+            <button type='submit'>submit</button>
+        </form>
+        <button onClick={toggleLogin}>{formAction}</button>
         <button onClick={test}>test</button>
-        <button onClick={test2}>test2</button>
+        <button onClick={healthCheck}>health check</button>
     </div>
 }
 

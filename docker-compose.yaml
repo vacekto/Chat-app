@@ -23,6 +23,7 @@ services:
       VITE_SERVER_URL: "http://localhost:${PORT_SERVER}"
       REDIS_URI: "redis://redis:6379"
       MONGO_URI: "mongodb://mongo:27017/chatapp"
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
 
   mongo:
     image: mongo

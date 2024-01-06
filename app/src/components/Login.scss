@@ -1,22 +1,6 @@
-.Login {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 50px;
-
-    input {
-        margin: 30px;
-        height: 40px;
-        text-align: center;
-    }
-
-    .errorMessage {
-        color: red;
-    }
-
-    button {
-        margin: 30px;
-        padding: 8px;
+.login {
+    form {
+        display: flex;
+        flex-direction: column;
     }
 }

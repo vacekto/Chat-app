@@ -1,6 +1,17 @@
 #!/bin/bash
 
-if [ "$NODE_ENV" = "production" ]
-then
+case "$NODE_ENV" in
+
+  production )
     npm run prod
-fi
+    ;;
+
+  development )
+    npm run dev
+    ;;
+
+  * )
+    echo NODE_ENV value is incorrect
+    exit 1
+    ;;
+esac

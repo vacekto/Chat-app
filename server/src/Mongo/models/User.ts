@@ -1,19 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
-import uniqueValidator from 'mongoose-unique-validator'
+import { IUser, usernameZodSchema, emailZodSchema, passwordZodSchema } from "@chatapp/shared";
 
-// verification id is used for email verification, in '/verify:verificationId' router path
-export interface IUser {
-    username: string
-    email: string
-    verified: boolean
-    password: string
-    verificationId: string
-    createdAt: Date
-}
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema = new mongoose.Schema<IUser & { password: string, }>({
 
     username: {
         type: String,
@@ -21,6 +11,12 @@ const userSchema = new mongoose.Schema<IUser>({
         unique: true,
         trim: true,
         message: 'username {VALUE} is already taken',
+        validate: {
+            validator: function (username: string) {
+                return usernameZodSchema.safeParse(username).success
+            },
+            message: props => `${props.value} is not a valid username!`
+        }
     },
 
     email: {
@@ -28,39 +24,33 @@ const userSchema = new mongoose.Schema<IUser>({
         reqired: true,
         unique: true,
         trim: true,
-    },
-
-    verified: {
-        type: Boolean,
-        default: false,
-    },
-
-    verificationId: {
-        type: String,
-        default: uuidv4()
+        validate: {
+            validator: function (email: string) {
+                return emailZodSchema.safeParse(email).success
+            },
+            message: props => `${props.value} is not a valid email!`
+        }
     },
 
     password: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function (password: string) {
+                return passwordZodSchema.safeParse(password).success
+            },
+            message: `invalid password!`
+        }
     },
 
-    createdAt: {
-        type: Date,
-        default: () => Date.now(),
-        immutable: true
-    }
-})
-
-userSchema.plugin(uniqueValidator);
+}, { versionKey: false })
 
 userSchema.pre('save', async function () {
-    const saltRounds = 10;
     const password = this.password.trim()
-    const passwordHash = await bcrypt.hash(password, saltRounds)
+    const passwordHash = await bcrypt.hash(password, 10)
     this.password = passwordHash
 });
 
-const UserModel = mongoose.model<IUser>("User", userSchema)
+const UserModel = mongoose.model<IUser & { password: string }>("User", userSchema)
 
 export default UserModel

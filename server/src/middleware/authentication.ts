@@ -1,4 +1,4 @@
-import { TUtilMiddleware } from '../util/types'
+import { TUtilMiddleware } from '../types'
 import { client as redis } from '@src/Redis/connect'
 
 export const user: TUtilMiddleware = (req, res, next) => {
