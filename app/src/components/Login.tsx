@@ -1,4 +1,4 @@
-import React, { useState, useRef, FormEvent } from 'react'
+import React, { useState, useRef } from 'react'
 import './Login.scss'
 import {
     zodSchemas
@@ -134,8 +134,7 @@ const Login: React.FC<ILoginProps> = () => {
         }).then(res => res.text()).then(data => console.log(data))
     }
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const handleSubmit = () => {
         if (formAction === 'login') handleLogin()
         else handleRegister()
         console.log('sending data to server')
@@ -159,56 +158,52 @@ const Login: React.FC<ILoginProps> = () => {
     }
 
     return <div className='login'>
-        <form
-            action="#"
-            onSubmit={handleSubmit}
-        >
-            username
+
+        username
+        <input
+            type="text"
+            onChange={withDelay(validateUsername)}
+            onBlur={withDelay(validateUsername)}
+            ref={usernameRef}
+        />
+        <div>
+            {usernameError}
+        </div>
+        {formAction === 'register' ? <>
+            email
             <input
-                type="text"
-                onChange={withDelay(validateUsername)}
-                onBlur={withDelay(validateUsername)}
-                ref={usernameRef}
+                type="email"
+                onChange={withDelay(validateEmail)}
+                onBlur={withDelay(validateEmail)}
+                ref={emailRef}
             />
             <div>
-                {usernameError}
-            </div>
-            {formAction === 'register' ? <>
-                email
-                <input
-                    type="email"
-                    onChange={withDelay(validateEmail)}
-                    onBlur={withDelay(validateEmail)}
-                    ref={emailRef}
-                />
-                <div>
-                    {emailError}
-                </div> </> : null}
-            password
+                {emailError}
+            </div> </> : null}
+        password
+        <input
+            type="password"
+            onChange={withDelay(validatePassword)}
+            onBlur={withDelay(validatePassword)}
+            ref={passwordRef}
+        />
+        <div>
+            {passwordError}
+        </div>
+        {formAction === 'register' ? <>
+            repeatPassword
             <input
                 type="password"
-                onChange={withDelay(validatePassword)}
-                onBlur={withDelay(validatePassword)}
-                ref={passwordRef}
+                onChange={withDelay(validateRepeatPassword)}
+                onBlur={withDelay(validateRepeatPassword)}
+                ref={repeatPasswordRef}
             />
             <div>
-                {passwordError}
+                {repeatPasswordError}
             </div>
-            {formAction === 'register' ? <>
-                repeatPassword
-                <input
-                    type="password"
-                    onChange={withDelay(validateRepeatPassword)}
-                    onBlur={withDelay(validateRepeatPassword)}
-                    ref={repeatPasswordRef}
-                />
-                <div>
-                    {repeatPasswordError}
-                </div>
 
-            </> : null}
-            <button type='submit'>submit</button>
-        </form>
+        </> : null}
+        <button onClick={handleSubmit}>submit</button>
         <button onClick={toggleLogin}>{formAction}</button>
         <button onClick={test}>test</button>
         <button onClick={healthCheck}>health check</button>
