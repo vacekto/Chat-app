@@ -1,8 +1,5 @@
 import { Router } from 'express'
-import * as controllers from '@src/middleware/controllers'
-import * as auth from '@src/middleware/authentication'
-import * as validate from '@src/middleware/validation'
-import * as errors from '@src/middleware/errorHandler'
+import * as controllers from '../middleware/controllers'
 import { middlewareErrorDecorator } from '../middleware/decorator'
 
 const router = Router()

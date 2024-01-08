@@ -1,7 +1,7 @@
 import { TUtilMiddleware } from "../types";
-import * as MongoAPI from '@src/Mongo/API'
-import * as zodSchemas from '@chatapp/shared/util/zodSchemas'
-import BadUserInput from "@src/util/errorClasses/BadUserInput";
+import * as MongoAPI from '../Mongo/API'
+import { zodSchemas } from '@chatapp/shared'
+import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 
@@ -32,7 +32,7 @@ export const login: TUtilMiddleware = async (req, res) => {
 
     user.password = ''
 
-    res.send({token})
+    res.send({ token })
 
 }
 
@@ -40,7 +40,7 @@ export const test: TUtilMiddleware = async (req, res, next) => {
     // console.log('testing', req.headers)
     console.log(req.headers)
     console.log(req.cookies)
-    
+
 
     res.send('test route hit')
 }

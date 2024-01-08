@@ -24,6 +24,7 @@ services:
       REDIS_URI: "redis://redis:6379"
       MONGO_URI: "mongodb://mongo:27017/chatapp"
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
+      NODE_ENV: ${NODE_ENV}
 
   mongo:
     image: mongo

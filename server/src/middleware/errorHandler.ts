@@ -2,7 +2,7 @@ import { TErrorMiddleware } from "../types"
 import mongoose from "mongoose"
 import { MongoError, MongoServerError, } from 'mongodb';
 import ResourceNotFoundError from '../util/errorClasses/ResourceNotFound'
-import BadUserInput from "@src/util/errorClasses/BadUserInput";
+import BadUserInput from "../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
 
 const customErrors: TErrorMiddleware = (err, req, res, next) => {

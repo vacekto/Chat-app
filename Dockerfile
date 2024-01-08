@@ -15,8 +15,4 @@ ENV NODE_ENV=${environment}
 
 COPY . .
 
-RUN <<EOF
-if [ "$NODE_ENV" = "production" ]; then npm run build; fi
-EOF
-
 CMD ["npm","run","start"]

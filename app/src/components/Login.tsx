@@ -1,9 +1,7 @@
 import React, { useState, useRef, FormEvent } from 'react'
 import './Login.scss'
 import {
-    usernameZodSchema,
-    passwordZodSchema,
-    emailZodSchema
+    zodSchemas
 } from '@chatapp/shared'
 import clientSocketSingleton from '../util/socket'
 
@@ -26,7 +24,7 @@ const Login: React.FC<ILoginProps> = () => {
     const validateTimer = useRef<NodeJS.Timeout | number>(-1)
 
     const validateUsername = () => {
-        const valid = usernameZodSchema.safeParse(usernameRef.current?.value)
+        const valid = zodSchemas.usernameZodSchema.safeParse(usernameRef.current?.value)
         if (valid.success) {
             if (usernameError) setUsernameError('')
             return true
@@ -37,7 +35,7 @@ const Login: React.FC<ILoginProps> = () => {
     }
 
     const validateEmail = () => {
-        const valid = emailZodSchema.safeParse(emailRef.current?.value)
+        const valid = zodSchemas.emailZodSchema.safeParse(emailRef.current?.value)
         if (valid.success) {
             if (emailError) setEmailError('')
             return true
@@ -48,7 +46,7 @@ const Login: React.FC<ILoginProps> = () => {
     }
 
     const validatePassword = () => {
-        const passValidation = passwordZodSchema.safeParse(passwordRef.current?.value)
+        const passValidation = zodSchemas.passwordZodSchema.safeParse(passwordRef.current?.value)
         if (passValidation.success) {
             if (passwordError) setPasswordError('')
             return true

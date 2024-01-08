@@ -3,5 +3,3 @@ docker-compose.yaml
 .dockerignore
 .env
 node_modules
-server/dist
-shared/dist

@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import connectToMongo from '@src/Mongo/connect'
-import connectToRedis from '@src/Redis/connect'
+import connectToMongo from './Mongo/connect'
+import connectToRedis from './Redis/connect'
 import router from './routes/router'
 import cookieParser from 'cookie-parser'
 import path from 'path'
@@ -14,9 +14,9 @@ import {
     InterServerEvents,
     ServerToClientEvents,
     SocketData,
-    TokenPayloadZodSchema
+    zodSchemas
 } from '@chatapp/shared'
-
+import { expressCspHeader, INLINE, NONE, SELF } from 'express-csp-header';
 const app = express()
 const httpServer = createServer(app);
 
@@ -37,7 +37,7 @@ io.use((socket, next) => {
         )
         const tokenPayload = token.split('.')[1]
         const decodedPayload = JSON.parse(atob(tokenPayload))
-        const username = TokenPayloadZodSchema.parse(decodedPayload).username
+        const username = zodSchemas.TokenPayloadZodSchema.parse(decodedPayload).username
 
         const usersOnline: string[] = []
         const activeSockets = io.of('/').sockets.entries()
@@ -73,7 +73,22 @@ io.on("connection", (socket) => {
 
 app.use(cors())
 
-app.get('/', express.static(path.join(__dirname, 'SPA')))
+// app.use(expressCspHeader({
+//     directives: {
+//         'default-src': [SELF],
+//         'script-src': [SELF, INLINE, 'somehost.com'],
+//         'style-src': [SELF, 'mystyles.net'],
+//         'img-src': [SELF, 'favico.ico'],
+//         'worker-src': [NONE],
+//         'block-all-mixed-content': true
+//     }
+// }));
+
+
+
+app.use('/', express.static(__dirname + '/SPA'))
+
+
 
 app.use((req, res, next) => {
     console.log(req.method)
@@ -89,6 +104,7 @@ app.use(errorHandler)
 
 httpServer.listen(3000, () => {
     console.log('server running in mode: ' + process.env.NODE_ENV)
+    console.log(process.env.PORT_SERVER)
     connectToMongo()
     connectToRedis()
 })

@@ -1,6 +1,6 @@
 import { IUser, TRegisterData } from "@chatapp/shared"
 import User from "../models/User"
-import { TMongoDoc, TMongoLean } from "@src/types";
+import { TMongoDoc, TMongoLean } from "../../types";
 
 /**
  * finds any one user in DB

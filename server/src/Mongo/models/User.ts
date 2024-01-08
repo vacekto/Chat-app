@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
-import { IUser, usernameZodSchema, emailZodSchema, passwordZodSchema } from "@chatapp/shared";
+import { IUser, zodSchemas } from "@chatapp/shared";
 
 
 const userSchema = new mongoose.Schema<IUser & { password: string, }>({
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
         message: 'username {VALUE} is already taken',
         validate: {
             validator: function (username: string) {
-                return usernameZodSchema.safeParse(username).success
+                return zodSchemas.usernameZodSchema.safeParse(username).success
             },
             message: props => `${props.value} is not a valid username!`
         }
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
         trim: true,
         validate: {
             validator: function (email: string) {
-                return emailZodSchema.safeParse(email).success
+                return zodSchemas.emailZodSchema.safeParse(email).success
             },
             message: props => `${props.value} is not a valid email!`
         }
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
         required: true,
         validate: {
             validator: function (password: string) {
-                return passwordZodSchema.safeParse(password).success
+                return zodSchemas.passwordZodSchema.safeParse(password).success
             },
             message: `invalid password!`
         }
