@@ -4,7 +4,6 @@ import connectToMongo from './Mongo/connect'
 import connectToRedis from './Redis/connect'
 import router from './routes/router'
 import cookieParser from 'cookie-parser'
-import path from 'path'
 import errorHandler from './middleware/errorHandler'
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -16,7 +15,7 @@ import {
     SocketData,
     zodSchemas
 } from '@chatapp/shared'
-import { expressCspHeader, INLINE, NONE, SELF } from 'express-csp-header';
+
 const app = express()
 const httpServer = createServer(app);
 
@@ -72,18 +71,6 @@ io.on("connection", (socket) => {
 });
 
 app.use(cors())
-
-// app.use(expressCspHeader({
-//     directives: {
-//         'default-src': [SELF],
-//         'script-src': [SELF, INLINE, 'somehost.com'],
-//         'style-src': [SELF, 'mystyles.net'],
-//         'img-src': [SELF, 'favico.ico'],
-//         'worker-src': [NONE],
-//         'block-all-mixed-content': true
-//     }
-// }));
-
 
 
 app.use('/', express.static(__dirname + '/SPA'))
