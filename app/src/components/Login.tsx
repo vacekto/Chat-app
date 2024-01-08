@@ -83,7 +83,8 @@ const Login: React.FC<ILoginProps> = () => {
             password: passwordRef.current.value
         }
 
-        const url = `${import.meta.env.VITE_SERVER_URL}/login`
+        const domain = import.meta.env.VITE_SERVER_URL ?? ''
+        const url = `${domain}/login`
         console.log(url)
 
         fetch(url, {
@@ -122,8 +123,8 @@ const Login: React.FC<ILoginProps> = () => {
             password: passwordRef.current.value
         }
 
-        const url = `${import.meta.env.VITE_SERVER_URL}/register`
-        console.log(url)
+        const domain = import.meta.env.VITE_SERVER_URL ?? ''
+        const url = `${domain}/register`
 
         fetch(url, {
             method: 'POST',
@@ -152,7 +153,8 @@ const Login: React.FC<ILoginProps> = () => {
     }
 
     const healthCheck = () => {
-        const url = `${import.meta.env.VITE_SERVER_URL}/healthCheck`
+        const domain = import.meta.env.VITE_SERVER_URL ?? ''
+        const url = `${domain}/healthCheck`
         fetch(url, {
             credentials: "include",
         })

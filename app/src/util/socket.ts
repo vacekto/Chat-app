@@ -3,7 +3,7 @@ import { ServerToClientEvents, ClientToServerEvents } from '@chatapp/shared/'
 
 const clientSocketSingleton = function () {
     let _instance: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
-    const url = import.meta.env.VITE_SERVER_URL
+    const url = import.meta.env.VITE_SERVER_URL ?? ''
 
     const rateLimiter = {
         goodToGo: true
