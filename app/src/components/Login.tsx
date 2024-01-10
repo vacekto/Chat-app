@@ -1,9 +1,7 @@
 import React, { useState, useRef } from 'react'
 import './Login.scss'
-import {
-    zodSchemas
-} from '@chatapp/shared'
-import clientSocketSingleton from '../util/socket'
+import { zodSchemas } from '@chatapp/shared'
+import { useAppSelector } from '../redux/hooks'
 
 interface ILoginProps {
 
@@ -22,6 +20,8 @@ const Login: React.FC<ILoginProps> = () => {
     const passwordRef = useRef<HTMLInputElement>({} as HTMLInputElement)
     const repeatPasswordRef = useRef<HTMLInputElement>({} as HTMLInputElement)
     const validateTimer = useRef<NodeJS.Timeout | number>(-1)
+
+    const socketSingleton = useAppSelector(state => state.socket.singleton)
 
     const validateUsername = () => {
         const valid = zodSchemas.usernameZodSchema.safeParse(usernameRef.current?.value)
@@ -96,10 +96,10 @@ const Login: React.FC<ILoginProps> = () => {
             if (typeof data.token === 'string') {
                 localStorage.setItem('chatAppToken', data.token)
                 if (
-                    !clientSocketSingleton.instance ||
-                    !clientSocketSingleton.instance.connected
+                    !socketSingleton.instance ||
+                    !socketSingleton.instance.connected
                 ) {
-                    clientSocketSingleton.connect(data.token)
+                    socketSingleton.connect(data.token)
                     console.log('connecting socket')
                 }
             }

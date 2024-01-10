@@ -91,7 +91,6 @@ app.use(errorHandler)
 
 httpServer.listen(3000, () => {
     console.log('server running in mode: ' + process.env.NODE_ENV)
-    console.log(process.env.PORT_SERVER)
     connectToMongo()
     connectToRedis()
 })
