@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import sokcetReducer from './socketSlice'
+import sokcetReducer from './slice/socket'
 
 const store = configureStore({
     reducer: {

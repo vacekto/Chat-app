@@ -13,7 +13,7 @@ export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeo
         SocketData
     >(server, {
         cors: {
-                origin: '*'
+            origin: '*'
         }
     });
 

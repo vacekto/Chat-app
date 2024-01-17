@@ -7,7 +7,8 @@ const createSocketSingleton = function () {
 
     instance = io(url, { autoConnect: false })
 
-    function connect(token: string) {
+    function connect(token: string, force?: boolean) {
+        if (instance.connected && !force) return
         instance.auth = { token }
         instance.connect()
     }
@@ -18,4 +19,4 @@ const createSocketSingleton = function () {
     }
 }
 
-export default createSocketSingleton
+export default createSocketSingleton()

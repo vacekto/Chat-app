@@ -1,36 +1,56 @@
 import './App.scss'
 import Login from './components/Login'
 import { useEffect } from 'react'
-import { useAppSelector } from './redux/hooks'
-
+import { useAppSelector, useAppDispatch } from './redux/hooks'
+import { setConnected } from './redux/slice/socket'
+import socketSingleton from './util/socketSingleton'
+import PracticeForm from './components/PracticeForm'
 
 function App() {
 
-  const socketSingleton = useAppSelector(state => state.socket.singleton)
+  const connected = useAppSelector(state => state.socket.connected)
+  const dispatch = useAppDispatch()
+
 
   const onConnectEvent = () => {
-    console.log('connected')
+    dispatch(setConnected(true))
+  }
+
+  const onDisconnectEvent = () => {
+    dispatch(setConnected(false))
+  }
+
+  const test = () => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('chatAppToken')
-    console.log(token)
-    if (!token) return
+  }, [connected])
 
-    socketSingleton.connect(token)
+  useEffect(() => {
+    const token = localStorage.getItem('chatAppToken')
+
+    if (token) socketSingleton.connect(token)
+
     socketSingleton.instance.on('connect', onConnectEvent)
+    socketSingleton.instance.on('disconnect', onDisconnectEvent)
+
 
 
     return () => {
       socketSingleton.instance.disconnect()
       socketSingleton.instance.off('connect', onConnectEvent)
+      socketSingleton.instance.off('disconnect', onDisconnectEvent)
     }
   }, [])
 
   return (
     <div className="App">
       <h1>Chat app</h1>
-      <Login />
+      {/* <Login /> */}
+      <PracticeForm />
+      <button id='testBtn' onClick={test}>
+        test
+      </button>
     </div>
   )
 }

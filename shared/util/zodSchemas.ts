@@ -18,14 +18,14 @@ export const passwordZodSchema = z.string().trim()
     .regex(/[0-9]/, 'Password must contain at least one number')
 
 export const loginDataZodSchema = z.object({
-    username: z.string().trim(),
-    password: z.string().trim()
+    username: usernameZodSchema,
+    password: passwordZodSchema
 })
 
 export const registerDataZodSchema = z.object({
-    username: z.string().trim(),
-    password: z.string().trim(),
-    email: z.string().trim()
+    username: usernameZodSchema,
+    password: passwordZodSchema,
+    email: emailZodSchema
 })
 
 export const TokenPayloadZodSchema = z.object({

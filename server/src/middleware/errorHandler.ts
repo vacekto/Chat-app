@@ -6,7 +6,6 @@ import BadUserInput from "../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
 
 const customErrors: TErrorMiddleware = (err, req, res, next) => {
-    console.log('new error:', err.constructor.name)
     // if (err instanceof NotAuthenticatedError) {
     //     res.status(401).send(err.message)
     //     return

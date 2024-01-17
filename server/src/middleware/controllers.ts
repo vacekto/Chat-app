@@ -37,9 +37,6 @@ export const login: TUtilMiddleware = async (req, res) => {
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {
-    // console.log('testing', req.headers)
-    console.log(req.headers)
-    console.log(req.cookies)
 
 
     res.send('test route hit')
