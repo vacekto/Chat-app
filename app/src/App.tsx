@@ -1,5 +1,4 @@
 import './App.scss'
-import Login from './components/Login'
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { setConnected } from './redux/slice/socket'

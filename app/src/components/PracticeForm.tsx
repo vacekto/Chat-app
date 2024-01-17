@@ -1,6 +1,6 @@
 import './PracticeForm.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAt, faUnlock, faUser, faXmark, /*faCheck*/ } from '@fortawesome/free-solid-svg-icons'
+import { faAt, faUnlock, faUser } from '@fortawesome/free-solid-svg-icons'
 import { zodSchemas } from '@chatapp/shared'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"

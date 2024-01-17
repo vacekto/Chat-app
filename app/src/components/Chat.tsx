@@ -4,7 +4,7 @@ export interface IChatProps {
 
 }
 
-const Chat: React.FC = (props: IChatProps) => {
+const Chat: React.FC = () => {
     return (
         <div>
             
