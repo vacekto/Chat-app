@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { setConnected } from './redux/slice/socket'
 import socketSingleton from './util/socketSingleton'
-import PracticeForm from './components/PracticeForm'
+import Login from './pages/Login'
 
 function App() {
 
@@ -45,8 +45,7 @@ function App() {
   return (
     <div className="App">
       <h1>Chat app</h1>
-      {/* <Login /> */}
-      <PracticeForm />
+      <Login />
       <button id='testBtn' onClick={test}>
         test
       </button>

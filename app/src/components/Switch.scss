@@ -1,0 +1,21 @@
+$switchWidth: 42px;
+$switchHeight: 15px;
+$controllerSize: 22px;
+
+.Switch {
+    border-radius: $switchHeight;
+    width: $switchWidth;
+    height: $switchHeight;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #1f2029;
+    
+    div {
+        position: absolute;
+        height: $controllerSize;
+        width: $controllerSize;
+        border-radius: $controllerSize;
+        background-color: #ffeba7;
+    }
+}

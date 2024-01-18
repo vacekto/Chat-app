@@ -1,10 +1,9 @@
-.PracticeForm {
+.Login {
   form {
     border: 1px solid black;
     display: flex;
     flex-direction: column;
-    width: 320px;
-    
+    width: min-content;
     padding: 50px;
 
     .form-group {
@@ -13,17 +12,19 @@
       flex-direction: column;
 
       .input-container {
+        margin-bottom: 40px;
         display: flex;
         align-items: center;
+        
         .input-icon {
           position: absolute;
           left: 30px;
+          margin: auto;
           color: #ffeba7;
         }
 
         input {
-          padding: 13px 20px;
-          padding-left: 55px;
+          padding: 13px 20px 13px 55px;
           height: 30px;
           line-height: 22px;
           font-weight: 500;
@@ -35,15 +36,16 @@
           background-color: #1f2029;
           box-shadow: 0 4px 8px 0 rgba(21, 21, 21, .2);
           border: none;
-          margin: 0 10px;
         }
       }
 
       .error-message {
-        color: rgb(81, 255, 0);
-        position: relative;
+        margin-top: 55px;
+        width: 100%;
+        color: #ff3d3d;
+        position: absolute;
         text-align: start;
-        font-size: 12px;
+        font-size: 13px;
       }
     }
   }
