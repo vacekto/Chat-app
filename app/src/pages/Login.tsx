@@ -6,12 +6,15 @@ import { zodSchemas } from '@chatapp/shared'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from 'zod'
-
+import { useState } from 'react'
 
 type Inputs = z.infer<typeof zodSchemas.registerDataZodSchema>
 
+type TFormAcion = 'login' | 'register'
+
 const Login: React.FC = () => {
-  console.log('rendering form ')
+  const [formAction, setFormAction] = useState<TFormAcion>('login')
+
   const {
     register,
     handleSubmit,
@@ -25,11 +28,28 @@ const Login: React.FC = () => {
     console.log(data)
   }
 
+  const changeFormAction = (action: TFormAcion) => () => {
+    setFormAction(action)
+  }
+
+  const switchCb = (activeSide: 'left' | 'right') => {
+    const newAction = activeSide === 'left' ? 'login' : 'register'
+    setFormAction(newAction)
+  }
 
   return <div className='Login'>
-    <Switch />
-    <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate>
 
+    <div className="header">
+      <span onClick={changeFormAction('login')}>Log in</span>
+      <span onClick={changeFormAction('register')}>Sign in</span>
+    </div>
+
+    <Switch
+      state={formAction === 'login' ? 'left' : 'right'}
+      cb={switchCb}
+    />
+
+    <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className="form-group">
         <div className="input-container">
           <input type="text" placeholder='username' {...register('username')} />

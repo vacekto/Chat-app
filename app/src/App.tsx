@@ -44,7 +44,6 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Chat app</h1>
       <Login />
       <button id='testBtn' onClick={test}>
         test

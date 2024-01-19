@@ -1,4 +1,26 @@
 .Login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .header span {
+    margin: 50px;
+    color: #c4c3ca;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      text-shadow: 0 0px 2px #c4c3ca;
+    }
+  }
+
+  .Switch {
+    margin: 30px;
+  }
+
   form {
     border: 1px solid black;
     display: flex;
@@ -15,7 +37,7 @@
         margin-bottom: 40px;
         display: flex;
         align-items: center;
-        
+
         .input-icon {
           position: absolute;
           left: 30px;
