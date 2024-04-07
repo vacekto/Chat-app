@@ -34,7 +34,7 @@
 
 
 
-    &.signin {
+    &.register {
       .loginForm {
         position: absolute;
         transform: translateX(410px);
@@ -47,7 +47,7 @@
         position: static;
       }
 
-      .signinForm {
+      .registerForm {
         position: absolute;
         transform: translateX(-410px);
       }
