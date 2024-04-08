@@ -11,12 +11,11 @@ import { addSocketServer } from './sockets/server'
 const app = express()
 const httpServer = createServer(app);
 
-app.use(cors())
-
-app.use("/test", (req, res, next) => {
-    console.log("testing route. origin: ", req.headers["origin"])
-    res.send(req.headers["origin"])
-})
+app.use(cors({
+    origin: process.env.NODE_ENV === "development" ?
+        "http://localhost:5173" :
+        "https://chat-app-deploy-f2b9.onrender.com/"
+}))
 
 addSocketServer(httpServer)
 

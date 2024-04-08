@@ -11,7 +11,7 @@ router.get('/healthCheck', (req, res, next) => {
     res.status(200).send('OK')
 })
 
-// router.get('/test', middlewareErrorDecorator(controllers.test))
+router.get('/test', middlewareErrorDecorator(controllers.test))
 
 router.post('/register', middlewareErrorDecorator(controllers.register))
 // router.post('/register', validate.registerData, controllers.register)
