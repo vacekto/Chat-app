@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
-import { TIOSocket, TIOMiddleware } from "../types"
+import { TIOSocket, TSocketIOMiddleware } from "../types"
 import { zodSchemas } from '@chatapp/shared'
 
-export const auth: TIOMiddleware = (socket, next) => {
+export const auth: TSocketIOMiddleware = (socket, next) => {
     try {
         const token = socket.handshake.auth.token;
         jwt.verify(

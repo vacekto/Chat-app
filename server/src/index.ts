@@ -6,13 +6,17 @@ import router from './routes/router'
 import cookieParser from 'cookie-parser'
 import errorHandler from './middleware/errorHandler'
 import { createServer } from "http";
-
 import { addSocketServer } from './sockets/server'
 
 const app = express()
 const httpServer = createServer(app);
 
-app.use(cors())
+// app.use(cors())
+
+app.use("/test", (req, res, next) => {
+    console.log(req.headers, "testing route")
+    res.send()
+})
 
 addSocketServer(httpServer)
 

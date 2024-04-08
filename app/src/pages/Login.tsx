@@ -15,8 +15,6 @@ const Login: React.FC = () => {
     setFormAction(newAction)
   }
 
-
-
   return <div className='Login'>
 
     <div className="header">

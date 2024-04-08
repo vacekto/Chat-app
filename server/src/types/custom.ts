@@ -31,4 +31,4 @@ export interface ExtendedError extends Error {
     data?: any
 }
 
-export type TIOMiddleware = (socket: TIOSocket, next: (err?: ExtendedError | undefined) => void) => void
+export type TSocketIOMiddleware = (socket: TIOSocket, next: (err?: ExtendedError | undefined) => void) => void

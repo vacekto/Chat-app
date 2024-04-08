@@ -19,7 +19,13 @@ function App() {
     dispatch(setConnected(false))
   }
 
-  const test = () => {
+  const test = async () => {
+    console.log("testing")
+    try {
+      await fetch("http://localhost:3000/test")
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {
@@ -32,8 +38,6 @@ function App() {
 
     socketSingleton.instance.on('connect', onConnectEvent)
     socketSingleton.instance.on('disconnect', onDisconnectEvent)
-
-
 
     return () => {
       socketSingleton.instance.disconnect()
