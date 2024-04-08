@@ -22,7 +22,9 @@ function App() {
   const test = async () => {
     console.log("testing")
     try {
-      await fetch("http://localhost:3000/test")
+      const res = await fetch("http://localhost:3000/test")
+      const data = await res.text()
+      console.log(data)
     } catch (err) {
       console.log(err)
     }

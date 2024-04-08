@@ -11,11 +11,11 @@ import { addSocketServer } from './sockets/server'
 const app = express()
 const httpServer = createServer(app);
 
-// app.use(cors())
+app.use(cors())
 
 app.use("/test", (req, res, next) => {
-    console.log(req.headers, "testing route")
-    res.send()
+    console.log("testing route. origin: ", req.headers["origin"])
+    res.send(req.headers["origin"])
 })
 
 addSocketServer(httpServer)
