@@ -4,8 +4,10 @@ import { zodSchemas } from '@chatapp/shared'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useAppDispatch } from '../redux/hooks'
+import { setConnected } from '../redux/slice/socket'
 
-type Inputs = z.infer<typeof zodSchemas.registerDataZodSchema>
+type Inputs = z.infer<typeof zodSchemas.loginDataZodSchema>
 interface ILoginFormProps { }
 
 const LoginFrom: React.FC<ILoginFormProps> = () => {
@@ -15,14 +17,33 @@ const LoginFrom: React.FC<ILoginFormProps> = () => {
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>({
-        resolver: zodResolver(zodSchemas.registerDataZodSchema),
+        resolver: zodResolver(zodSchemas.loginDataZodSchema),
     })
 
-    const onSubmit: SubmitHandler<Inputs> = data => {
-        console.log('submitting')
-        console.log(data)
-    }
+    const dispatch = useAppDispatch()
 
+    const onSubmit: SubmitHandler<Inputs> = async data => {
+        const url = `${import.meta.env.VITE_SERVER_URL}/login`
+        const options = {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        const response = await fetch(url, options)
+        if (response.status !== 200) return
+        dispatch(setConnected(true))
+
+        // .then(res => res.json())
+        // .then(data => {
+        //     console.log("response: ", data)
+        //     dispatch(setConnected(true))
+        // })
+        // .catch(err => console.log(err))
+    }
 
     return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='loginForm'>
         <div className="form-group">
@@ -38,9 +59,9 @@ const LoginFrom: React.FC<ILoginFormProps> = () => {
                 <input type="password" placeholder='password' {...register('password')} />
                 <FontAwesomeIcon icon={faUnlock} className='input-icon' />
             </div>
-            {/* <span className="error-message">{errors.password?.message}</span> */}
+            <span className="error-message">{errors.password?.message}</span>
         </div>
-        <button type='submit'>submit</button>
+        <button type='submit' >submit</button>
 
     </form>
 }

@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export interface ISocketState {
     fetchedData: boolean
+    JWT: string
 }
 
 const initialState: ISocketState = {
-    fetchedData: false
+    fetchedData: false,
+    JWT: ""
 }
 
 export const userDataSlice = createSlice({

@@ -29,7 +29,7 @@ const Login: React.FC = () => {
 
     <div className={`formContainer ${formAction}`}>
       <LoginFrom />
-      <RegisterFrom />
+      <RegisterFrom toggleFormAction={setFormAction} />
     </div>
   </div>
 }

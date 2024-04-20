@@ -6,8 +6,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 
 export const register: TUtilMiddleware = async (req, res, next) => {
-    const registerData = zodSchemas.registerDataZodSchema.parse(req.body)
-    const createdUser = await MongoAPI.createUser(registerData)
+    const createdUser = await MongoAPI.createUser(req.body)
     createdUser.password = ''
     res.json(createdUser)
 }

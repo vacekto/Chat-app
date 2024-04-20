@@ -4,11 +4,15 @@ import { zodSchemas } from '@chatapp/shared'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { sha3_256 } from "js-sha3"
+import { TFormAction } from '../pages/Login'
 
 type Inputs = z.infer<typeof zodSchemas.registerDataZodSchema>
-interface ILoginFormProps { }
+interface IRegisterFormProps {
+    toggleFormAction: React.Dispatch<React.SetStateAction<TFormAction>>
+}
 
-const RegisterFrom: React.FC<ILoginFormProps> = () => {
+const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
 
     const {
         register,
@@ -18,9 +22,20 @@ const RegisterFrom: React.FC<ILoginFormProps> = () => {
         resolver: zodResolver(zodSchemas.registerDataZodSchema),
     })
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log('submitting')
-        console.log(data)
+    const onSubmit: SubmitHandler<Inputs> = async data => {
+        data.password = sha3_256(data.password)
+        const url = `${import.meta.env.VITE_SERVER_URL}/register`
+        const options = {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        const response = await fetch(url, options)
+        if (response.status === 200) toggleFormAction("login")
     }
 
     return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='registerForm'>

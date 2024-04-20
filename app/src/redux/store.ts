@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import sokcetReducer from './slice/socket'
+import userDataReducer from './slice/userData'
 
 const store = configureStore({
     reducer: {
-        socket: sokcetReducer
+        socket: sokcetReducer,
+        userData: userDataReducer
     }
 })
 

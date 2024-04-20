@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 import { IUser, zodSchemas } from "@chatapp/shared";
 
-
 const userSchema = new mongoose.Schema<IUser & { password: string, }>({
 
     username: {
@@ -35,12 +34,6 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
     password: {
         type: String,
         required: true,
-        validate: {
-            validator: function (password: string) {
-                return zodSchemas.passwordZodSchema.safeParse(password).success
-            },
-            message: `invalid password!`
-        }
     },
 
 }, { versionKey: false })

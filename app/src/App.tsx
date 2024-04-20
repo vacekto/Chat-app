@@ -4,12 +4,15 @@ import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { setConnected } from './redux/slice/socket'
 import socketSingleton from './util/socketSingleton'
 import Login from './pages/Login'
+import Chat from './pages/Chat'
+// import { sha3_512 } from "js-sha3"
 
 function App() {
 
   const connected = useAppSelector(state => state.socket.connected)
+  const jwt = useAppSelector(state => state.userData.JWT)
+  console.log("jwt: ", jwt)
   const dispatch = useAppDispatch()
-
 
   const onConnectEvent = () => {
     dispatch(setConnected(true))
@@ -20,11 +23,13 @@ function App() {
   }
 
   const test = async () => {
-    console.log("testing")
-
+    console.log("testing", import.meta.env.VITE_SERVER_URL)
+    // console.log(sha3_512("my testing string"))
+    fetch(`${import.meta.env.VITE_SERVER_URL}/test`)
   }
 
   useEffect(() => {
+
   }, [connected])
 
   useEffect(() => {
@@ -44,7 +49,7 @@ function App() {
 
   return (
     <div className="App">
-      <Login />
+      {connected ? <Chat /> : <Login />}
       <button id='testBtn' onClick={test}>
         test
       </button>
