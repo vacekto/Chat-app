@@ -13,8 +13,8 @@ const httpServer = createServer(app);
 
 app.use(cors({
     origin: process.env.NODE_ENV === "development" ?
-        "http://localhost:5173" :
-        "https://chat-app-deploy-f2b9.onrender.com/"
+        `http://localhost:${process.env.PORT_CLIENT}` :
+        `${process.env.VITE_SERVER_URL}`
 }))
 
 addSocketServer(httpServer)
