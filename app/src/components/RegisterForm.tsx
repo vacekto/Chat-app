@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { TFormAction } from '../pages/Login'
 
-type Inputs = z.infer<typeof zodSchemas.registerDataZodSchema>
+type Inputs = z.infer<typeof zodSchemas.registerDataZS>
 interface IRegisterFormProps {
     toggleFormAction: React.Dispatch<React.SetStateAction<TFormAction>>
 }
@@ -19,7 +19,7 @@ const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>({
-        resolver: zodResolver(zodSchemas.registerDataZodSchema),
+        resolver: zodResolver(zodSchemas.registerDataZS),
     })
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
@@ -36,6 +36,7 @@ const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
 
         const response = await fetch(url, options)
         if (response.status === 200) toggleFormAction("login")
+        console.log(response.body)
     }
 
     return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='registerForm'>

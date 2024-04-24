@@ -6,6 +6,9 @@ import { Server, Socket } from 'socket.io'
 
 // types starting with IO are used with Socket.io 
 
+export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+export type RequiredBy<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
 export type TUtilMiddleware = (req: Request, res: Response, next: NextFunction) => void
 export type TErrorMiddleware = (err: Error | MongooseError, req: Request, res: Response, next: NextFunction) => void
 

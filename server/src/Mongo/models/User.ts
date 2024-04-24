@@ -1,8 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import bcrypt from 'bcrypt';
 import { IUser, zodSchemas } from "@chatapp/shared";
 
-const userSchema = new mongoose.Schema<IUser & { password: string, }>({
+
+
+const userSchema = new mongoose.Schema<IUser>({
 
     username: {
         type: String,
@@ -12,7 +14,7 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
         message: 'username {VALUE} is already taken',
         validate: {
             validator: function (username: string) {
-                return zodSchemas.usernameZodSchema.safeParse(username).success
+                return zodSchemas.usernameZS.safeParse(username).success
             },
             message: props => `${props.value} is not a valid username!`
         }
@@ -25,7 +27,7 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
         trim: true,
         validate: {
             validator: function (email: string) {
-                return zodSchemas.emailZodSchema.safeParse(email).success
+                return zodSchemas.emailZS.safeParse(email).success
             },
             message: props => `${props.value} is not a valid email!`
         }
@@ -39,11 +41,12 @@ const userSchema = new mongoose.Schema<IUser & { password: string, }>({
 }, { versionKey: false })
 
 userSchema.pre('save', async function () {
+    if (!this.password) throw new Error("password required")
     const password = this.password.trim()
     const passwordHash = await bcrypt.hash(password, 10)
     this.password = passwordHash
 });
 
-const UserModel = mongoose.model<IUser & { password: string }>("User", userSchema)
+const UserModel = mongoose.model<IUser>("User", userSchema)
 
 export default UserModel

@@ -12,7 +12,7 @@ export const auth: TSocketIOMiddleware = (socket, next) => {
 
         const tokenPayload = token.split('.')[1]
         const decodedPayload = JSON.parse(atob(tokenPayload))
-        const username = zodSchemas.TokenPayloadZodSchema.parse(decodedPayload).username
+        const username = zodSchemas.tokenPayloadZS.parse(decodedPayload).username
 
         socket.data.username = username
         next()

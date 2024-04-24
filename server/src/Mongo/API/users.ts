@@ -1,46 +1,21 @@
-import { IUser, TRegisterData } from "@chatapp/shared"
+import { IUser } from "@chatapp/shared"
 import User from "../models/User"
 import { TMongoDoc, TMongoLean } from "../../types";
+import { ObjectId } from "mongoose";
 
-/**
- * finds any one user in DB
- * 
- * @param user POJO representing user
- * @param useLean returns POJO without virtuals 
- * or any other ORM methods like .save, is faster and smaller
- * @returns Promise resolving in any one Document extending requested user 
- * or null if no user satisfies search params. Finds any user
- * if no user argument is provided and user exists in database.
- */
-
-export function getUser(user?: Partial<IUser> & { _id?: string }, useLean?: true):
-    Promise<TMongoLean<IUser & { password: string }> | null>;
-
-export function getUser(user?: Partial<IUser> & { _id?: string }, useLean?: false):
-    Promise<TMongoDoc<IUser & { password: string }> | null>;
-
-export function getUser(user?: Partial<IUser> & { _id?: string }, useLean?: boolean) {
-    const query = User.findOne(user)
-    if (useLean) query.lean()
+type TGetUserLean = (user?: Partial<IUser> & { _id?: string | ObjectId }) => Promise<TMongoLean<IUser> | null>
+export const getUserLean: TGetUserLean = (user) => {
+    const query = User.findOne(user).lean()
     return query.exec()
 }
 
-// /** 
-//  * finds all users satisfying params
-//  * 
-//  * @param user POJO representing user
-//  * @param useLean lean returns smaller Mognoose Document without virtuals or any other ORM methods, is faster
-//  * @returns Promise resolving in array of all Documents extending requested user
-//  */
+type TGetUser = (user?: Partial<IUser> & { _id?: string | ObjectId }) => Promise<TMongoDoc<IUser> | null>
+export const getUser: TGetUser = (user) => {
+    const query = User.findOne(user)
+    return query.exec()
+}
 
-// export const getUsers = (user?: Partial<IUser> & { _id?: ObjectId | string }) => {
-//     return User.find({
-//         $or: [],
-
-//     })
-// }
-
-export function createUser(userData: TRegisterData): Promise<TMongoDoc<IUser & { password: string }>> {
-    const newUser = new User(userData)
+export const createUser = (userData: IUser) => {
+    const newUser: TMongoDoc<IUser> = new User(userData)
     return newUser.save()
 }

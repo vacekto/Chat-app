@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAppDispatch } from '../redux/hooks'
 import { setConnected } from '../redux/slice/socket'
 
-type Inputs = z.infer<typeof zodSchemas.loginDataZodSchema>
+type Inputs = z.infer<typeof zodSchemas.loginDataZS>
 interface ILoginFormProps { }
 
 const LoginFrom: React.FC<ILoginFormProps> = () => {
@@ -17,7 +17,7 @@ const LoginFrom: React.FC<ILoginFormProps> = () => {
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>({
-        resolver: zodResolver(zodSchemas.loginDataZodSchema),
+        resolver: zodResolver(zodSchemas.loginDataZS),
     })
 
     const dispatch = useAppDispatch()
