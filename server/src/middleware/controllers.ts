@@ -1,4 +1,4 @@
-import { PartialBy, TUtilMiddleware } from "../types";
+import { TUtilMiddleware } from "../types";
 import * as MongoAPI from '../Mongo/API'
 import { IUser, zodSchemas } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
@@ -37,7 +37,7 @@ export const login: TUtilMiddleware = async (req, res) => {
 
     user.password = ''
 
-    res.send({ token })
+    res.send(token)
 
 }
 

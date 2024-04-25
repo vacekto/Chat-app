@@ -35,7 +35,8 @@ const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
         }
 
         const response = await fetch(url, options)
-        if (response.status === 200) toggleFormAction("login")
+        if (response.status !== 200) return
+        toggleFormAction("login")
         console.log(response.body)
     }
 
@@ -63,8 +64,14 @@ const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
             </div>
             <span className="error-message">{errors.password?.message}</span>
         </div>
+        <div className="form-group">
+            <div className="input-container">
+                <input type="password" placeholder='repeat password' {...register('repeatPassword')} />
+                <FontAwesomeIcon icon={faUnlock} className='input-icon' />
+            </div>
+            <span className="error-message">{errors.repeatPassword?.message}</span>
+        </div>
         <button type='submit'>submit</button>
-
     </form>
 }
 

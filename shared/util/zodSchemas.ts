@@ -24,8 +24,12 @@ export const loginDataZS = z.object({
 
 export const registerDataZS = z.object({
     username: usernameZS,
+    email: emailZS,
     password: passwordZS,
-    email: emailZS
+    repeatPassword: z.string()
+}).refine(data => data.password === data.repeatPassword, {
+    message: "Password must equel RepeatPassword",
+    path: ["repeatPassword"]
 })
 
 export const tokenPayloadZS = z.object({
