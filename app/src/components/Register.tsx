@@ -5,42 +5,28 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
-import { TFormAction } from '../pages/Login'
+import { useAppDispatch } from '../redux/hooks'
+import { registerThunk } from '../redux/thunk'
 
-type Inputs = z.infer<typeof zodSchemas.registerDataZS>
-interface IRegisterFormProps {
-    toggleFormAction: React.Dispatch<React.SetStateAction<TFormAction>>
-}
+type Inputs = z.infer<typeof zodSchemas.registerFormZS>
+interface IRegisterFormProps { }
 
-const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
-
+const Register: React.FC<IRegisterFormProps> = () => {
+    const dispatch = useAppDispatch()
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>({
-        resolver: zodResolver(zodSchemas.registerDataZS),
+        resolver: zodResolver(zodSchemas.registerFormZS),
     })
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
         data.password = sha3_256(data.password)
-        const url = `${import.meta.env.VITE_SERVER_URL}/register`
-        const options = {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }
-
-        const response = await fetch(url, options)
-        if (response.status !== 200) return
-        toggleFormAction("login")
-        console.log(response.body)
+        dispatch(registerThunk(data))
     }
 
-    return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='registerForm'>
+    return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='Register'>
         <div className="form-group">
             <div className="input-container">
                 <input type="text" placeholder='username' {...register('username')} />
@@ -75,4 +61,4 @@ const RegisterFrom: React.FC<IRegisterFormProps> = ({ toggleFormAction }) => {
     </form>
 }
 
-export default RegisterFrom
+export default Register

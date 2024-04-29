@@ -1,4 +1,4 @@
-.Login {
+.AppForm {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,7 +35,7 @@
 
 
     &.register {
-      .loginForm {
+      .Login {
         position: absolute;
         transform: translateX(410px);
       }
@@ -43,11 +43,11 @@
 
 
     &.login {
-      .loginForm {
+      .Login {
         position: static;
       }
 
-      .registerForm {
+      .Register {
         position: absolute;
         transform: translateX(-410px);
       }

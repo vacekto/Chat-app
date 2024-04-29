@@ -1,6 +1,5 @@
 import './Chat.scss'
-import { useAppDispatch } from '../redux/hooks'
-import { setConnected } from '../redux/slice/socket'
+// import { useAppDispatch } from '../redux/hooks'
 
 export interface IChatProps {
 
@@ -8,10 +7,9 @@ export interface IChatProps {
 
 const Chat: React.FC = () => {
 
-    const dispatch = useAppDispatch()
+    // const dispatch = useAppDispatch()
 
     const handleLogout = () => {
-        dispatch(setConnected(false))
     }
 
     return (

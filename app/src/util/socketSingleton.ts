@@ -1,22 +1,20 @@
 import { io, Socket } from "socket.io-client";
 import { ServerToClientEvents, ClientToServerEvents } from '@chatapp/shared/'
 
-const createSocketSingleton = function () {
-    let instance: Socket<ServerToClientEvents, ClientToServerEvents>
-    const url = import.meta.env.VITE_SERVER_URL
 
-    instance = io(url, { autoConnect: false })
+const url = import.meta.env.VITE_SERVER_URL
 
-    function connect(token: string, force?: boolean) {
-        if (instance.connected && !force) return
-        instance.auth = { token }
-        instance.connect()
-    }
+let instance: Socket<ServerToClientEvents, ClientToServerEvents> = io(url, { autoConnect: false })
 
-    return {
-        instance,
-        connect
-    }
+function connect(token: string, force?: boolean) {
+    if (instance.connected && !force) return
+    instance.auth = { token }
+    instance.connect()
 }
 
-export default createSocketSingleton()
+const socketSingleton = {
+    instance,
+    connect
+}
+
+export default socketSingleton

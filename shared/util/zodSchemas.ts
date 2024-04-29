@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 // ZS === ZodSchema
 export const emailZS = z.string().trim().email('Invalid email')
 
@@ -17,12 +18,12 @@ export const passwordZS = z.string().trim()
     .regex(/[a-z]/, 'Password must contain at least one lowercase')
     .regex(/[0-9]/, 'Password must contain at least one num(ber')
 
-export const loginDataZS = z.object({
+export const loginFormZS = z.object({
     username: usernameZS,
     password: passwordZS
 })
 
-export const registerDataZS = z.object({
+export const registerFormZS = z.object({
     username: usernameZS,
     email: emailZS,
     password: passwordZS,
@@ -37,13 +38,13 @@ export const tokenPayloadZS = z.object({
     email: z.string().trim()
 })
 
-export const apiRegisterZS = z.object({
+export const registerApiZS = z.object({
     username: usernameZS,
     email: emailZS,
     password: z.string()
 })
 
-export const apiLoginZS = z.object({
+export const loginApiZS = z.object({
     username: usernameZS,
     password: z.string()
 })

@@ -1,15 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import sokcetReducer from './slice/socket'
-import userDataReducer from './slice/userData'
+import userDataReducer from './slice/data'
 
 const store = configureStore({
     reducer: {
-        socket: sokcetReducer,
-        userData: userDataReducer
-    }
+        userData: userDataReducer,
+    },
 })
-
-export default store
 
 export type TRootState = ReturnType<typeof store.getState>
 export type TAppDispatch = typeof store.dispatch
+
+export default store

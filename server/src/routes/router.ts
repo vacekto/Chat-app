@@ -15,7 +15,7 @@ router.get('/test', middlewareErrorDecorator(controllers.test))
 
 router.post('/register', middlewareErrorDecorator(controllers.register))
 // router.post('/register', validate.registerData, controllers.register)
-router.post('/login', middlewareErrorDecorator(controllers.login))
+router.post('/login', middlewareErrorDecorator(controllers.logIn))
 // router.post('/login', validate.loginData, auth.user, controllers.login)
 
 router.get('/verify/:verificationId')

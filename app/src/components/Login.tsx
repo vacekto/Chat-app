@@ -4,48 +4,30 @@ import { zodSchemas } from '@chatapp/shared'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { sha3_256 } from "js-sha3"
 import { useAppDispatch } from '../redux/hooks'
-import { setConnected } from '../redux/slice/socket'
+import { loginThunk } from '../redux/thunk'
 
-type Inputs = z.infer<typeof zodSchemas.loginDataZS>
+type Inputs = z.infer<typeof zodSchemas.loginFormZS>
 interface ILoginFormProps { }
 
 const LoginFrom: React.FC<ILoginFormProps> = () => {
+    const dispatch = useAppDispatch()
 
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>({
-        resolver: zodResolver(zodSchemas.loginDataZS),
+        resolver: zodResolver(zodSchemas.loginFormZS),
     })
 
-    const dispatch = useAppDispatch()
-
     const onSubmit: SubmitHandler<Inputs> = async data => {
-        const url = `${import.meta.env.VITE_SERVER_URL}/login`
-        const options = {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }
-
-        const response = await fetch(url, options)
-        if (response.status !== 200) return
-        dispatch(setConnected(true))
-
-        // .then(res => res.json())
-        // .then(data => {
-        //     console.log("response: ", data)
-        //     dispatch(setConnected(true))
-        // })
-        // .catch(err => console.log(err))
+        data.password = sha3_256(data.password)
+        dispatch(loginThunk(data))
     }
 
-    return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='loginForm'>
+    return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='Login'>
         <div className="form-group">
             <div className="input-container">
                 <input type="text" placeholder='username' {...register('username')} />

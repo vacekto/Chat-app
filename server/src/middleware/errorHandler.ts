@@ -71,7 +71,7 @@ const errorsHandlers: TErrorHandlers = {
             const propTaken = Object.keys(uniqueErr.keyValue)[0]
             const value = uniqueErr.keyValue[propTaken]
             responseError.message = `${propTaken} '${value}' is already taken`
-            res.status(409).send(responseError)
+            res.status(409).send("responseError")
             return
 
         }
