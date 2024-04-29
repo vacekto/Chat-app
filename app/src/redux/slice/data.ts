@@ -24,6 +24,7 @@ export const userDataSlice = createSlice({
         },
         setFormAction: ((state: Draft<IStoreState>, action: PayloadAction<"register" | "login">) => {
             state.formAction = action.payload
+
         })
     },
     extraReducers(builder) {
@@ -43,6 +44,7 @@ export const userDataSlice = createSlice({
         })
     },
 })
+
 
 export const dataActions = userDataSlice.actions
 export default userDataSlice.reducer

@@ -23,5 +23,8 @@
     "@types/uuid": "^9.0.2",
     "jsdoc": "^4.0.2",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "react-redux": "^9.1.1"
   }
 }
