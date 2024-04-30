@@ -5,14 +5,16 @@ export interface IDataState {
     socketConnected: boolean,
     username: string,
     email: string,
-    formAction: "login" | "register"
+    formAction: "login" | "register",
+    jwt: string
 }
 
 const initialState: IDataState = {
     socketConnected: false,
     username: "",
     email: "",
-    formAction: "login"
+    formAction: "login",
+    jwt: ""
 }
 
 export const userDataSlice = createSlice({
@@ -34,13 +36,13 @@ export const userDataSlice = createSlice({
             localStorage.setItem("chatAppAccessToken", action.payload.jwt)
         })
         builder.addCase(loginThunk.rejected, (_, action) => {
-            console.error("error while fetching data from server: ", action.error.message)
+            console.log(action.error.message)
         })
         builder.addCase(registerThunk.fulfilled, () => {
             console.log("register successful")
         })
         builder.addCase(registerThunk.rejected, (_, action) => {
-            console.error("error while fetching data from server: ", action.error.message)
+            console.error(action.error.message)
         })
     },
 })

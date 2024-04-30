@@ -6,6 +6,7 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
+import { addAlertThunk } from './redux/thunk'
 
 function App() {
 
@@ -22,9 +23,11 @@ function App() {
 
   const test = async () => {
     console.log("testing", import.meta.env.VITE_SERVER_URL)
-    fetch(`${import.meta.env.VITE_SERVER_URL}/test`, {
-      credentials: "include"
-    })
+    dispatch(addAlertThunk({
+      id: Date.now(),
+      message: "cosikdosi",
+      severity: 'success'
+    }))
   }
 
   useEffect(() => {

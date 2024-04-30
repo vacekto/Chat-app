@@ -1,6 +1,6 @@
 import { TUtilMiddleware } from "../types";
 import * as MongoAPI from '../Mongo/API'
-import { IUser, zodSchemas } from '@chatapp/shared'
+import { IUser, ILoginResponseData, zodSchemas, IRegisterResponseData } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
@@ -9,7 +9,7 @@ import { redisClient } from "../Redis/connect";
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)
     const createdUser = await MongoAPI.createUser(registerData)
-    const POJO: Omit<IUser, "password"> = {
+    const POJO: IRegisterResponseData = {
         username: createdUser.username,
         email: createdUser.email
     }
@@ -20,7 +20,7 @@ export const register: TUtilMiddleware = async (req, res, next) => {
 export const logIn: TUtilMiddleware = async (req, res) => {
     const loginData = zodSchemas.loginApiZS.parse(req.body)
     const user = await MongoAPI.getUser({ username: loginData.username })
-    if (!user) throw new BadUserInput('bad input')
+    if (!user) throw new BadUserInput(`${loginData.username} is Invalid username`)
     const isMatch = await bcrypt.compare(loginData.password, user.password)
     if (!isMatch) throw new BadUserInput('password missmatch')
 
@@ -51,7 +51,7 @@ export const logIn: TUtilMiddleware = async (req, res) => {
 
     await redisClient.set(user.username, refreshToken);
 
-    const userData = {
+    const userData: ILoginResponseData = {
         username: user.username,
         email: user.email,
         jwt: accessToken
@@ -68,5 +68,5 @@ export const logOut: TUtilMiddleware = async (req, res) => {
 export const test: TUtilMiddleware = async (req, res, next) => {
     console.log(redisClient.isOpen)
     console.log(req.cookies)
-    res.send('test route hit')
+    res.status(200).send('test route hit')
 }

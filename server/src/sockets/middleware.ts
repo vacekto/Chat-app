@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { TSocketIOMiddleware } from "../types"
-import { zodSchemas, functions } from '@chatapp/shared'
+import { zodSchemas, getJWTPayload } from '@chatapp/shared'
 
 
 export const auth: TSocketIOMiddleware = (socket, next) => {
@@ -12,7 +12,7 @@ export const auth: TSocketIOMiddleware = (socket, next) => {
             process.env.AUTH_TOKEN_SECRET as string,
         )
 
-        const payload = functions.getJWTPayload(token)
+        const payload = getJWTPayload(token)
         const userData = zodSchemas.tokenPayloadZS.parse(payload)
 
         socket.data.username = userData.username

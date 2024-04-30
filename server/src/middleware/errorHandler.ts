@@ -14,7 +14,7 @@ type TErrorHandlers = {
 const errorsHandlers: TErrorHandlers = {
     customErrors: function (err, req, res, next) {
         let responseError: IResponseError = {
-            message: "",
+            errorMessage: "",
         }
 
         if (err instanceof ResourceNotFoundError) {
@@ -34,7 +34,7 @@ const errorsHandlers: TErrorHandlers = {
 
     zodErrors: function (err, req, res, next) {
         let responseError: IResponseError = {
-            message: "",
+            errorMessage: "",
         }
 
 
@@ -51,7 +51,7 @@ const errorsHandlers: TErrorHandlers = {
 
     mongooseErrors: function (err, req, res, next) {
         let responseError: IResponseError = {
-            message: "",
+            errorMessage: "",
         }
 
         if (err instanceof mongoose.Error.ValidationError) {
