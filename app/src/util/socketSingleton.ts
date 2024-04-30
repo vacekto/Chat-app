@@ -1,10 +1,9 @@
-import { io, Socket } from "socket.io-client";
-import { ServerToClientEvents, ClientToServerEvents } from '@chatapp/shared/'
-
+import { io, } from "socket.io-client";
+import { TClientSocket } from './types'
 
 const url = import.meta.env.VITE_SERVER_URL
 
-let instance: Socket<ServerToClientEvents, ClientToServerEvents> = io(url, { autoConnect: false })
+let instance: TClientSocket = io(url, { autoConnect: false })
 
 function connect(token: string, force?: boolean) {
     if (instance.connected && !force) return

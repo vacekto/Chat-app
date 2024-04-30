@@ -5,12 +5,12 @@ import { dataActions } from './redux/slice/data'
 import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
+import Alerts from './components/Alerts'
 
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
-  // const jwt = useAppSelector(state => state.userData.JWT)
 
   const onConnectEvent = () => {
     dispatch(dataActions.setSocketConnected(true))
@@ -41,6 +41,7 @@ function App() {
 
   return (
     <div className="App">
+      <Alerts />
       {connected ? <Chat /> : <AppForm />}
       <button id='testBtn' onClick={test}>
         test

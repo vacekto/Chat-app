@@ -22,7 +22,6 @@ const AppForm: React.FC = () => {
   }
 
   return <div className='AppForm'>
-
     <div className="header">
       <span onClick={() => setAction("login")}>Log in</span>
       <span onClick={() => setAction("register")}>Register</span>

@@ -1,14 +1,14 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { loginThunk, registerThunk } from '../thunk'
 
-export interface IStoreState {
+export interface IDataState {
     socketConnected: boolean,
     username: string,
     email: string,
     formAction: "login" | "register"
 }
 
-const initialState: IStoreState = {
+const initialState: IDataState = {
     socketConnected: false,
     username: "",
     email: "",
@@ -19,10 +19,10 @@ export const userDataSlice = createSlice({
     name: 'data',
     initialState,
     reducers: {
-        setSocketConnected: (state: Draft<IStoreState>, action: PayloadAction<boolean>) => {
+        setSocketConnected: (state: Draft<IDataState>, action: PayloadAction<boolean>) => {
             state.socketConnected = action.payload
         },
-        setFormAction: ((state: Draft<IStoreState>, action: PayloadAction<"register" | "login">) => {
+        setFormAction: ((state: Draft<IDataState>, action: PayloadAction<"register" | "login">) => {
             state.formAction = action.payload
 
         })

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { useAppDispatch } from '../redux/hooks'
 import { loginThunk } from '../redux/thunk'
+import Button from '@mui/material/Button';
 
 type Inputs = z.infer<typeof zodSchemas.loginFormZS>
 interface ILoginFormProps { }
@@ -43,7 +44,7 @@ const LoginFrom: React.FC<ILoginFormProps> = () => {
             </div>
             <span className="error-message">{errors.password?.message}</span>
         </div>
-        <button type='submit' >submit</button>
+        <Button type='submit' >submit</Button>
 
     </form>
 }
