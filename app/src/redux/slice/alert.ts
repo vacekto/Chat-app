@@ -1,6 +1,5 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { IAlert } from '../../util/types'
-import { addAlertThunk } from '../thunk'
 
 export interface IAlertState {
     alerts: IAlert[]
@@ -22,9 +21,7 @@ export const alertSlice = createSlice({
         }
 
     },
-    extraReducers(builder) {
-        builder.addCase(addAlertThunk.pending, () => { })
-    }
+
 })
 
 export const alertActions = alertSlice.actions

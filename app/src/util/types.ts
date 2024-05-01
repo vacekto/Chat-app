@@ -6,5 +6,4 @@ export interface IAlert {
     message: string,
     severity: 'success' | 'info' | 'warning' | 'error',
     id: number
-
 }

@@ -6,7 +6,7 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { addAlertThunk } from './redux/thunk'
+import { alertActions } from './redux/slice/alert'
 
 function App() {
 
@@ -23,7 +23,7 @@ function App() {
 
   const test = async () => {
     console.log("testing", import.meta.env.VITE_SERVER_URL)
-    dispatch(addAlertThunk({
+    dispatch(alertActions.addAlert({
       id: Date.now(),
       message: "cosikdosi",
       severity: 'success'

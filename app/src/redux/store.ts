@@ -1,12 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userDataReducer from './slice/data'
 import alertReducer from './slice/alert'
+import { myMiddleware } from './middleware'
+
+const rootReducer = combineReducers({
+    userData: userDataReducer,
+    alert: alertReducer
+})
 
 const store = configureStore({
-    reducer: {
-        userData: userDataReducer,
-        alert: alertReducer
-    },
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(myMiddleware)
 })
 
 export type TRootState = ReturnType<typeof store.getState>
