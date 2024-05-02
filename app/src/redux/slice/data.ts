@@ -36,10 +36,7 @@ export const userDataSlice = createSlice({
             localStorage.setItem("chatAppAccessToken", action.payload.jwt)
         })
         builder.addCase(loginThunk.rejected, (_, action) => {
-            console.log(action.error.message)
-        })
-        builder.addCase(registerThunk.fulfilled, () => {
-            console.log("register successful")
+            console.error(action.error.message)
         })
         builder.addCase(registerThunk.rejected, (_, action) => {
             console.error(action.error.message)

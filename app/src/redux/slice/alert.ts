@@ -19,7 +19,6 @@ export const alertSlice = createSlice({
         removeAlert: (state: Draft<IAlertState>, action: PayloadAction<number>) => {
             state.alerts = state.alerts.filter(alert => alert.id !== action.payload)
         }
-
     },
 
 })

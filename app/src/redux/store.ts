@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userDataReducer from './slice/data'
 import alertReducer from './slice/alert'
-import { myMiddleware } from './middleware'
+import { addAlertMiddleware } from './middleware'
 
 const rootReducer = combineReducers({
     userData: userDataReducer,
@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(myMiddleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(addAlertMiddleware)
 })
 
 export type TRootState = ReturnType<typeof store.getState>

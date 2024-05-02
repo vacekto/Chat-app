@@ -7,24 +7,22 @@ import BadUserInput from "../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
 
 
-type TErrorHandlers = {
-    [prop: string]: TErrorMiddleware
-}
+type TErrorHandlers = TErrorMiddleware[]
 
-const errorsHandlers: TErrorHandlers = {
-    customErrors: function (err, req, res, next) {
+const errorsHandlers: TErrorHandlers = [
+    function customErrors(err, req, res, next) {
         let responseError: IResponseError = {
             errorMessage: "",
         }
 
         if (err instanceof ResourceNotFoundError) {
-            responseError.message = err.message
+            responseError.errorMessage = err.message
             res.status(404).send(responseError)
             return
         }
 
         if (err instanceof BadUserInput) {
-            responseError.message = err.message
+            responseError.errorMessage = err.message
             res.status(409).send(responseError)
             return
         }
@@ -32,37 +30,34 @@ const errorsHandlers: TErrorHandlers = {
         next(err)
     },
 
-    zodErrors: function (err, req, res, next) {
-        let responseError: IResponseError = {
-            errorMessage: "",
-        }
-
-
+    function zodErrors(err, req, res, next) {
         if (!(err instanceof ZodError)) {
             next(err)
             return
         }
 
-        responseError.message = 'validataion error'
-        responseError.errors = err.errors
+        let responseError: IResponseError = {
+            errorMessage: err.errors[0].message,
+            errors: err.errors
+        }
 
         res.status(400).send(responseError)
     },
 
-    mongooseErrors: function (err, req, res, next) {
+    function mongooseErrors(err, req, res, next) {
         let responseError: IResponseError = {
             errorMessage: "",
         }
 
         if (err instanceof mongoose.Error.ValidationError) {
-            responseError.message = "DB validation error"
+            responseError.errorMessage = "DB validation error"
             responseError.errors = err.errors
             res.status(400).send(responseError)
             return
         }
 
         if (err instanceof MongoServerError && err.code === 11000) {
-
+            console.log("ERROR: ", err)
             interface IUniqueError extends MongoError {
                 keyValue: { [prop: string]: any }
             }
@@ -70,8 +65,8 @@ const errorsHandlers: TErrorHandlers = {
             const uniqueErr = err as IUniqueError
             const propTaken = Object.keys(uniqueErr.keyValue)[0]
             const value = uniqueErr.keyValue[propTaken]
-            responseError.message = `${propTaken} '${value}' is already taken`
-            res.status(409).send("responseError")
+            responseError.errorMessage = `${propTaken} '${value}' is already taken`
+            res.status(409).send(responseError)
             return
 
         }
@@ -83,7 +78,7 @@ const errorsHandlers: TErrorHandlers = {
             }
 
             const castErr = err as ICastError
-            responseError.message = `invalid ${castErr.path}: '${castErr.value}'`
+            responseError.errorMessage = `Invalid ${castErr.path}: '${castErr.value}'`
             res.status(400).send(responseError)
             return
         }
@@ -91,9 +86,7 @@ const errorsHandlers: TErrorHandlers = {
         next(err)
     }
 
-}
+]
 
 
-const errorMiddleware: TErrorMiddleware[] = Object.values(errorsHandlers)
-
-export default errorMiddleware
+export default errorsHandlers

@@ -5,6 +5,7 @@ import { IAlert } from "../util/types"
 import { alertActions } from './slice/alert'
 import {
     ILoginResponseData,
+    IRegisterResponseData,
     IResponseError,
     PartialBy,
     TLoginData,
@@ -17,12 +18,16 @@ export const loginThunk = createAsyncThunk(
     async (data: TLoginData, { dispatch }) => {
         const res: Response = await sendJSON("/login", data)
         const responseData: ILoginResponseData | IResponseError = await res.json()
-        if (isServerError(responseData)) throw new Error(responseData.errorMessage)
-        const alert: IAlert = {
+        const alert: IAlert = isServerError(responseData) ? {
             id: Date.now(),
-            message: `Login succesfull`,
+            message: responseData.errorMessage,
+            severity: "error"
+        } : {
+            id: Date.now(),
+            message: "Login succesfull",
             severity: "success"
         }
+
         dispatch(alertActions.addAlert(alert))
         return responseData
     }
@@ -32,8 +37,22 @@ export const registerThunk = createAsyncThunk(
     "data/register",
     async (data: PartialBy<TRegisterData, "repeatPassword">, { dispatch }) => {
         delete data.repeatPassword
-        const res = await sendJSON("/register", data)
-        if (res.status !== 200) throw new Error()
-        dispatch(dataActions.setFormAction("login"))
+        const res: Response = await sendJSON("/register", data)
+        const responseData: IRegisterResponseData | IResponseError = await res.json()
+
+        const alert: IAlert = isServerError(responseData) ? {
+            id: Date.now(),
+            message: responseData.errorMessage,
+            severity: "error"
+
+        } : {
+            id: Date.now(),
+            message: `Account created`,
+            severity: "success"
+        }
+
+        dispatch(alertActions.addAlert(alert))
+        if (!isServerError(responseData))
+            dispatch(dataActions.setFormAction("login"))
     }
 )
