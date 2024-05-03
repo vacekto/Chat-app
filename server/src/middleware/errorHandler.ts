@@ -6,7 +6,6 @@ import ResourceNotFoundError from '../util/errorClasses/ResourceNotFound'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
 
-
 type TErrorHandlers = TErrorMiddleware[]
 
 const errorsHandlers: TErrorHandlers = [
@@ -57,7 +56,6 @@ const errorsHandlers: TErrorHandlers = [
         }
 
         if (err instanceof MongoServerError && err.code === 11000) {
-            console.log("ERROR: ", err)
             interface IUniqueError extends MongoError {
                 keyValue: { [prop: string]: any }
             }

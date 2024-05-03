@@ -1,6 +1,6 @@
 import { TUtilMiddleware } from "../types";
 import * as MongoAPI from '../Mongo/API'
-import { ILoginResponseData, zodSchemas, IRegisterResponseData } from '@chatapp/shared'
+import { ILoginResponseData, zodSchemas, IRegisterResponseData, TTokenPayload, getJWTPayload } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
@@ -13,11 +13,10 @@ export const register: TUtilMiddleware = async (req, res, next) => {
         username: createdUser.username,
         email: createdUser.email
     }
-
     res.json(POJO)
 }
 
-export const logIn: TUtilMiddleware = async (req, res) => {
+export const login: TUtilMiddleware = async (req, res) => {
     const loginData = zodSchemas.loginApiZS.parse(req.body)
     const user = await MongoAPI.getUser({ username: loginData.username })
     if (!user) throw new BadUserInput(`User with username ${loginData.username} does not exist.`)
@@ -30,19 +29,20 @@ export const logIn: TUtilMiddleware = async (req, res) => {
     const accessToken = jwt.sign(
         payload,
         process.env.AUTH_TOKEN_SECRET as string,
-        { expiresIn: '10min' }
+        { expiresIn: 600 }
     )
     const refreshToken = jwt.sign(
         payload,
         process.env.AUTH_TOKEN_SECRET as string,
-        { expiresIn: '7 days' }
+        { expiresIn: 604800 }
     )
     res.cookie(
         "chatAppRefreshToken",
         refreshToken,
         {
             httpOnly: true,
-            sameSite: "strict"
+            sameSite: "strict",
+            maxAge: 604800000
         })
     await redisClient.set(user.username, refreshToken);
     const userData: ILoginResponseData = {
@@ -53,9 +53,55 @@ export const logIn: TUtilMiddleware = async (req, res) => {
     res.send(userData)
 }
 
-export const logOut: TUtilMiddleware = async (req, res) => {
-    // res.clearCookie(name, [ options ])
-    res.send()
+export const refreshToken: TUtilMiddleware = async (req, res) => {
+    const refreshToken = req.cookies["chatAppRefreshToken"]
+    if (!refreshToken) {
+        res.status(400).send()
+        return
+    }
+    jwt.verify(
+        refreshToken,
+        process.env.AUTH_TOKEN_SECRET as string,
+    )
+    let payload: TTokenPayload = getJWTPayload(refreshToken)
+    payload = {
+        username: payload.username,
+        email: payload.email
+    }
+    const redisRefreshToken = await redisClient.get(payload.username);
+    if (refreshToken !== redisRefreshToken) {
+        res.clearCookie("chatAppRefreshToken")
+        res.redirect('back')
+        return
+    }
+    const newAccessToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: 600 }
+    )
+    const newRefreshToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: 604800 }
+    )
+    res.cookie(
+        "chatAppRefreshToken",
+        newRefreshToken,
+        {
+            httpOnly: true,
+            sameSite: "strict",
+            maxAge: 604800000
+        })
+    await redisClient.set(payload.username, newRefreshToken);
+    res.send({ JWT: newAccessToken })
+}
+
+export const logout: TUtilMiddleware = async (req, res) => {
+    const token = req.cookies["chatAppRefreshToken"]
+    const paylaod: TTokenPayload = getJWTPayload(token)
+    res.clearCookie("chatAppRefreshToken")
+    await redisClient.del(paylaod.username);
+    res.status(200).send(paylaod)
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {

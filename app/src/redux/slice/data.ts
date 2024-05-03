@@ -1,12 +1,13 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { loginThunk, registerThunk } from '../thunk'
+import { loginThunk, logoutThunk, registerThunk } from '../thunk'
+import socket from '../../util/socketSingleton'
 
 export interface IDataState {
     socketConnected: boolean,
     username: string,
     email: string,
     formAction: "login" | "register",
-    jwt: string
+    JWT: string
 }
 
 const initialState: IDataState = {
@@ -14,7 +15,7 @@ const initialState: IDataState = {
     username: "",
     email: "",
     formAction: "login",
-    jwt: ""
+    JWT: ""
 }
 
 export const userDataSlice = createSlice({
@@ -26,18 +27,31 @@ export const userDataSlice = createSlice({
         },
         setFormAction: ((state: Draft<IDataState>, action: PayloadAction<"register" | "login">) => {
             state.formAction = action.payload
+        }),
+        setJWT: ((state: Draft<IDataState>, action: PayloadAction<string>) => {
+            state.JWT = action.payload
+        }),
 
-        })
     },
+
     extraReducers(builder) {
         builder.addCase(loginThunk.fulfilled, (state, action) => {
             state.username = action.payload.username
             state.email = action.payload.email
-            localStorage.setItem("chatAppAccessToken", action.payload.jwt)
+            state.JWT = action.payload.jwt
+            localStorage.setItem('chatAppAccessToken', action.payload.jwt)
+            socket.connect(action.payload.jwt)
         })
         builder.addCase(loginThunk.rejected, (_, action) => {
             console.error(action.error.message)
         })
+        builder.addCase(logoutThunk.rejected, (state) => {
+            state.email = ""
+            state.formAction = "login"
+            state.JWT = ""
+            state.username = ""
+        })
+
         builder.addCase(registerThunk.rejected, (_, action) => {
             console.error(action.error.message)
         })

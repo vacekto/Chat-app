@@ -6,11 +6,13 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { alertActions } from './redux/slice/alert'
+import { logoutThunk } from './redux/thunk'
+// import { alertActions } from './redux/slice/alert'
 
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
+  // const JWT = useAppSelector(state => state.userData.JWT)
   const dispatch = useAppDispatch()
 
   const onConnectEvent = () => {
@@ -21,26 +23,39 @@ function App() {
     dispatch(dataActions.setSocketConnected(false))
   }
 
-  const test = async () => {
-    console.log("testing", import.meta.env.VITE_SERVER_URL)
-    dispatch(alertActions.addAlert({
-      id: Date.now(),
-      message: "cosikdosi",
-      severity: 'success'
-    }))
+  const onErrorEvent = async (err: Error) => {
+    if (err.message === "jwt expired") {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/refreshToken`, {
+        method: "POST",
+        credentials: 'include',
+      })
+      if (res.status !== 200) {
+        dispatch(logoutThunk())
+        return
+      }
+      const { JWT } = await res.json()
+      dispatch(dataActions.setJWT(JWT))
+      localStorage.setItem('chatAppAccessToken', JWT)
+      socket.connect(JWT)
+    }
   }
 
+  const test = async () => { }
+
   useEffect(() => {
-    const token = localStorage.getItem('chatAppToken')
+    socket.on('connect', onConnectEvent)
+    socket.on('disconnect', onDisconnectEvent)
+    socket.on("connect_error", onErrorEvent)
+    const token = localStorage.getItem('chatAppAccessToken')
     if (token) socket.connect(token)
-    socket.instance.on('connect', onConnectEvent)
-    socket.instance.on('disconnect', onDisconnectEvent)
     return () => {
-      socket.instance.disconnect()
-      socket.instance.off('connect', onConnectEvent)
-      socket.instance.off('disconnect', onDisconnectEvent)
+      socket.disconnect()
+      socket.off('connect', onConnectEvent)
+      socket.off('disconnect', onDisconnectEvent)
+      socket.off("connect_error", onErrorEvent)
     }
   }, [])
+
 
   return (
     <div className="App">

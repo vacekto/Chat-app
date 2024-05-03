@@ -12,12 +12,10 @@ router.get('/healthCheck', (req, res, next) => {
 })
 
 router.get('/test', middlewareErrorDecorator(controllers.test))
-
+router.post('/refreshToken', middlewareErrorDecorator(controllers.refreshToken))
+router.post('/logout', middlewareErrorDecorator(controllers.logout))
 router.post('/register', middlewareErrorDecorator(controllers.register))
-// router.post('/register', validate.registerData, controllers.register)
-router.post('/login', middlewareErrorDecorator(controllers.logIn))
-// router.post('/login', validate.loginData, auth.user, controllers.login)
-
+router.post('/login', middlewareErrorDecorator(controllers.login))
 router.get('/verify/:verificationId')
 
 export default router

@@ -22,4 +22,3 @@ export const auth: TSocketIOMiddleware = (socket, next) => {
         next(err)
     }
 }
-
