@@ -3,7 +3,7 @@ import Switch from '../components/Switch'
 import LoginFrom from '../components/Login'
 import RegisterFrom from '../components/Register'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { dataActions } from '../redux/slice/data'
+import { dataActions } from '../redux/slice/userData'
 
 
 export type TFormAction = 'login' | 'register'

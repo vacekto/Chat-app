@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { sendJSON } from "../util/functions"
-import { dataActions } from '../redux/slice/data'
+import { dataActions } from './slice/userData'
 import { alertActions } from './slice/alert'
 import {
     ILoginResponseData,
@@ -14,7 +14,7 @@ import {
 import socket from "../util/socketSingleton"
 
 export const loginThunk = createAsyncThunk(
-    "data/login",
+    "userData/login",
     async (data: TLoginData, { dispatch }) => {
         const res: Response = await sendJSON("/login", data)
         const responseData: ILoginResponseData | IResponseError = await res.json()
@@ -38,7 +38,7 @@ export const loginThunk = createAsyncThunk(
 )
 
 export const registerThunk = createAsyncThunk(
-    "data/register",
+    "userData/register",
     async (data: PartialBy<TRegisterData, "repeatPassword">, { dispatch }) => {
         delete data.repeatPassword
         const res: Response = await sendJSON("/register", data)
@@ -64,7 +64,7 @@ export const registerThunk = createAsyncThunk(
 )
 
 export const logoutThunk = createAsyncThunk(
-    "data/logout",
+    "userData/logout",
     async () => {
         await fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
             method: "POST",

@@ -2,36 +2,37 @@ import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { loginThunk, logoutThunk, registerThunk } from '../thunk'
 import socket from '../../util/socketSingleton'
 
-export interface IDataState {
+export interface IUserDataState {
     socketConnected: boolean,
     username: string,
     email: string,
     formAction: "login" | "register",
-    JWT: string
+    JWT: string,
+    generalChatUsers: string[]
 }
 
-const initialState: IDataState = {
+const initialState: IUserDataState = {
     socketConnected: false,
     username: "",
     email: "",
     formAction: "login",
-    JWT: ""
+    JWT: "",
+    generalChatUsers: []
 }
 
 export const userDataSlice = createSlice({
-    name: 'data',
+    name: 'userData',
     initialState,
     reducers: {
-        setSocketConnected: (state: Draft<IDataState>, action: PayloadAction<boolean>) => {
+        setSocketConnected: (state: Draft<IUserDataState>, action: PayloadAction<boolean>) => {
             state.socketConnected = action.payload
         },
-        setFormAction: ((state: Draft<IDataState>, action: PayloadAction<"register" | "login">) => {
+        setFormAction: ((state: Draft<IUserDataState>, action: PayloadAction<"register" | "login">) => {
             state.formAction = action.payload
         }),
-        setJWT: ((state: Draft<IDataState>, action: PayloadAction<string>) => {
+        setJWT: ((state: Draft<IUserDataState>, action: PayloadAction<string>) => {
             state.JWT = action.payload
         }),
-
     },
 
     extraReducers(builder) {

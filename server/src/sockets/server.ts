@@ -2,7 +2,10 @@ import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketDa
 import { Server } from "socket.io"
 import { Server as HttpServer, IncomingMessage, ServerResponse } from "http"
 import { auth } from "./middleware"
-import socketListener from './events'
+import { registerEvents } from "./registerEvents"
+import { TServerSocket } from "src/types"
+
+export const usersList = new Map<string, TServerSocket>()
 
 export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeof ServerResponse>) => {
 
@@ -20,5 +23,5 @@ export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeo
 
     io.use(auth)
 
-    io.on("connection", socketListener(io))
+    io.on("connection", registerEvents(io))
 }

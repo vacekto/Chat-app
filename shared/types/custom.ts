@@ -22,3 +22,20 @@ export interface ILoginResponseData {
     email: string,
     jwt: string
 }
+
+export interface IMessage {
+    text: string
+    sender: string
+    id: string,
+    RoomId: string
+}
+
+/**
+ * participants are usernames
+ */
+export interface IRoom {
+    roomName: string
+    messages: IMessage[]
+    id: string
+    participants: string[]
+}

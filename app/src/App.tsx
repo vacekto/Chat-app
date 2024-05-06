@@ -1,20 +1,21 @@
 import './App.scss'
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
-import { dataActions } from './redux/slice/data'
+import { dataActions } from './redux/slice/userData'
 import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
 import { logoutThunk } from './redux/thunk'
-// import { alertActions } from './redux/slice/alert'
+import { alertActions } from './redux/slice/alert'
+import { IMessage } from '@chatapp/shared'
+import { messagesActions } from './redux/slice/messages'
 
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
-  // const JWT = useAppSelector(state => state.userData.JWT)
   const dispatch = useAppDispatch()
-
+  const activeRoom = useAppSelector(state => state.messageReducer.activeRoom)!
   const onConnectEvent = () => {
     dispatch(dataActions.setSocketConnected(true))
   }
@@ -40,12 +41,28 @@ function App() {
     }
   }
 
-  const test = async () => { }
+  const onMessageEvent = (msg: IMessage) => {
+    console.log("on message event")
+    dispatch(messagesActions.addMessage(msg))
+  }
+
+  const test = async () => {
+    console.log(activeRoom.messages)
+  }
+  const handleLogout = () => {
+    dispatch(logoutThunk())
+    dispatch(alertActions.addAlert({
+      id: Date.now(),
+      message: "You are now logged out",
+      severity: "success"
+    }))
+  }
 
   useEffect(() => {
     socket.on('connect', onConnectEvent)
     socket.on('disconnect', onDisconnectEvent)
     socket.on("connect_error", onErrorEvent)
+    socket.on("message", onMessageEvent)
     const token = localStorage.getItem('chatAppAccessToken')
     if (token) socket.connect(token)
     return () => {
@@ -53,6 +70,7 @@ function App() {
       socket.off('connect', onConnectEvent)
       socket.off('disconnect', onDisconnectEvent)
       socket.off("connect_error", onErrorEvent)
+      socket.off("message", onMessageEvent)
     }
   }, [])
 
@@ -61,9 +79,10 @@ function App() {
     <div className="App">
       <Alerts />
       {connected ? <Chat /> : <AppForm />}
-      <button id='testBtn' onClick={test}>
-        test
-      </button>
+      <div id='temporary'>
+        <button onClick={test}>test</button>
+        <button onClick={handleLogout}>logout</button>
+      </div >
     </div>
   )
 }

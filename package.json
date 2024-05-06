@@ -20,8 +20,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.4.2",
+    "@types/redux-logger": "^3.0.13",
     "@types/uuid": "^9.0.2",
     "jsdoc": "^4.0.2",
+    "redux-logger": "^3.0.6",
     "typescript": "^5.2.2"
   },
   "dependencies": {
