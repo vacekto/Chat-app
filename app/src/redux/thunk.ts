@@ -12,6 +12,7 @@ import {
     isServerError,
 } from "@chatapp/shared"
 import socket from "../util/socketSingleton"
+import { LOCALS_TORE_KEY_LOGGED_IN_USERS } from "../util/constants"
 
 export const loginThunk = createAsyncThunk(
     "userData/login",
@@ -70,7 +71,7 @@ export const logoutThunk = createAsyncThunk(
             method: "POST",
             credentials: 'include'
         })
-        localStorage.removeItem("chatAppAccessToken")
+        localStorage.removeItem(LOCALS_TORE_KEY_LOGGED_IN_USERS)
         socket.disconnect()
     }
 )

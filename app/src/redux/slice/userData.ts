@@ -1,6 +1,7 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { loginThunk, logoutThunk, registerThunk } from '../thunk'
 import socket from '../../util/socketSingleton'
+import { LOCALS_TORE_KEY_LOGGED_IN_USERS } from '../../util/constants'
 
 export interface IUserDataState {
     socketConnected: boolean,
@@ -40,7 +41,7 @@ export const userDataSlice = createSlice({
             state.username = action.payload.username
             state.email = action.payload.email
             state.JWT = action.payload.jwt
-            localStorage.setItem('chatAppAccessToken', action.payload.jwt)
+            localStorage.setItem(LOCALS_TORE_KEY_LOGGED_IN_USERS, action.payload.jwt)
             socket.connect(action.payload.jwt)
         })
         builder.addCase(loginThunk.rejected, (_, action) => {

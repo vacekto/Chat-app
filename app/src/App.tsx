@@ -10,12 +10,12 @@ import { logoutThunk } from './redux/thunk'
 import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
+import { LOCALS_TORE_KEY_LOGGED_IN_USERS } from './util/constants'
 
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
-  const activeRoom = useAppSelector(state => state.messageReducer.activeRoom)!
   const onConnectEvent = () => {
     dispatch(dataActions.setSocketConnected(true))
   }
@@ -36,7 +36,7 @@ function App() {
       }
       const { JWT } = await res.json()
       dispatch(dataActions.setJWT(JWT))
-      localStorage.setItem('chatAppAccessToken', JWT)
+      localStorage.setItem(LOCALS_TORE_KEY_LOGGED_IN_USERS, JWT)
       socket.connect(JWT)
     }
   }
@@ -47,7 +47,9 @@ function App() {
   }
 
   const test = async () => {
-    console.log(activeRoom.messages)
+    // const tokens = []
+    const items = { ...localStorage };
+    console.log(items)
   }
   const handleLogout = () => {
     dispatch(logoutThunk())
@@ -63,7 +65,7 @@ function App() {
     socket.on('disconnect', onDisconnectEvent)
     socket.on("connect_error", onErrorEvent)
     socket.on("message", onMessageEvent)
-    const token = localStorage.getItem('chatAppAccessToken')
+    const token = localStorage.getItem(LOCALS_TORE_KEY_LOGGED_IN_USERS)
     if (token) socket.connect(token)
     return () => {
       socket.disconnect()
@@ -73,7 +75,6 @@ function App() {
       socket.off("message", onMessageEvent)
     }
   }, [])
-
 
   return (
     <div className="App">

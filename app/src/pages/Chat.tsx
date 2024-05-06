@@ -12,12 +12,17 @@ const Chat: React.FC = () => {
 
     return (
         <div className='Chat'>
-            <div className="left">
-                <RoomList />
+            <div className="topBar">
+
             </div>
-            <div className="right">
-                {activeRoom ? <ChatMessages /> : null}
-                <ChatInput />
+            <div className="body">
+                <div className="left">
+                    <RoomList />
+                </div>
+                <div className="right">
+                    {activeRoom ? <ChatMessages /> : null}
+                    <ChatInput />
+                </div>
 
             </div>
         </div>
