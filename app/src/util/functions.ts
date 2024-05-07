@@ -14,6 +14,6 @@ export const sendJSON = (
         body: JSON.stringify(data),
         ...fetchOptions
     }
-
+    console.log(url)
     return fetch(url, options)
 }

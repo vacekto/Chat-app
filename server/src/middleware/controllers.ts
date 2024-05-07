@@ -13,7 +13,7 @@ export const register: TUtilMiddleware = async (req, res, next) => {
         username: createdUser.username,
         email: createdUser.email
     }
-    res.json(POJO)
+    res.send(POJO)
 }
 
 export const login: TUtilMiddleware = async (req, res) => {
