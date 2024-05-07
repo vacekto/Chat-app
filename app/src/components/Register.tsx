@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { useAppDispatch } from '../redux/hooks'
 import { registerThunk } from '../redux/thunk'
-import Button from '@mui/material/Button';
 
 type Inputs = z.infer<typeof zodSchemas.registerFormZS>
 interface IRegisterFormProps { }
@@ -58,7 +57,7 @@ const Register: React.FC<IRegisterFormProps> = () => {
             </div>
             <span className="error-message">{errors.repeatPassword?.message}</span>
         </div>
-        <Button type='submit'>submit</Button>
+        <button type='submit'>submit</button>
     </form>
 }
 

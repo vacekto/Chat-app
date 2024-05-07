@@ -1,4 +1,3 @@
-import { Alert } from '@mui/material';
 import { useAppSelector } from '../redux/hooks';
 import './Alerts.scss';
 
@@ -8,9 +7,9 @@ const Alerts: React.FC<IAlertsProps> = () => {
     const alerts = useAppSelector(state => state.alert.alerts)
 
     return <div className="Alerts">
-        {alerts.map(alert => <Alert key={alert.id} severity={alert.severity}>
+        {alerts.map(alert => <div key={alert.id}>
             {alert.message}
-        </Alert>)}
+        </div>)}
     </div>
 }
 

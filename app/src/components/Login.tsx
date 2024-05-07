@@ -1,7 +1,6 @@
 import { faUnlock, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
-import Button from '@mui/material/Button';
 import { useRef } from 'react';
 import { useAppDispatch } from '../redux/hooks';
 import { loginThunk } from '../redux/thunk';
@@ -38,8 +37,7 @@ const LoginFrom: React.FC<ILoginFormProps> = () => {
                 <FontAwesomeIcon icon={faUnlock} className='input-icon' />
             </div>
         </div>
-        <Button type='submit' >submit</Button>
-
+        <button type='submit' >submit</button>
     </form>
 }
 
