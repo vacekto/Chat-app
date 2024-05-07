@@ -1,5 +1,4 @@
 import { TIOServer, TServerSocket } from "src/types";
-import { messages } from './events'
 import { usersList } from "./server"
 
 export const registerEvents = (io: TIOServer) => (socket: TServerSocket) => {
@@ -7,7 +6,9 @@ export const registerEvents = (io: TIOServer) => (socket: TServerSocket) => {
 
     usersList.set(socket.data.username, socket)
 
-    messages(io, socket)
+    socket.on("message", msg => {
+        socket.broadcast.emit("message", msg)
+    })
 
     socket.on("disconnect", reason => {
         console.log(`user ${socket.data.username} disconnecting, reason: `, reason)
