@@ -1,1 +1,4 @@
-export const LOCALS_TORE_KEY_LOGGED_IN_USERS = "chatAppAccessToken"
+/**
+ * local storage prop that says weather user is remember through refresh token, 
+ */
+export const CHAP_APP_LAST_ONLINE = "chatAppLastOnline"

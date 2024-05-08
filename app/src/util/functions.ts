@@ -14,6 +14,16 @@ export const sendJSON = (
         body: JSON.stringify(data),
         ...fetchOptions
     }
-    console.log(url)
     return fetch(url, options)
+}
+
+export const refreshTokens = async () => {
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/refreshToken`, {
+        method: "POST",
+        credentials: 'include',
+    })
+
+    if (response.status !== 200) ""
+    const { JWT } = await response.json()
+    return JWT
 }

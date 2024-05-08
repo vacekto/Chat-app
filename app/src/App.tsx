@@ -10,7 +10,8 @@ import { logoutThunk } from './redux/thunk'
 import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
-import { LOCALS_TORE_KEY_LOGGED_IN_USERS } from './util/constants'
+import { CHAP_APP_LAST_ONLINE } from './util/constants'
+import { refreshTokens } from './util/functions'
 
 function App() {
 
@@ -24,33 +25,14 @@ function App() {
     dispatch(dataActions.setSocketConnected(false))
   }
 
-  const onErrorEvent = async (err: Error) => {
-    if (err.message === "jwt expired") {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/refreshToken`, {
-        method: "POST",
-        credentials: 'include',
-      })
-      if (res.status !== 200) {
-        dispatch(logoutThunk())
-        return
-      }
-      const { JWT } = await res.json()
-      dispatch(dataActions.setJWT(JWT))
-      localStorage.setItem(LOCALS_TORE_KEY_LOGGED_IN_USERS, JWT)
-      socket.connect(JWT)
-    }
-  }
-
   const onMessageEvent = (msg: IMessage) => {
-    console.log("on message event")
     dispatch(messagesActions.addMessage(msg))
   }
 
   const test = async () => {
-    // const tokens = []
-    const items = { ...localStorage };
-    console.log(items)
+    // const items = { ...localStorage };
   }
+
   const handleLogout = () => {
     dispatch(logoutThunk())
     dispatch(alertActions.addAlert({
@@ -60,18 +42,23 @@ function App() {
     }))
   }
 
+  const connectSocket = async () => {
+    const JWT = await refreshTokens()
+    if (!JWT) return
+    dispatch(dataActions.setJWT(JWT))
+    socket.connect(JWT)
+  }
+
   useEffect(() => {
     socket.on('connect', onConnectEvent)
     socket.on('disconnect', onDisconnectEvent)
-    socket.on("connect_error", onErrorEvent)
     socket.on("message", onMessageEvent)
-    const token = localStorage.getItem(LOCALS_TORE_KEY_LOGGED_IN_USERS)
-    if (token) socket.connect(token)
+    const username = localStorage.getItem(CHAP_APP_LAST_ONLINE)
+    if (username) connectSocket()
     return () => {
       socket.disconnect()
       socket.off('connect', onConnectEvent)
       socket.off('disconnect', onDisconnectEvent)
-      socket.off("connect_error", onErrorEvent)
       socket.off("message", onMessageEvent)
     }
   }, [])
