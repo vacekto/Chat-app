@@ -1,10 +1,17 @@
 import mongoose, { Model } from "mongoose";
 import bcrypt from 'bcrypt';
 import { IUser, zodSchemas } from "@chatapp/shared";
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 const userSchema = new mongoose.Schema<IUser>({
+
+    id: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+    },
 
     username: {
         type: String,
@@ -40,12 +47,17 @@ const userSchema = new mongoose.Schema<IUser>({
 
 }, { versionKey: false })
 
+userSchema.pre('validate', function () {
+    this.id = uuidv4()
+});
 userSchema.pre('save', async function () {
+    this.id = uuidv4()
     if (!this.password) throw new Error("password required")
     const password = this.password.trim()
     const passwordHash = await bcrypt.hash(password, 10)
     this.password = passwordHash
 });
+
 
 const UserModel = mongoose.model<IUser>("User", userSchema)
 

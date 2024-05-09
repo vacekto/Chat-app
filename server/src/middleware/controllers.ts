@@ -8,12 +8,55 @@ import { redisClient } from "../Redis/connect";
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)
-    const createdUser = await MongoAPI.createUser(registerData)
-    const POJO: IRegisterResponseData = {
-        username: createdUser.username,
-        email: createdUser.email
+    const user = await MongoAPI.createUser(registerData)
+
+    const passKeyPayload = {
+        userId: user.id,
+        username: user.username
+    };
+
+    const url = process.env.PASSKEY_API_URL
+    const { token } = await fetch(url + '/register/token', {
+        method: 'POST',
+        body: JSON.stringify(passKeyPayload),
+        headers: {
+            'ApiSecret': process.env.PASSKEY_PRIVATE_KEY!,
+            'Content-Type': 'application/json'
+        }
+    }).then((r) => r.json());
+
+    const response: IRegisterResponseData = {
+        username: user.username,
+        email: user.email,
+        id: user.id,
+        passkeyToken: token
     }
-    res.send(POJO)
+    res.send(response)
+}
+
+export const bitWardenLogin: TUtilMiddleware = async (req, res) => {
+    const token = req.body.token
+    console.log("token: ", token)
+
+    const apiUrl = process.env.PASSKEY_API_URL
+    const response = await fetch(apiUrl + '/signin/verify', {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: {
+            'ApiSecret': process.env.PASSKEY_PRIVATE_KEY!,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const body = await response.json();
+
+    if (body.success) {
+        console.log('Successfully verified sign-in for user.', body);
+        // Set a cookie/userid.
+    } else {
+        console.warn('Sign in failed.', body);
+    }
+    res.send({ outcome: body.success })
 }
 
 export const login: TUtilMiddleware = async (req, res) => {
@@ -45,12 +88,15 @@ export const login: TUtilMiddleware = async (req, res) => {
             maxAge: 604800000
         })
     await redisClient.set(user.username, refreshToken);
-    const userData: ILoginResponseData = {
+
+    const response: ILoginResponseData = {
         username: user.username,
         email: user.email,
-        jwt: accessToken
+        jwt: accessToken,
+        id: user.id,
     }
-    res.send(userData)
+
+    res.send(response)
 }
 
 export const refreshToken: TUtilMiddleware = async (req, res) => {
@@ -59,6 +105,7 @@ export const refreshToken: TUtilMiddleware = async (req, res) => {
         res.status(400).send()
         return
     }
+    console.log("refreshToken")
     jwt.verify(
         refreshToken,
         process.env.AUTH_TOKEN_SECRET as string,

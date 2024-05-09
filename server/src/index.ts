@@ -11,7 +11,6 @@ import { addSocketServer } from './sockets/server'
 const app = express()
 const httpServer = createServer(app);
 
-
 app.use(cors({
     origin: process.env.NODE_ENV === "development" ?
         `http://localhost:${process.env.PORT_CLIENT}` :

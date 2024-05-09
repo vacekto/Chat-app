@@ -23,7 +23,7 @@ export const refreshTokens = async () => {
         credentials: 'include',
     })
 
-    if (response.status !== 200) ""
+    if (response.status !== 200) return ""
     const { JWT } = await response.json()
     return JWT
 }

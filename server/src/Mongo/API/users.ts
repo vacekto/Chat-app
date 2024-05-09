@@ -15,7 +15,7 @@ export const getUser: TGetUser = (user) => {
     return query.exec()
 }
 
-export const createUser = (userData: IUser) => {
+export const createUser = (userData: Omit<IUser, "id">) => {
     const newUser: TMongoDoc<IUser> = new User(userData)
     return newUser.save()
 }

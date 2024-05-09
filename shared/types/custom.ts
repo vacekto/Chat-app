@@ -2,6 +2,7 @@ export interface IUser {
     username: string
     email: string
     password: string
+    id: string
 }
 
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -15,12 +16,15 @@ export interface IResponseError {
 export interface IRegisterResponseData {
     username: string,
     email: string,
+    id: string
+    passkeyToken: string
 }
 
 export interface ILoginResponseData {
     username: string,
     email: string,
-    jwt: string
+    jwt: string,
+    id: string,
 }
 
 export interface IMessage {

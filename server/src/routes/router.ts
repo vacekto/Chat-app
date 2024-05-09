@@ -17,5 +17,6 @@ router.post('/logout', middlewareErrorDecorator(controllers.logout))
 router.post('/register', middlewareErrorDecorator(controllers.register))
 router.post('/login', middlewareErrorDecorator(controllers.login))
 router.get('/verify/:verificationId')
+router.post('/bitWardenLogin', middlewareErrorDecorator(controllers.bitWardenLogin))
 
 export default router

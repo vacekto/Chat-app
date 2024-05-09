@@ -6,7 +6,7 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { logoutThunk } from './redux/thunk'
+import { bitWardenLoginThunk, logoutThunk } from './redux/thunk'
 import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
@@ -30,7 +30,7 @@ function App() {
   }
 
   const test = async () => {
-    // const items = { ...localStorage };
+    dispatch(bitWardenLoginThunk("vacekto11"))
   }
 
   const handleLogout = () => {
@@ -44,7 +44,10 @@ function App() {
 
   const connectSocket = async () => {
     const JWT = await refreshTokens()
-    if (!JWT) return
+    if (!JWT) {
+      localStorage.removeItem(CHAP_APP_LAST_ONLINE)
+      return
+    }
     dispatch(dataActions.setJWT(JWT))
     socket.connect(JWT)
   }
@@ -70,7 +73,7 @@ function App() {
       <div id='temporary'>
         <button onClick={test}>test</button>
         <button onClick={handleLogout}>logout</button>
-      </div >
+      </div>
     </div>
   )
 }

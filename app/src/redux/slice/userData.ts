@@ -1,5 +1,5 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { loginThunk, logoutThunk, registerThunk } from '../thunk'
+import { bitWardenLoginThunk, loginThunk, logoutThunk, registerThunk } from '../thunk'
 import socket from '../../util/socketSingleton'
 import { CHAP_APP_LAST_ONLINE } from '../../util/constants'
 
@@ -9,7 +9,8 @@ export interface IUserDataState {
     email: string,
     formAction: "login" | "register",
     JWT: string,
-    generalChatUsers: string[]
+    generalChatUsers: string[],
+    id: string
 }
 
 const initialState: IUserDataState = {
@@ -18,7 +19,8 @@ const initialState: IUserDataState = {
     email: "",
     formAction: "login",
     JWT: "",
-    generalChatUsers: []
+    generalChatUsers: [],
+    id: ""
 }
 
 export const userDataSlice = createSlice({
@@ -41,6 +43,7 @@ export const userDataSlice = createSlice({
             state.username = action.payload.username
             state.email = action.payload.email
             state.JWT = action.payload.jwt
+            state.id = action.payload.id
             localStorage.setItem(CHAP_APP_LAST_ONLINE, action.payload.username)
             socket.connect(action.payload.jwt)
         })
@@ -52,14 +55,22 @@ export const userDataSlice = createSlice({
             state.formAction = "login"
             state.JWT = ""
             state.username = ""
+            state.id = ""
         })
 
         builder.addCase(registerThunk.rejected, (_, action) => {
             console.error(action.error.message)
         })
+
+        builder.addCase(bitWardenLoginThunk.fulfilled, () => {
+            console.log("usccess")
+        })
+        builder.addCase(bitWardenLoginThunk.rejected, () => {
+            console.log("failure")
+        })
     },
 })
-
+// bitWardenLoginThunk
 
 export const dataActions = userDataSlice.actions
 export default userDataSlice.reducer

@@ -41,7 +41,7 @@ export const tokenPayloadZS = z.object({
 export const registerApiZS = z.object({
     username: usernameZS,
     email: emailZS,
-    password: z.string()
+    password: z.string(),
 })
 
 export const loginApiZS = z.object({
