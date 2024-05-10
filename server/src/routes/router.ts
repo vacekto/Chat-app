@@ -16,7 +16,8 @@ router.post('/refreshToken', middlewareErrorDecorator(controllers.refreshToken))
 router.post('/logout', middlewareErrorDecorator(controllers.logout))
 router.post('/register', middlewareErrorDecorator(controllers.register))
 router.post('/login', middlewareErrorDecorator(controllers.login))
-router.get('/verify/:verificationId')
-router.post('/bitWardenLogin', middlewareErrorDecorator(controllers.bitWardenLogin))
+router.post('/passkeyLogin', middlewareErrorDecorator(controllers.passkeyLogin))
+router.post('/createPasskey', middlewareErrorDecorator(controllers.createPassKey))
+// router.get('/verify/:verificationId')
 
 export default router

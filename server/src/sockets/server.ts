@@ -4,6 +4,7 @@ import { Server as HttpServer, IncomingMessage, ServerResponse } from "http"
 import { auth } from "./middleware"
 import { registerEvents } from "./registerEvents"
 import { TServerSocket } from "src/types"
+import { CORS } from "../util/config"
 
 export const usersList = new Map<string, TServerSocket>()
 
@@ -16,7 +17,7 @@ export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeo
         SocketData
     >(server, {
         cors: {
-            origin: '*'
+            origin: CORS
         }
     });
 

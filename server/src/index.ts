@@ -7,14 +7,13 @@ import cookieParser from 'cookie-parser'
 import errorMiddleware from './middleware/errorHandler'
 import { createServer } from "http";
 import { addSocketServer } from './sockets/server'
+import { CORS } from './util/config'
 
 const app = express()
 const httpServer = createServer(app);
 
 app.use(cors({
-    origin: process.env.NODE_ENV === "development" ?
-        `http://localhost:${process.env.PORT_CLIENT}` :
-        `${process.env.VITE_SERVER_URL}`,
+    origin: CORS,
     credentials: true,
 }))
 
