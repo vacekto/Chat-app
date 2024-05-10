@@ -34,8 +34,9 @@ export const registerFormZS = z.object({
 })
 
 export const tokenPayloadZS = z.object({
-    username: z.string().trim(),
-    email: z.string().trim()
+    username: z.string(),
+    email: z.string(),
+    id: z.string()
 })
 
 export const registerApiZS = z.object({
@@ -48,5 +49,10 @@ export const loginApiZS = z.object({
     username: usernameZS,
     password: z.string()
 })
+
+// export const createPasskeyApiZS = z.object({
+//     username: usernameZS,
+//     password: z.string()
+// })
 
 

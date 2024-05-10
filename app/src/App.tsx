@@ -6,12 +6,19 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { bitWardenLoginThunk, logoutThunk } from './redux/thunk'
+import { logoutThunk } from './redux/thunk'
 import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
 import { refreshTokens } from './util/functions'
+import { Client } from '@passwordlessdev/passwordless-client'
+
+PublicKeyCredential.isConditionalMediationAvailable().then(res => console.log(res))
+
+const p = new Client({
+  apiKey: import.meta.env.VITE_PASSKEY_PUBLIC_KEY
+});
 
 function App() {
 
@@ -30,7 +37,9 @@ function App() {
   }
 
   const test = async () => {
-    dispatch(bitWardenLoginThunk("vacekto11"))
+    console.log(await p.isPlatformSupported())
+    console.log(await p.isAutofillSupported())
+    console.log(await p.isBrowserSupported())
   }
 
   const handleLogout = () => {
@@ -43,6 +52,7 @@ function App() {
   }
 
   const connectSocket = async () => {
+    console.log("connecting to socket")
     const JWT = await refreshTokens()
     if (!JWT) {
       localStorage.removeItem(CHAP_APP_LAST_ONLINE)

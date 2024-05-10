@@ -19,7 +19,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.4.2",
     "@types/redux-logger": "^3.0.13",
     "@types/uuid": "^9.0.8",
     "jsdoc": "^4.0.2",

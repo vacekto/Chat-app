@@ -6,6 +6,7 @@ interface ISocketProxy extends TClientSocket {
 }
 
 const url = import.meta.env.VITE_SERVER_URL
+console.log("myTest: ", url)
 let instance: TClientSocket = io(url, { autoConnect: false })
 
 /**

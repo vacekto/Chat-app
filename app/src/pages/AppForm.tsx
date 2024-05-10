@@ -4,7 +4,8 @@ import LoginFrom from '../components/Login'
 import RegisterFrom from '../components/Register'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { dataActions } from '../redux/slice/userData'
-
+import BitWardenIcon from '../util/SVG/BitWardenSVG'
+import GoogleSVG from '../util/SVG/Google'
 
 export type TFormAction = 'login' | 'register'
 
@@ -33,8 +34,14 @@ const AppForm: React.FC = () => {
     </div>
 
     <div className={`formContainer ${formAction}`}>
-      <LoginFrom />
-      <RegisterFrom />
+      <div className="icons">
+        <BitWardenIcon />
+        <GoogleSVG />
+      </div>
+      <div className='forms'>
+        <LoginFrom />
+        <RegisterFrom />
+      </div>
     </div>
   </div>
 }

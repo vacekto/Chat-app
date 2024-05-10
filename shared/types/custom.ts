@@ -17,7 +17,6 @@ export interface IRegisterResponseData {
     username: string,
     email: string,
     id: string
-    passkeyToken: string
 }
 
 export interface ILoginResponseData {
