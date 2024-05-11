@@ -11,7 +11,7 @@ import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
-import { refreshTokens } from './util/functions'
+import { canCreatePasskey, refreshTokens } from './util/functions'
 import { Client } from '@passwordlessdev/passwordless-client'
 
 PublicKeyCredential.isConditionalMediationAvailable().then(res => console.log(res))
@@ -40,6 +40,7 @@ function App() {
     console.log(await p.isPlatformSupported())
     console.log(await p.isAutofillSupported())
     console.log(await p.isBrowserSupported())
+    console.log(await canCreatePasskey())
   }
 
   const handleLogout = () => {
