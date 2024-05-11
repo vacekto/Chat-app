@@ -12,6 +12,8 @@ import { CORS } from './util/config'
 const app = express()
 const httpServer = createServer(app);
 
+console.log(process.env.PASSKEY_API_URL)
+
 app.use(cors({
     origin: CORS,
     credentials: true,
