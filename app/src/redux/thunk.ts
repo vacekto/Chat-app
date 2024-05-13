@@ -14,10 +14,10 @@ import {
 import socket from "../util/socketSingleton"
 import { CHAP_APP_LAST_ONLINE } from "../util/constants"
 
-export const loginThunk = createAsyncThunk(
-    "userData/login",
+export const passwordLoginThunk = createAsyncThunk(
+    "userData/passwordLogin",
     async (data: TLoginData, { dispatch }) => {
-        const res: Response = await sendJSON("/login", data)
+        const res: Response = await sendJSON("/passwordLogin", data)
         const responseData: ILoginResponseData | IResponseError = await res.json()
 
         if (isServerError(responseData)) {

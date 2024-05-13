@@ -4,7 +4,7 @@ import { TMongoDoc, TMongoLean } from "../../types";
 import { ObjectId } from "mongoose";
 
 type TGetUserLean = (user?: Partial<IUser> & { _id?: string | ObjectId }) => Promise<TMongoLean<IUser> | null>
-export const getUserLean: TGetUserLean = (user) => {
+export const getUserLean: TGetUserLean = (user, populate?: boolean) => {
     const query = User.findOne(user).lean()
     return query.exec()
 }

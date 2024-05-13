@@ -11,14 +11,8 @@ import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
-import { canCreatePasskey, refreshTokens } from './util/functions'
-import { Client } from '@passwordlessdev/passwordless-client'
-
-PublicKeyCredential.isConditionalMediationAvailable().then(res => console.log(res))
-
-const p = new Client({
-  apiKey: import.meta.env.VITE_PASSKEY_PUBLIC_KEY
-});
+import { refreshTokens } from './util/functions'
+import { browserSupportsWebAuthn, browserSupportsWebAuthnAutofill, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
 
 function App() {
 
@@ -37,10 +31,9 @@ function App() {
   }
 
   const test = async () => {
-    console.log(await p.isPlatformSupported())
-    console.log(await p.isAutofillSupported())
-    console.log(await p.isBrowserSupported())
-    console.log(await canCreatePasskey())
+    // console.log(browserSupportsWebAuthn(), await browserSupportsWebAuthnAutofill(), await platformAuthenticatorIsAvailable())
+
+
   }
 
   const handleLogout = () => {

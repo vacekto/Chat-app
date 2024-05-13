@@ -4,8 +4,6 @@ import { middlewareErrorDecorator } from '../middleware/decorator'
 
 const router = Router()
 
-
-
 router.get('/healthCheck', (req, res, next) => {
     console.log('healthCheck')
     res.status(200).send('OK')
@@ -15,9 +13,10 @@ router.get('/test', middlewareErrorDecorator(controllers.test))
 router.post('/refreshToken', middlewareErrorDecorator(controllers.refreshToken))
 router.post('/logout', middlewareErrorDecorator(controllers.logout))
 router.post('/register', middlewareErrorDecorator(controllers.register))
-router.post('/login', middlewareErrorDecorator(controllers.login))
+router.post('/passwordLogin', middlewareErrorDecorator(controllers.passwordLogin))
 router.post('/passkeyLogin', middlewareErrorDecorator(controllers.passkeyLogin))
 router.post('/createPasskey', middlewareErrorDecorator(controllers.createPassKey))
+router.post('/veryfiRegistration', middlewareErrorDecorator(controllers.verify))
 // router.get('/verify/:verificationId')
 
 export default router

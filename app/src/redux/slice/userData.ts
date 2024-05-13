@@ -1,5 +1,5 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { loginThunk, logoutThunk, registerThunk } from '../thunk'
+import { passwordLoginThunk, logoutThunk, registerThunk } from '../thunk'
 import socket from '../../util/socketSingleton'
 import { CHAP_APP_LAST_ONLINE } from '../../util/constants'
 
@@ -39,7 +39,7 @@ export const userDataSlice = createSlice({
     },
 
     extraReducers(builder) {
-        builder.addCase(loginThunk.fulfilled, (state, action) => {
+        builder.addCase(passwordLoginThunk.fulfilled, (state, action) => {
             state.username = action.payload.username
             state.email = action.payload.email
             state.JWT = action.payload.jwt
@@ -47,7 +47,7 @@ export const userDataSlice = createSlice({
             localStorage.setItem(CHAP_APP_LAST_ONLINE, action.payload.username)
             socket.connect(action.payload.jwt)
         })
-        builder.addCase(loginThunk.rejected, (_, action) => {
+        builder.addCase(passwordLoginThunk.rejected, (_, action) => {
             console.error(action.error.message)
         })
         builder.addCase(logoutThunk.fulfilled, (state) => {

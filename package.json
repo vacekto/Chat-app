@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@simplewebauthn/types": "^10.0.0",
     "@types/redux-logger": "^3.0.13",
     "@types/uuid": "^9.0.8",
     "jsdoc": "^4.0.2",

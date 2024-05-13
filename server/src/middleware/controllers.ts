@@ -1,64 +1,116 @@
-import { TUtilMiddleware } from "../types";
+import { TPasskey, TUtilMiddleware } from "../types";
 import * as MongoAPI from '../Mongo/API'
 import { ILoginResponseData, zodSchemas, IRegisterResponseData, TTokenPayload, getJWTPayload, REFRESH_TOKEN } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { redisClient } from "../Redis/connect";
-import { JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH } from "@chatapp/shared"
-import { COOKIE_SAMESITE } from "../util/config";
+import {
+    JWT_ACCESS_VALIDATION_LENGTH,
+    JWT_REFRESH_VALIDATION_LENGTH
+} from "@chatapp/shared"
+import { COOKIE_SAMESITE, rpName, rpID } from "../util/config";
+import {
+    generateRegistrationOptions,
+    verifyRegistrationResponse,
+} from '@simplewebauthn/server';
+import { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/types";
 
-/**
- * user first needs to create account vie conventional method with password
- * @returns registration token for authenticator
- */
+export const verify: TUtilMiddleware = async (req, res, next) => {
+
+}
+
 export const createPassKey: TUtilMiddleware = async (req, res, next) => {
-    const { JWT } = req.body
+    const { accessToken } = req.body
+
     jwt.verify(
-        JWT,
+        accessToken,
         process.env.AUTH_TOKEN_SECRET as string,
     )
-    const { username, id } = getJWTPayload(JWT)
+    let payload: TTokenPayload = getJWTPayload(accessToken)
 
-    const passkeyPayload = {
-        userId: id,
-        username: username
-    };
+    const user = await MongoAPI.getUserLean({ id: payload.id })
+    console.log(user, payload)
+    if (!user) { throw new Error("cosikdosi") }
 
-    const url = `${process.env.PASSKEY_API_URL}/register/token`
-    const options: RequestInit = {
-        method: 'POST',
-        body: JSON.stringify(passkeyPayload),
-        headers: {
-            'ApiSecret': `${process.env.PASSKEY_PRIVATE_KEY!}`,
-            'Content-Type': 'application/json'
-        }
-    }
+    // registered authenticators
+    const userPasskeys: TPasskey[] = []
 
-    const response = await fetch(url, options)
-    const { token } = await response.json()
-    res.send({ registerToken: token })
+    const options: PublicKeyCredentialCreationOptionsJSON = await generateRegistrationOptions({
+        rpName,
+        rpID,
+        userName: user.username,
+        // Don't prompt users for additional information about the authenticator
+        // (Recommended for smoother UX)
+        attestationType: 'none',
+        // Prevent users from re-registering existing authenticators
+        excludeCredentials: userPasskeys.map(passkey => ({
+            id: passkey.id,
+            // Optional
+            transports: passkey.transports,
+        })),
+        // See "Guiding use of authenticators via authenticatorSelection" below
+        authenticatorSelection: {
+            // Defaults
+            residentKey: 'preferred',
+            userVerification: 'preferred',
+            // Optional
+            authenticatorAttachment: 'platform',
+        },
+    });
+
+    res.send(options)
+
+    // (Pseudocode) Remember these options for the user
+    // setCurrentRegistrationOptions(user, options);
+
+
+    // const { JWT } = req.body
+    // jwt.verify(
+    //     JWT,
+    //     process.env.AUTH_TOKEN_SECRET as string,
+    // )
+    // const { username, id } = getJWTPayload(JWT)
+
+    // const passkeyPayload = {
+    //     userId: id, 
+    //     username: username
+    // };
+
+    // const url = `${process.env.PASSKEY_API_URL}/register/token`
+    // const options: RequestInit = {
+    //     method: 'POST',
+    //     body: JSON.stringify(passkeyPayload),
+    //     headers: {
+    //         'ApiSecret': `${process.env.PASSKEY_PRIVATE_KEY!}`,
+    //         'Content-Type': 'application/json'
+    //     }
+    // }
+
+    // const response = await fetch(url, options)
+    // const { token } = await response.json()
+    // res.send({ registerToken: token })
 }
 
 export const passkeyLogin: TUtilMiddleware = async (req, res) => {
-    const token = req.body.token
-    const url = `${process.env.PASSKEY_API_URL}/signin/verify`
-    const options: RequestInit = {
-        method: 'POST',
-        body: JSON.stringify({ token }),
-        headers: {
-            'ApiSecret': process.env.PASSKEY_PRIVATE_KEY!,
-            'Content-Type': 'application/json'
-        }
-    }
-    const response = await fetch(url, options);
-    const body = await response.json();
+    //     const token = req.body.token
+    //     const url = `${process.env.PASSKEY_API_URL}/signin/verify`
+    //     const options: RequestInit = {
+    //         method: 'POST',
+    //         body: JSON.stringify({ token }),
+    //         headers: {
+    //             'ApiSecret': process.env.PASSKEY_PRIVATE_KEY!,
+    //             'Content-Type': 'application/json'
+    //         }
+    //     }
+    //     const response = await fetch(url, options);
+    //     const body = await response.json();
 
-    if (body.success) { }
-    else {
-        console.warn('Sign in failed.', body);
-    }
-    res.send({ outcome: body.success })
+    //     if (body.success) { }
+    //     else {
+    //         console.warn('Sign in failed.', body);
+    //     }
+    //     res.send({ outcome: body.success })
 }
 
 export const register: TUtilMiddleware = async (req, res, next) => {
@@ -73,11 +125,11 @@ export const register: TUtilMiddleware = async (req, res, next) => {
     res.send(response)
 }
 
-export const login: TUtilMiddleware = async (req, res) => {
+export const passwordLogin: TUtilMiddleware = async (req, res) => {
     const loginData = zodSchemas.loginApiZS.parse(req.body)
     const user = await MongoAPI.getUser({ username: loginData.username })
     if (!user) throw new BadUserInput(`User with username ${loginData.username} does not exist.`)
-    const isMatch = await bcrypt.compare(loginData.password, user.password)
+    const isMatch = await bcrypt.compare(loginData.password, user.password!)
     if (!isMatch) throw new BadUserInput('Incorrect password')
     const payload = {
         username: user.username,
@@ -102,6 +154,7 @@ export const login: TUtilMiddleware = async (req, res) => {
             sameSite: COOKIE_SAMESITE,
             maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
         })
+
     await redisClient.set(user.username, refreshToken);
 
     const response: ILoginResponseData = {

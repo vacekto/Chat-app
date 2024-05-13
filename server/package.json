@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@chatapp/shared": "^1.0.0",
+    "@simplewebauthn/server": "^10.0.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
