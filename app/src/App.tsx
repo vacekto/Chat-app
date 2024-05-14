@@ -6,7 +6,7 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { logoutThunk } from './redux/thunk'
+import { logout } from './redux/thunk'
 import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
@@ -43,7 +43,7 @@ function App() {
   }
 
   const handleLogout = () => {
-    dispatch(logoutThunk())
+    dispatch(logout())
     dispatch(alertActions.addAlert({
       id: Date.now(),
       message: "You are now logged out",

@@ -51,14 +51,49 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
             'Content-Type': 'application/json'
         }
     }
-    const response = await fetch(url, options);
-    const body = await response.json();
 
-    if (body.success) { }
-    else {
-        console.warn('Sign in failed.', body);
+    const verifyResponse = await fetch(url, options);
+    const body = await verifyResponse.json();
+
+    if (!body.success) throw new Error("some passkey login error")
+    const user = await MongoAPI.getUserLean({ id: body.userId })
+    if (!user) throw new Error("some passkey login error")
+
+    const payload: TTokenPayload = {
+        email: user.email,
+        id: user.id,
+        username: user.username,
     }
-    res.send({ outcome: body.success })
+
+    const accessToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: JWT_ACCESS_VALIDATION_LENGTH }
+    )
+
+    const refreshToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: JWT_REFRESH_VALIDATION_LENGTH }
+    )
+    res.cookie(
+        REFRESH_TOKEN,
+        refreshToken,
+        {
+            httpOnly: true,
+            sameSite: COOKIE_SAMESITE,
+            maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
+        })
+    await redisClient.set(user.username, refreshToken);
+
+    const response: ILoginResponseData = {
+        username: user.username,
+        email: user.email,
+        jwt: accessToken,
+        id: user.id,
+    }
+
+    res.send(response)
 }
 
 export const register: TUtilMiddleware = async (req, res, next) => {

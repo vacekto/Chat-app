@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { useAppDispatch } from '../redux/hooks'
-import { registerThunk } from '../redux/thunk'
+import { register } from '../redux/thunk'
 
 type Inputs = z.infer<typeof zodSchemas.registerFormZS>
 interface IRegisterFormProps { }
@@ -23,7 +23,7 @@ const Register: React.FC<IRegisterFormProps> = () => {
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
         data.password = sha3_256(data.password)
-        dispatch(registerThunk(data))
+        dispatch(register(data))
     }
 
     return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='Register'>

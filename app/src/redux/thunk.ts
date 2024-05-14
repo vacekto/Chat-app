@@ -13,9 +13,10 @@ import {
 } from "@chatapp/shared"
 import socket from "../util/socketSingleton"
 import { CHAP_APP_LAST_ONLINE } from "../util/constants"
+import { passwordless } from "../util/passwordlessClient";
 
-export const loginThunk = createAsyncThunk(
-    "userData/login",
+export const passwordLogin = createAsyncThunk(
+    "userData/passwordLogin",
     async (data: TLoginData, { dispatch }) => {
         const res: Response = await sendJSON("/login", data)
         const responseData: ILoginResponseData | IResponseError = await res.json()
@@ -34,11 +35,14 @@ export const loginThunk = createAsyncThunk(
             message: "Login succesfull",
             severity: "success"
         }))
+
+        dispatch(dataActions.login(responseData))
+
         return responseData
     }
 )
 
-export const registerThunk = createAsyncThunk(
+export const register = createAsyncThunk(
     "userData/register",
     async (data: PartialBy<TRegisterData, "repeatPassword">, { dispatch }) => {
         delete data.repeatPassword
@@ -64,7 +68,7 @@ export const registerThunk = createAsyncThunk(
     }
 )
 
-export const logoutThunk = createAsyncThunk(
+export const logout = createAsyncThunk(
     "userData/logout",
     async () => {
         await fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
@@ -73,6 +77,41 @@ export const logoutThunk = createAsyncThunk(
         })
         localStorage.removeItem(CHAP_APP_LAST_ONLINE)
         socket.disconnect()
+    }
+)
+
+export const passkeyLogin = createAsyncThunk(
+    "userData/passkeyLogin",
+    async (_, { dispatch }) => {
+        const { token } = await passwordless.signinWithDiscoverable()
+        if (!token) {
+            alertActions.addAlert({
+                id: Date.now(),
+                message: "Could not authenticate, please try again",
+                severity: "error"
+            })
+            throw new Error("passkey signin error")
+        }
+        const response = await sendJSON("/passkeyLogin", { token })
+        const responseData: ILoginResponseData | IResponseError = await response.json()
+        if (isServerError(responseData)) {
+            dispatch(alertActions.addAlert({
+                id: Date.now(),
+                message: responseData.errorMessage,
+                severity: "error"
+            }))
+            throw new Error(responseData.errorMessage)
+        }
+
+        dispatch(alertActions.addAlert({
+            id: Date.now(),
+            message: "Login succesfull",
+            severity: "success"
+        }))
+
+        dispatch(dataActions.login(responseData))
+
+        return responseData
     }
 )
 
