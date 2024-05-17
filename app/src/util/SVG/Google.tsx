@@ -22,8 +22,7 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
         popupRef.current = window.open(url, "popup", 'width=640,height=480')
 
         const popupInterval = setInterval(() => {
-            console.log("testing")
-            if (popupRef.current?.location.href.includes(`${import.meta.env.VITE_APP_URL}/notRegistered`)) {
+            if (popupRef.current?.location.href.includes(`/notRegistered`)) {
                 popupRef.current.close()
                 popupRef.current = null
                 clearInterval(popupInterval)
@@ -34,7 +33,7 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
                 }))
                 return
             }
-            if (popupRef.current?.location.href.includes(import.meta.env.VITE_APP_URL)) {
+            if (popupRef.current?.location.href.includes(import.meta.env.VITE_APP_DOMAIN)) {
                 popupRef.current.close()
                 popupRef.current = null
                 clearInterval(popupInterval)
