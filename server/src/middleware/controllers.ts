@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'
 import { redisClient } from "../Redis/connect";
 import { JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH } from "@chatapp/shared"
 import { COOKIE_SAMESITE } from "../util/config";
+import { getGoogleOAuthTokens, getGoogleOAuthURL } from "../util/functions";
 
 /**
  * user first needs to create account vie conventional method with password
@@ -151,6 +152,7 @@ export const login: TUtilMiddleware = async (req, res) => {
 
 export const refreshToken: TUtilMiddleware = async (req, res) => {
     const refreshToken = req.cookies[REFRESH_TOKEN]
+    console.log("refresh: ", refreshToken)
     if (!refreshToken) {
         res.status(400).send("no refresh token")
         return
@@ -203,6 +205,53 @@ export const logout: TUtilMiddleware = async (req, res) => {
     res.status(200).send(paylaod)
 }
 
+export const OAuth: TUtilMiddleware = async (req, res) => {
+    const code = req.query.code as string
+    const { access_token, id_token } = await getGoogleOAuthTokens(code)
+    const OAuthPayloadayload = getJWTPayload(id_token)
+    const user = await MongoAPI.getUserLean({ email: OAuthPayloadayload.email })
+    if (!user) {
+        res.redirect(`${process.env.VITE_APP_URL}/notRegistered`)
+        return
+    }
+    const payload: TTokenPayload = {
+        email: user.email,
+        id: user.id,
+        username: user.username
+    }
+    const newRefreshToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: JWT_REFRESH_VALIDATION_LENGTH }
+    )
+    res.cookie(
+        REFRESH_TOKEN,
+        newRefreshToken,
+        {
+            httpOnly: true,
+            sameSite: COOKIE_SAMESITE,
+            maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
+        }
+    )
+
+    await redisClient.set(payload.username, newRefreshToken);
+
+    res.redirect(process.env.VITE_APP_URL as string)
+}
+
 export const test: TUtilMiddleware = async (req, res, next) => {
-    res.status(200).send('test route hit')
+    res.cookie(
+        "testing",
+        "testing",
+        {
+            httpOnly: true,
+            sameSite: COOKIE_SAMESITE,
+            maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
+        })
+    res.redirect("back")
+}
+
+export const googleLogin: TUtilMiddleware = async (req, res, next) => {
+    const url = getGoogleOAuthURL()
+    res.redirect(url)
 }

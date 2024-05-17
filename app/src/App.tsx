@@ -12,18 +12,12 @@ import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
 import { refreshTokens } from './util/functions'
-import { Client } from '@passwordlessdev/passwordless-client'
-
-PublicKeyCredential.isConditionalMediationAvailable().then(res => console.log(res))
-
-const p = new Client({
-  apiKey: import.meta.env.VITE_PASSKEY_PUBLIC_KEY
-});
 
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
+
   const onConnectEvent = () => {
     dispatch(dataActions.setSocketConnected(true))
   }
@@ -36,10 +30,9 @@ function App() {
     dispatch(messagesActions.addMessage(msg))
   }
 
-  const test = async () => {
-    console.log(await p.isPlatformSupported())
-    console.log(await p.isAutofillSupported())
-    console.log(await p.isBrowserSupported())
+  const handleTest = async () => {
+    const url = `${import.meta.env.VITE_SERVER_URL}/test`
+    window.open(url, "popup", "popup=true")
   }
 
   const handleLogout = () => {
@@ -63,6 +56,10 @@ function App() {
   }
 
   useEffect(() => {
+    console.log("connected", connected)
+  }, [connected])
+
+  useEffect(() => {
     socket.on('connect', onConnectEvent)
     socket.on('disconnect', onDisconnectEvent)
     socket.on("message", onMessageEvent)
@@ -81,7 +78,7 @@ function App() {
       <Alerts />
       {connected ? <Chat /> : <AppForm />}
       <div id='temporary'>
-        <button onClick={test}>test</button>
+        <button onClick={handleTest}>test</button>
         <button onClick={handleLogout}>logout</button>
       </div>
     </div>

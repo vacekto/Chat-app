@@ -9,11 +9,12 @@ import {
     PartialBy,
     TLoginData,
     TRegisterData,
+    TTokenPayload,
+    getJWTPayload,
     isServerError,
 } from "@chatapp/shared"
-import socket from "../util/socketSingleton"
-import { CHAP_APP_LAST_ONLINE } from "../util/constants"
 import { passwordless } from "../util/passwordlessClient";
+import socket from "../util/socketSingleton"
 
 export const passwordLogin = createAsyncThunk(
     "userData/passwordLogin",
@@ -35,8 +36,8 @@ export const passwordLogin = createAsyncThunk(
             message: "Login succesfull",
             severity: "success"
         }))
-
-        dispatch(dataActions.login(responseData))
+        socket.connect(responseData.jwt)
+        dispatch(dataActions.connect(responseData))
 
         return responseData
     }
@@ -70,13 +71,13 @@ export const register = createAsyncThunk(
 
 export const logout = createAsyncThunk(
     "userData/logout",
-    async () => {
+    async (_, { dispatch }) => {
         await fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
             method: "POST",
             credentials: 'include'
         })
-        localStorage.removeItem(CHAP_APP_LAST_ONLINE)
         socket.disconnect()
+        dispatch(dataActions.disconnect())
     }
 )
 
@@ -108,10 +109,34 @@ export const passkeyLogin = createAsyncThunk(
             message: "Login succesfull",
             severity: "success"
         }))
-
-        dispatch(dataActions.login(responseData))
+        socket.connect(responseData.jwt)
+        dispatch(dataActions.connect(responseData))
 
         return responseData
     }
 )
 
+
+export const OAuthLogin = createAsyncThunk(
+    "userData/OAuthLogin",
+    async (_, { dispatch }) => {
+
+        const url = `${import.meta.env.VITE_SERVER_URL}/refreshToken`
+        const options: RequestInit = {
+            method: "POST",
+            credentials: 'include'
+        }
+        const res = await fetch(url, options)
+        const { JWT } = await res.json()
+        const data: TTokenPayload = getJWTPayload(JWT)
+        const loginData: ILoginResponseData = {
+            email: data.email,
+            jwt: JWT,
+            id: data.id,
+            username: data.username
+        }
+        socket.connect(JWT)
+        dispatch(dataActions.connect(loginData))
+
+    }
+)

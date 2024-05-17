@@ -1,6 +1,4 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { passwordLogin, logout, register } from '../thunk'
-import socket from '../../util/socketSingleton'
 import { CHAP_APP_LAST_ONLINE } from '../../util/constants'
 import { ILoginResponseData } from '@chatapp/shared'
 
@@ -37,32 +35,23 @@ export const userDataSlice = createSlice({
         setJWT: ((state: Draft<IUserDataState>, action: PayloadAction<string>) => {
             state.JWT = action.payload
         }),
-        login: ((state: Draft<IUserDataState>, action: PayloadAction<ILoginResponseData>) => {
+        connect: ((state: Draft<IUserDataState>, action: PayloadAction<ILoginResponseData>) => {
+            localStorage.setItem(CHAP_APP_LAST_ONLINE, action.payload.username)
             state.username = action.payload.username
             state.email = action.payload.email
             state.JWT = action.payload.jwt
             state.id = action.payload.id
-            localStorage.setItem(CHAP_APP_LAST_ONLINE, action.payload.username)
-            socket.connect(action.payload.jwt)
         }),
-    },
-
-    extraReducers(builder) {
-        builder.addCase(register.rejected, (_, action) => {
-            console.error(action.error.message)
-        })
-
-        builder.addCase(passwordLogin.rejected, (_, action) => {
-            console.error(action.error.message)
-        })
-
-        builder.addCase(logout.fulfilled, (state) => {
+        disconnect: ((state: Draft<IUserDataState>) => {
+            localStorage.removeItem(CHAP_APP_LAST_ONLINE)
             state.email = ""
             state.formAction = "login"
             state.JWT = ""
             state.username = ""
             state.id = ""
         })
+
+
     },
 })
 
