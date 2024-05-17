@@ -8,7 +8,6 @@ import errorMiddleware from './middleware/errorHandler'
 import { createServer } from "http";
 import { addSocketServer } from './sockets/server'
 import { CORS } from './util/config'
-import passkeyModel from './Mongo/models/Passkey'
 
 const app = express()
 const httpServer = createServer(app);

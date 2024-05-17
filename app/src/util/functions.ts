@@ -29,8 +29,7 @@ export const refreshTokens = async () => {
     return JWT
 }
 
-
-export const createPasskey = async (accessToken: string) => {
+export const createPasskey = async (username: string, JWT: string) => {
     const url = `${import.meta.env.VITE_SERVER_URL}/createPasskey`
     const options: RequestInit = {
         method: "POST",

@@ -20,6 +20,7 @@ services:
       - ./shared:/chatapp/shared
       - ./bin:/chatapp/bin
     environment:
+      VITE_APP_URL: "http://localhost:${PORT_CLIENT}"
       VITE_SERVER_URL: "http://localhost:${PORT_SERVER}"
       REDIS_URI: "redis://redis:6379"
       MONGO_URI: "mongodb://mongo:27017/chatapp"
@@ -29,6 +30,9 @@ services:
       PASSKEY_PRIVATE_KEY: ${PASSKEY_PRIVATE_KEY}
       VITE_PASSKEY_PUBLIC_KEY: ${PASSKEY_PUBLIC_KEY}
       PASSKEY_API_URL: ${PASSKEY_API_URL}
+      VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      VITE_GOOGLE_OAUTH_REDIRECT_URL: ${GOOGLE_OAUTH_REDIRECT_URL}
 
   mongo:
     image: mongo

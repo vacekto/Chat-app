@@ -6,18 +6,18 @@ import socket from './util/socketSingleton'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { logoutThunk } from './redux/thunk'
+import { logout } from './redux/thunk'
 import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
 import { refreshTokens } from './util/functions'
-import { browserSupportsWebAuthn, browserSupportsWebAuthnAutofill, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
 
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
+
   const onConnectEvent = () => {
     dispatch(dataActions.setSocketConnected(true))
   }
@@ -30,14 +30,13 @@ function App() {
     dispatch(messagesActions.addMessage(msg))
   }
 
-  const test = async () => {
-    // console.log(browserSupportsWebAuthn(), await browserSupportsWebAuthnAutofill(), await platformAuthenticatorIsAvailable())
-
-
+  const handleTest = async () => {
+    const url = `${import.meta.env.VITE_SERVER_URL}/test`
+    window.open(url, "popup", "popup=true")
   }
 
   const handleLogout = () => {
-    dispatch(logoutThunk())
+    dispatch(logout())
     dispatch(alertActions.addAlert({
       id: Date.now(),
       message: "You are now logged out",
@@ -55,6 +54,10 @@ function App() {
     dispatch(dataActions.setJWT(JWT))
     socket.connect(JWT)
   }
+
+  useEffect(() => {
+    console.log("connected", connected)
+  }, [connected])
 
   useEffect(() => {
     socket.on('connect', onConnectEvent)
@@ -75,7 +78,7 @@ function App() {
       <Alerts />
       {connected ? <Chat /> : <AppForm />}
       <div id='temporary'>
-        <button onClick={test}>test</button>
+        <button onClick={handleTest}>test</button>
         <button onClick={handleLogout}>logout</button>
       </div>
     </div>
