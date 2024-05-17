@@ -121,7 +121,6 @@ export const passwordLogin: TUtilMiddleware = async (req, res) => {
 
 export const refreshToken: TUtilMiddleware = async (req, res) => {
     const refreshToken = req.cookies[REFRESH_TOKEN]
-    console.log("refresh: ", refreshToken)
     if (!refreshToken) {
         res.status(400).send("no refresh token")
         return
@@ -179,8 +178,13 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
     const { access_token, id_token } = await getGoogleOAuthTokens(code)
     const OAuthPayloadayload = getJWTPayload(id_token)
     const user = await MongoAPI.getUserLean({ email: OAuthPayloadayload.email })
+    const redirectUrl = process.env.NODE_ENV === "development" ?
+        process.env.VITE_APP_URL as string :
+        process.env.VITE_SERVER_URL as string
+
+
     if (!user) {
-        res.redirect(`${process.env.VITE_APP_URL}/notRegistered`)
+        res.redirect(`${redirectUrl}/notRegistered`)
         return
     }
     const payload: TTokenPayload = {
@@ -205,7 +209,7 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
 
     await redisClient.set(payload.username, newRefreshToken);
 
-    res.redirect(process.env.VITE_APP_URL as string)
+    res.redirect(redirectUrl)
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {
