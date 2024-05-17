@@ -15,8 +15,8 @@ router.post('/logout', middlewareErrorDecorator(controllers.logout))
 router.post('/register', middlewareErrorDecorator(controllers.register))
 router.post('/passwordLogin', middlewareErrorDecorator(controllers.passwordLogin))
 router.post('/passkeyLogin', middlewareErrorDecorator(controllers.passkeyLogin))
-router.post('/createPasskey', middlewareErrorDecorator(controllers.createPassKey))
-router.post('/veryfiRegistration', middlewareErrorDecorator(controllers.verify))
+router.get('/OAuth', middlewareErrorDecorator(controllers.OAuth))
+router.get('/googleLogin', middlewareErrorDecorator(controllers.googleLogin))
 // router.get('/verify/:verificationId')
 
 export default router

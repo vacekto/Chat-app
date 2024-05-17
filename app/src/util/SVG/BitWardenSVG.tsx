@@ -1,23 +1,15 @@
-import {
-    // canAuthenticateWithPasskey,
-    // canCreatePasskey,
-    sendJSON
-} from "../functions";
 import "./BitWardenSVG.scss"
-import { passwordless } from "../passwordlessClient";
+import { passkeyLogin } from "../../redux/thunk";
+import { useAppDispatch } from "../../redux/hooks";
+
 interface IBitWardenSVGProps { }
 
 const BitWardenIcon: React.FC<IBitWardenSVGProps> = () => {
+    const dispatch = useAppDispatch()
+
     const handleClick = async () => {
-        const { token } = await passwordless.signinWithDiscoverable()
-        const url = import.meta.env.VITE_SERVER_URL
-        const response = await sendJSON(url + "/passkeyLogin", token)
-        const verifiedUser = await response.json()
-        if (verifiedUser.outcome) {
-
-        }
+        dispatch(passkeyLogin())
     }
-
     return <div className="BitWardenSVG" onClick={handleClick}>
         <svg xmlns="http://www.w3.org/2000/svg"
             aria-label="imgur" role="img"
@@ -28,5 +20,4 @@ const BitWardenIcon: React.FC<IBitWardenSVGProps> = () => {
         </svg>
     </div>
 }
-
 export default BitWardenIcon

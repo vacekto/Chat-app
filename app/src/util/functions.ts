@@ -1,3 +1,5 @@
+import { passwordless } from "./passwordlessClient"
+
 export const sendJSON = (
     path: string,
     data: any,
@@ -29,17 +31,20 @@ export const refreshTokens = async () => {
     return JWT
 }
 
-
-export const createPasskey = async (accessToken: string) => {
+export const createPasskey = async (username: string, JWT: string) => {
     const url = `${import.meta.env.VITE_SERVER_URL}/createPasskey`
     const options: RequestInit = {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ accessToken })
+        body: JSON.stringify({ JWT })
     }
     const resposne = await fetch(url, options)
-    const data = await resposne.json()
-    return data
+    const { registerToken } = await resposne.json()
+
+    const credentialNickname = `chatApp-${username}`
+    const { token, error } = await passwordless.register(registerToken, credentialNickname);
+    return { token, error }
+
 }
