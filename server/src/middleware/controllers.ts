@@ -9,6 +9,34 @@ import { JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH } from "@ch
 import { COOKIE_SAMESITE } from "../util/config";
 import { getGoogleOAuthTokens, getGoogleOAuthURL } from "../util/functions";
 
+export const createPassKey: TUtilMiddleware = async (req, res) => {
+    const { JWT } = req.body
+    jwt.verify(
+        JWT,
+        process.env.AUTH_TOKEN_SECRET as string,
+    )
+    const { username, id } = getJWTPayload(JWT)
+
+    const passkeyPayload = {
+        userId: id,
+        username: username
+    };
+
+    const url = `${process.env.PASSKEY_API_URL}/register/token`
+    const options: RequestInit = {
+        method: 'POST',
+        body: JSON.stringify(passkeyPayload),
+        headers: {
+            'ApiSecret': `${process.env.PASSKEY_PRIVATE_KEY!}`,
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const response = await fetch(url, options)
+    const { token } = await response.json()
+    res.send({ registerToken: token })
+}
+
 export const passkeyLogin: TUtilMiddleware = async (req, res) => {
     const token = req.body.token
     const url = `${process.env.PASSKEY_API_URL}/signin/verify`

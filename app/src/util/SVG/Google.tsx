@@ -28,7 +28,7 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
                 clearInterval(popupInterval)
                 dispatch(alertActions.addAlert({
                     id: Date.now(),
-                    message: "You are no registered, please create account before logging in.",
+                    message: "You are not registered, please create account before logging in.",
                     severity: "error"
                 }))
                 return
