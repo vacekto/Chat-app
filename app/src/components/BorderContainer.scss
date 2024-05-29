@@ -1,0 +1,28 @@
+.BorderContainer {
+    border: 2px solid #a8bfed;
+    border-radius: 10px;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 10px;
+
+    .title {
+        text-align: center;
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+            position: absolute;
+            background-color: #39364b;
+            color: #a8bfed;
+            padding: 0 5px;
+            user-select: none;
+        }
+    }
+}

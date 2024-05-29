@@ -2,18 +2,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 500px;
+  // margin-bottom: 500px;
+  position: absolute;
+  top: 20%;
+
 
   .header {
+
     span {
-      margin: 50px;
+      margin: 0px 50px;
       color: #c4c3ca;
-      font-family: 'Poppins', sans-serif;
       font-size: 20px;
       font-weight: 600;
       cursor: pointer;
       user-select: none;
-      margin-bottom: 50px;
 
       &:hover {
         text-shadow: 0 0px 2px #c4c3ca;
@@ -140,6 +142,22 @@
         color: #102770;
         box-shadow: 0 8px 24px 0 rgba(255, 235, 167, .2);
         cursor: pointer;
+      }
+    }
+  }
+}
+
+@media (height <=800px) {
+  .AppForm {
+    top: 20px;
+  }
+}
+
+@media (width <=440px) {
+  .AppForm {
+    .header {
+      span {
+        margin: 0px 20px;
       }
     }
   }

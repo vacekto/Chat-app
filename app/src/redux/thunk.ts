@@ -15,6 +15,7 @@ import {
 } from "@chatapp/shared"
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socketSingleton"
+import { CHAP_APP_LAST_ONLINE } from "../util/constants"
 
 export const passwordLogin = createAsyncThunk(
     "userData/passwordLogin",
@@ -31,13 +32,14 @@ export const passwordLogin = createAsyncThunk(
             throw new Error(responseData.errorMessage)
         }
 
+        socket.connect(responseData.jwt)
+        localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
+        dispatch(dataActions.connect(responseData))
         dispatch(alertActions.addAlert({
             id: Date.now(),
             message: "Login succesfull",
             severity: "success"
         }))
-        socket.connect(responseData.jwt)
-        dispatch(dataActions.connect(responseData))
 
         return responseData
     }
@@ -59,13 +61,12 @@ export const register = createAsyncThunk(
             throw new Error(responseData.errorMessage)
         }
 
+        dispatch(dataActions.setFormAction("login"))
         dispatch(alertActions.addAlert({
             id: Date.now(),
             message: "Login succesfull",
             severity: "success"
         }))
-
-        dispatch(dataActions.setFormAction("login"))
     }
 )
 
@@ -77,7 +78,13 @@ export const logout = createAsyncThunk(
             credentials: 'include'
         })
         socket.disconnect()
+        localStorage.removeItem(CHAP_APP_LAST_ONLINE)
         dispatch(dataActions.disconnect())
+        dispatch(alertActions.addAlert({
+            id: Date.now(),
+            message: "You are now logged out",
+            severity: "success"
+        }))
     }
 )
 
@@ -110,6 +117,7 @@ export const passkeyLogin = createAsyncThunk(
             severity: "success"
         }))
         socket.connect(responseData.jwt)
+        localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
         dispatch(dataActions.connect(responseData))
 
         return responseData
@@ -136,6 +144,7 @@ export const OAuthLogin = createAsyncThunk(
             username: data.username
         }
         socket.connect(JWT)
+        localStorage.setItem(CHAP_APP_LAST_ONLINE, loginData.username)
         dispatch(dataActions.connect(loginData))
 
     }

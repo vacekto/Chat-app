@@ -7,7 +7,6 @@ import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
 import { logout } from './redux/thunk'
-import { alertActions } from './redux/slice/alert'
 import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
@@ -31,17 +30,12 @@ function App() {
   }
 
   const handleTest = async () => {
-    const url = `${import.meta.env.VITE_SERVER_URL}/test`
-    window.open(url, "popup", "popup=true")
+    // console.log("\n")
   }
 
   const handleLogout = () => {
     dispatch(logout())
-    dispatch(alertActions.addAlert({
-      id: Date.now(),
-      message: "You are now logged out",
-      severity: "success"
-    }))
+
   }
 
   const connectSocket = async () => {

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { dataActions } from '../redux/slice/userData'
 import BitWardenIcon from '../util/SVG/BitWardenSVG'
 import GoogleSVG from '../util/SVG/Google'
+import Test from '../components/Test'
 
 export type TFormAction = 'login' | 'register'
 
@@ -43,6 +44,7 @@ const AppForm: React.FC = () => {
         <RegisterFrom />
       </div>
     </div>
+    {/* <Test /> */}
   </div>
 }
 

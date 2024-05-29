@@ -1,4 +1,21 @@
 .ChatInput {
-    border: 3px solid purple;
-    height: 100px;
+    height: 150px;
+    position: relative;
+
+    .BorderContainer {
+        display: flex;
+
+        textarea {
+            margin: 20px 10px;
+            flex: 1;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            margin: 20px 10px;
+            width: 50px;
+            border: none;
+        }
+    }
 }

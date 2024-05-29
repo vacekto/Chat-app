@@ -1,4 +1,5 @@
 import { useAppSelector } from '../redux/hooks';
+import BorderContainer from './BorderContainer';
 import './ChatMessages.scss';
 import Message from './Message';
 
@@ -8,10 +9,15 @@ const ChatMessages: React.FC<IChatMessagesProps> = () => {
     const activeRoom = useAppSelector(state => state.messageReducer.activeRoom)!
 
     return <div className="ChatMessages">
-        {activeRoom.roomName}
-        {activeRoom.messages.map(msg => {
-            return <Message message={msg} key={msg.id} />
-        })}
+        <BorderContainer
+            title="Chat messages"
+        >
+
+            {activeRoom.roomName}
+            {activeRoom.messages.map(msg => {
+                return <Message message={msg} key={msg.id} />
+            })}
+        </BorderContainer>
     </div>
 }
 

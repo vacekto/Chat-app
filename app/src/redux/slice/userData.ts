@@ -1,5 +1,4 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { CHAP_APP_LAST_ONLINE } from '../../util/constants'
 import { ILoginResponseData } from '@chatapp/shared'
 
 export interface IUserDataState {
@@ -36,14 +35,12 @@ export const userDataSlice = createSlice({
             state.JWT = action.payload
         }),
         connect: ((state: Draft<IUserDataState>, action: PayloadAction<ILoginResponseData>) => {
-            localStorage.setItem(CHAP_APP_LAST_ONLINE, action.payload.username)
             state.username = action.payload.username
             state.email = action.payload.email
             state.JWT = action.payload.jwt
             state.id = action.payload.id
         }),
         disconnect: ((state: Draft<IUserDataState>) => {
-            localStorage.removeItem(CHAP_APP_LAST_ONLINE)
             state.email = ""
             state.formAction = "login"
             state.JWT = ""
