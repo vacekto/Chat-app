@@ -5,9 +5,9 @@ import socket from '../util/socketSingleton';
 import { IMessage } from '@chatapp/shared';
 import { messagesActions } from '../redux/slice/messages';
 import { v4 as uuidv4 } from 'uuid';
-import { Textarea } from '@chakra-ui/react'
+// import { Textarea } from '@chakra-ui/react'
 import BorderContainer from './BorderContainer';
-import { Button } from '@chakra-ui/react'
+// import { Button } from '@chakra-ui/react'
 
 interface IChatInputProps { }
 
@@ -54,14 +54,14 @@ const ChatInput: React.FC<IChatInputProps> = () => {
             title='Message'
         >
 
-            <Textarea
+            {/* <Textarea
                 onKeyDown={handleKeyDown}
                 onChange={handleChange}
                 value={text}
                 size='sm'
                 resize='none'
-            />
-            <Button onClick={test}>send</Button>
+            /> */}
+            {/* <Button onClick={test}>send</Button> */}
         </BorderContainer>
     </div>
 }
