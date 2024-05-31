@@ -1,5 +1,7 @@
 node_modules
 .devcontainer
+server/dist
+shared/dist
 .env
 app/tsconfig.tsbuildinfo
 server/tsconfig.tsbuildinfo
