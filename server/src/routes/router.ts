@@ -5,7 +5,6 @@ import { middlewareErrorDecorator } from '../middleware/decorator'
 const router = Router()
 
 router.get('/healthCheck', (req, res, next) => {
-    console.log('healthCheck')
     res.status(200).send('OK')
 })
 
