@@ -11,10 +11,4 @@ RUN npm i
 
 COPY . .
 
-COPY /home/runner/work/chat-app/chat-app/server/dist /chatapp/server/dist
-
-RUN bash -c "(cd server && ls)"
-
-RUN bash -c "echo $(pwd)"
-
-# CMD ["npm","run","start"]
+CMD ["npm","run","start"]

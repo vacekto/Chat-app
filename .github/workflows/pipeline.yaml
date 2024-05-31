@@ -13,25 +13,6 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: install modules
-        run: npm i
-
-      - name: compile app
-        run: npm run build
-
-      - name: check for dist
-        run: bash -c "(cd server && ls)"
-        
-      - run: bash -c "(cd shared && ls)"
-
-      - run: bash -c "echo $(pwd)"
-      
-      - run: ls
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
