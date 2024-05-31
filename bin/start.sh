@@ -3,7 +3,6 @@
 case "$NODE_ENV" in
 
   production )
-    npm run build
     npm run prod
     ;;
 
