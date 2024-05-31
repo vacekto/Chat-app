@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(router)
 app.use(errorMiddleware)
 
-httpServer.listen(3000, () => {
+httpServer.listen(process.env.PORT, () => {
     console.log('server running in mode: ' + process.env.NODE_ENV)
     connectToMongo()
     connectToRedis()

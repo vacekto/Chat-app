@@ -26,36 +26,36 @@ const Register: React.FC<IRegisterFormProps> = () => {
         dispatch(thunk.register(data))
     }
 
-    return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='Register'>
-        <div className="form-group">
-            <div className="input-container">
+    return <form autoComplete='off' onSubmit={handleSubmit(onSubmit)} noValidate className='RegisterForm'>
+        <div className="formGroup">
+            <div className="inputContainer">
                 <input type="text" placeholder='username' {...register('username')} />
-                <FontAwesomeIcon icon={faUser} className='input-icon' />
+                <FontAwesomeIcon icon={faUser} className='inputIcon' />
             </div>
-            <span className="error-message">{errors.username?.message}</span>
+            <span className="errorMessage">{errors.username?.message}</span>
         </div>
 
-        <div className="form-group">
-            <div className="input-container">
+        <div className="formGroup">
+            <div className="inputContainer">
                 <input type="text" placeholder='email' {...register('email')} />
-                <FontAwesomeIcon icon={faAt} className='input-icon' />
+                <FontAwesomeIcon icon={faAt} className='inputIcon' />
             </div>
-            <span className="error-message">{errors.email?.message}</span>
+            <span className="errorMessage">{errors.email?.message}</span>
         </div>
 
-        <div className="form-group">
-            <div className="input-container">
+        <div className="formGroup">
+            <div className="inputContainer">
                 <input type="password" placeholder='password' {...register('password')} />
-                <FontAwesomeIcon icon={faUnlock} className='input-icon' />
+                <FontAwesomeIcon icon={faUnlock} className='inputIcon' />
             </div>
-            <span className="error-message">{errors.password?.message}</span>
+            <span className="errorMessage">{errors.password?.message}</span>
         </div>
-        <div className="form-group">
-            <div className="input-container">
+        <div className="formGroup">
+            <div className="inputContainer">
                 <input type="password" placeholder='repeat password' {...register('repeatPassword')} />
-                <FontAwesomeIcon icon={faUnlock} className='input-icon' />
+                <FontAwesomeIcon icon={faUnlock} className='inputIcon' />
             </div>
-            <span className="error-message">{errors.repeatPassword?.message}</span>
+            <span className="errorMessage">{errors.repeatPassword?.message}</span>
         </div>
         <button type='submit'>submit</button>
     </form>

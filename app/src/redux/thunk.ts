@@ -61,10 +61,10 @@ export const register = createAsyncThunk(
             throw new Error(responseData.errorMessage)
         }
 
-        dispatch(dataActions.setFormAction("login"))
+        dispatch(dataActions.setFormAction("loginAction"))
         dispatch(alertActions.addAlert({
             id: Date.now(),
-            message: "Login succesfull",
+            message: "Registered succesfully",
             severity: "success"
         }))
     }
