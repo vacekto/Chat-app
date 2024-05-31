@@ -16,7 +16,7 @@ export const passwordZS = z.string().trim()
     .max(20, 'Password must contain at most 20 characters')
     .regex(/[A-Z]/, 'Password must contain at least one uppercase')
     .regex(/[a-z]/, 'Password must contain at least one lowercase')
-    .regex(/[0-9]/, 'Password must contain at least one num(ber')
+    .regex(/[0-9]/, 'Password must contain at least one number')
 
 export const loginFormZS = z.object({
     username: usernameZS,

@@ -6,6 +6,6 @@ export const addAlertMiddleware: Middleware = api => next => action => {
     if (!isAction(action) || action.type !== "alert/addAlert") return next(action)
 
     const removeAlert = () => api.dispatch(alertActions.removeAlert((action as PayloadAction<IAlert>).payload.id))
-    setTimeout(removeAlert, 3000)
+    setTimeout(removeAlert, 10000)
     return next(action)
 }

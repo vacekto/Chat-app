@@ -4,40 +4,37 @@ import LoginFrom from '../components/Login'
 import RegisterFrom from '../components/Register'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { dataActions } from '../redux/slice/userData'
-import BitWardenIcon from '../util/SVG/BitWardenSVG'
-import GoogleSVG from '../util/SVG/Google'
 
-export type TFormAction = 'login' | 'register'
+export type TFormAction = 'loginAction' | 'registerAction'
 
 const AppForm: React.FC = () => {
   const formAction = useAppSelector(state => state.userData.formAction)
   const dispatch = useAppDispatch()
 
-  const setAction = (action: "login" | "register") => {
+  const setAction = (action: TFormAction) => {
     dispatch(dataActions.setFormAction(action))
   }
 
   const switchCb = (activeSide: 'left' | 'right') => {
-    const newAction = activeSide === 'left' ? 'login' : 'register'
+    const newAction = activeSide === 'left' ? 'loginAction' : 'registerAction'
     setAction(newAction)
   }
 
   return <div className='AppForm'>
     <div className="header">
-      <span onClick={() => setAction("login")}>Log in</span>
-      <span onClick={() => setAction("register")}>Register</span>
+      <div className="headerText">
+        <div onClick={() => setAction("loginAction")}>Log in</div>
+        <div onClick={() => setAction("registerAction")}>Register</div>
+      </div>
 
       <Switch
-        state={formAction === 'login' ? 'left' : 'right'}
+        state={formAction === 'loginAction' ? 'left' : 'right'}
         cb={switchCb}
       />
     </div>
 
     <div className={`formContainer ${formAction}`}>
-      <div className="icons">
-        <BitWardenIcon />
-        <GoogleSVG />
-      </div>
+
       <div className='forms'>
         <LoginFrom />
         <RegisterFrom />

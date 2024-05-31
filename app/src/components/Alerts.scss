@@ -4,7 +4,22 @@
     z-index: 100;
 
     &>div {
-        border: 3px solid black;
+        background-color: #52e07c;
+        font-size: 17px;
         margin-top: 10px;
+        border-radius: 3px;
+        padding: 15px 30px 15px 15px;
+        display: flex;
+        align-items: center;
+
+        svg {
+            height: 30px;
+            width: 30px;
+        }
+
+        span {
+            margin-left: 10px;
+            color: #161c26;
+        }
     }
 }

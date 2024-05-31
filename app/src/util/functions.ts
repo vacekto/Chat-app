@@ -46,5 +46,4 @@ export const createPasskey = async (username: string, JWT: string) => {
     const credentialNickname = `chatApp-${username}`
     const { token, error } = await passwordless.register(registerToken, credentialNickname);
     return { token, error }
-
 }

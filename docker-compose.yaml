@@ -10,7 +10,7 @@ services:
     container_name: "chat_app"
     ports:
       - ${PORT_CLIENT}:5173
-      - ${PORT_SERVER}:3000
+      - ${PORT}:3000
     volumes:
       - ./package.json:/chatapp/package.json
       - ./package-lock.json:/chatapp/package-lock.json
@@ -22,7 +22,7 @@ services:
     environment:
       VITE_APP_DOMAIN: "localhost"
       VITE_APP_URL: "http://localhost:${PORT_CLIENT}"
-      VITE_SERVER_URL: "http://localhost:${PORT_SERVER}"
+      VITE_SERVER_URL: "http://localhost:${PORT}"
       REDIS_URI: "redis://redis:6379"
       MONGO_URI: "mongodb://mongo:27017/chatapp"
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
@@ -33,6 +33,7 @@ services:
       VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       VITE_GOOGLE_OAUTH_REDIRECT_URL: ${GOOGLE_OAUTH_REDIRECT_URL}
+      PORT: ${PORT}
 
   mongo:
     image: mongo

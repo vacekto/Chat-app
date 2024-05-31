@@ -70,7 +70,12 @@ function App() {
   return (
     <div className="App">
       <Alerts />
-      {connected ? <Chat /> : <AppForm />}
+      {connected ?
+        <Chat /> :
+        <div className="appFormContainer">
+          <AppForm />
+        </div>
+      }
       <div id='temporary'>
         <button onClick={handleTest}>test</button>
         <button onClick={handleLogout}>logout</button>
