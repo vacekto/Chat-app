@@ -1,15 +1,22 @@
+@font-face {
+  font-family: jetBrainsRegular;
+  src: url(./util/fonts/JetBrainsMono-Regular.ttf);
+}
+
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   user-select: none;
+  font-family: jetBrainsRegular;
 }
 
 .App {
   width: 100vw;
   height: 100vh;
   flex-direction: column;
-  background-color: #39364b;
+  background-color: #3a2c4d;
   position: fixed;
   top: 0;
   overflow: scroll;

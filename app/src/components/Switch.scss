@@ -9,11 +9,11 @@ $controllerSize: 25px;
     position: relative;
     display: flex;
     align-items: center;
-    background-color: #1f2029;
+    background-color: #ffeaa754;
     justify-content: left;
     cursor: pointer;
-    
-    
+
+
     div {
         transition: left .1s;
         left: 0%;
@@ -23,7 +23,7 @@ $controllerSize: 25px;
         border-radius: $controllerSize;
         background-color: #ffeba7;
         box-shadow: 0px 0px 7px #ffedb0;
-        
+
         &.right {
             left: 50%;
         }
