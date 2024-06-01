@@ -11,7 +11,4 @@ RUN npm i
 
 COPY . .
 
-RUN bash -c "./bin/buildApp.sh"
-
-
 CMD ["npm","run","start"]
