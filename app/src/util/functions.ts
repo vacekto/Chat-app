@@ -1,5 +1,8 @@
 import { passwordless } from "./passwordlessClient"
 
+/**
+ * @param path must start with /
+ */
 export const sendJSON = (
     path: string,
     data: any,

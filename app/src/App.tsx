@@ -30,7 +30,7 @@ function App() {
   }
 
   const handleTest = async () => {
-    // console.log("\n")
+    console.log(import.meta.env.VITE_SERVER_URL)
   }
 
   const handleLogout = () => {
