@@ -9,9 +9,16 @@ const Alerts: React.FC<IAlertsProps> = () => {
     const alerts = useAppSelector(state => state.alert.alerts)
 
     return <div className="Alerts">
-        {alerts.map(alert => <div key={alert.id}>
-            <Icon as={IoCheckmarkOutline} />
-            <span>{alert.message}</span>
+        <div className="test"></div>
+        {alerts.map(alert => <div key={alert.id} className='alert'>
+            <div>
+                <div>
+                </div>
+            </div>
+            <div>
+                <Icon as={IoCheckmarkOutline} />
+                <span>{alert.message}</span>
+            </div>
         </div>)}
     </div>
 }

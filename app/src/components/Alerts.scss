@@ -3,23 +3,89 @@
     top: 40px;
     z-index: 100;
 
-    &>div {
-        background-color: #52e07c;
-        font-size: 14px;
-        margin-top: 10px;
-        border-radius: 3px;
-        padding: 15px 30px 15px 15px;
-        display: flex;
-        align-items: center;
+    .alert {
+        position: relative;
+        margin-bottom: 20px;
+
+        * {
+            animation-name: appear;
+            animation-duration: 2s;
+            animation-timing-function: linear;
+        }
+
+        &>div {
+            font-size: 14px;
+            border-radius: 5px 5px 0px 0px;
+            display: flex;
+            align-items: center;
+
+            background-color: #52e07c;
+            box-sizing: content-box;
+        }
+
+        div:nth-child(1) {
+            border-radius: 5px;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            background-color: rgba(82, 224, 124, 0.5);
+            overflow: hidden;
+            box-sizing: content-box;
+            padding-bottom: 5px;
+
+            div {
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-radius: 5px 5px 0 0;
+                animation-name: slide;
+                animation-duration: 30s;
+                animation-timing-function: linear;
+                animation-fill-mode: forwards;
+                height: 100%;
+                z-index: 2;
+                background-color: #52e07c;
+            }
+        }
+
+        div:nth-child(2) {
+            z-index: 3;
+            background-color: #52e07c;
+            position: relative;
+            padding: 15px 30px 10px 15px;
+        }
 
         svg {
-            height: 30px;
-            width: 30px;
+            height: 25px;
+            width: 25px;
+            color: #161c26;
         }
+
 
         span {
             margin-left: 10px;
             color: #161c26;
         }
+    }
+}
+
+@keyframes appear {
+    from {
+        background-color: rgba(82, 224, 124, 0);
+    }
+
+    to {
+        background-color: rgba(82, 224, 124, 1);
+    }
+}
+
+@keyframes slide {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
     }
 }
