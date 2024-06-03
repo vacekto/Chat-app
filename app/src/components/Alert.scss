@@ -1,11 +1,18 @@
 .Alert {
     animation-name: appear;
-    animation-duration: .5s;
+    animation-duration: .3s;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
     max-width: 600px;
     font-size: 15px;
     margin-bottom: 10px;
+
+    &.fading {
+        animation-name: disappear;
+        animation-duration: .2s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+    }
 
     &:hover {
         .timer div {
@@ -86,6 +93,16 @@
 
     to {
         opacity: 1;
+    }
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
     }
 }
 

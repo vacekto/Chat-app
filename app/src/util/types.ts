@@ -5,5 +5,6 @@ export type TClientSocket = Socket<ServerToClientEvents, ClientToServerEvents>
 export interface IAlert {
     message: string,
     severity: 'success' | 'info' | 'warning' | 'error',
-    id: string
+    id: string,
+    fading: boolean
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Alert.scss';
 import { IAlert } from '../util/types';
 import { Icon } from '@chakra-ui/react';
@@ -13,10 +13,12 @@ interface IAlertProps {
 
 const Alert: React.FC<IAlertProps> = ({ alert }) => {
     const [timerCSS, setTimerCSS] = useState<"" | "quickened">("")
+    const [fadingCSS, setFadingCSS] = useState<"" | "fading">("")
 
     const dispatch = useAppDispatch()
 
     const handleMouseEnter = () => {
+        if (alert.fading) return
         setTimerCSS("quickened")
         dispatch(alertActions.setAlertTimeout({
             alertId: alert.id,
@@ -25,6 +27,7 @@ const Alert: React.FC<IAlertProps> = ({ alert }) => {
     }
 
     const handleMouseLeave = () => {
+        if (alert.fading) return
         dispatch(alertActions.setAlertTimeout({
             alertId: alert.id,
             delay: 2000
@@ -32,15 +35,20 @@ const Alert: React.FC<IAlertProps> = ({ alert }) => {
     }
 
     const handleCancelAlert = () => {
-        dispatch(alertActions.setAlertTimeout({
-            alertId: alert.id,
-            delay: 0
-        }))
+        dispatch(alertActions.removeAlert(alert.id))
     }
 
-    return <div className='Alert'>
+    useEffect(() => {
+        if (!alert.fading) return
+        setTimeout(handleCancelAlert, 200)
+        setFadingCSS("fading")
+    }, [alert])
+
+    return <div
+        className={`Alert ${fadingCSS}`}
+    >
         <div
-            className='content'
+            className="content"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >

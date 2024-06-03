@@ -3,7 +3,6 @@ import { useRef } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { alertActions } from '../../redux/slice/alert';
 import { OAuthLogin } from '../../redux/thunk';
-import { v4 as uuidv4 } from 'uuid';
 
 interface IGoogleSVGProps { }
 
@@ -28,7 +27,6 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
                 popupRef.current = null
                 clearInterval(popupInterval)
                 dispatch(alertActions.addAlert({
-                    id: uuidv4(),
                     message: "You are not registered, please create account before logging in.",
                     severity: "error"
                 }))
