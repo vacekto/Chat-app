@@ -13,6 +13,7 @@ import {
     getJWTPayload,
     isServerError,
 } from "@chatapp/shared"
+import { v4 as uuidv4 } from 'uuid';
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socketSingleton"
 import { CHAP_APP_LAST_ONLINE } from "../util/constants"
@@ -25,7 +26,7 @@ export const passwordLogin = createAsyncThunk(
 
         if (isServerError(responseData)) {
             dispatch(alertActions.addAlert({
-                id: Date.now(),
+                id: uuidv4(),
                 message: responseData.errorMessage,
                 severity: "error"
             }))
@@ -36,7 +37,7 @@ export const passwordLogin = createAsyncThunk(
         localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
         dispatch(dataActions.connect(responseData))
         dispatch(alertActions.addAlert({
-            id: Date.now(),
+            id: uuidv4(),
             message: "Login succesfull",
             severity: "success"
         }))
@@ -54,7 +55,7 @@ export const register = createAsyncThunk(
 
         if (isServerError(responseData)) {
             dispatch(alertActions.addAlert({
-                id: Date.now(),
+                id: uuidv4(),
                 message: responseData.errorMessage,
                 severity: "error"
             }))
@@ -63,7 +64,7 @@ export const register = createAsyncThunk(
 
         dispatch(dataActions.setFormAction("loginAction"))
         dispatch(alertActions.addAlert({
-            id: Date.now(),
+            id: uuidv4(),
             message: "Registered succesfully",
             severity: "success"
         }))
@@ -81,7 +82,7 @@ export const logout = createAsyncThunk(
         localStorage.removeItem(CHAP_APP_LAST_ONLINE)
         dispatch(dataActions.disconnect())
         dispatch(alertActions.addAlert({
-            id: Date.now(),
+            id: uuidv4(),
             message: "You are now logged out",
             severity: "success"
         }))
@@ -94,7 +95,7 @@ export const passkeyLogin = createAsyncThunk(
         const { token } = await passwordless.signinWithDiscoverable()
         if (!token) {
             alertActions.addAlert({
-                id: Date.now(),
+                id: uuidv4(),
                 message: "Could not authenticate, please try again",
                 severity: "error"
             })
@@ -104,7 +105,7 @@ export const passkeyLogin = createAsyncThunk(
         const responseData: ILoginResponseData | IResponseError = await response.json()
         if (isServerError(responseData)) {
             dispatch(alertActions.addAlert({
-                id: Date.now(),
+                id: uuidv4(),
                 message: responseData.errorMessage,
                 severity: "error"
             }))
@@ -112,7 +113,7 @@ export const passkeyLogin = createAsyncThunk(
         }
 
         dispatch(alertActions.addAlert({
-            id: Date.now(),
+            id: uuidv4(),
             message: "Login succesfull",
             severity: "success"
         }))
