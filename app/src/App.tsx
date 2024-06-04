@@ -11,6 +11,7 @@ import { IMessage } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messages'
 import { CHAP_APP_LAST_ONLINE } from './util/constants'
 import { refreshTokens } from './util/functions'
+import { alertActions } from './redux/slice/alert'
 
 function App() {
 
@@ -30,7 +31,22 @@ function App() {
   }
 
   const handleTest = async () => {
-    console.log(import.meta.env)
+    dispatch(alertActions.addAlert({
+      message: "testing",
+      severity: 'success'
+    }))
+    dispatch(alertActions.addAlert({
+      message: "testing",
+      severity: 'info'
+    }))
+    dispatch(alertActions.addAlert({
+      message: "testing",
+      severity: 'warning'
+    }))
+    dispatch(alertActions.addAlert({
+      message: "testing",
+      severity: 'error'
+    }))
   }
 
   const handleLogout = () => {

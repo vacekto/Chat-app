@@ -5,8 +5,10 @@ interface ISocketProxy extends TClientSocket {
     connect: (jwt?: string, force?: boolean) => this
 }
 
-const url = import.meta.env.VITE_SERVER_URL
-let instance: TClientSocket = io(url, { autoConnect: false })
+let instance: TClientSocket = io(
+    import.meta.env.VITE_SERVER_URL,
+    { autoConnect: false }
+)
 
 /**
  * 

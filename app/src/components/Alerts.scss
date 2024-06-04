@@ -1,5 +1,12 @@
 .Alerts {
     position: fixed;
     top: 40px;
+    left: 50%;
+    transform: translate(-50%);
+    margin: auto;
     z-index: 100;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

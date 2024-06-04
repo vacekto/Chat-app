@@ -6,6 +6,16 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import { useAppDispatch } from '../redux/hooks';
 import { alertActions } from '../redux/slice/alert';
+import { CiWarning } from "react-icons/ci";
+import { MdOutlineErrorOutline } from "react-icons/md";
+import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
+
+const icons = {
+    success: IoCheckmarkOutline,
+    info: HiOutlineChatBubbleOvalLeftEllipsis,
+    warning: CiWarning,
+    error: MdOutlineErrorOutline
+}
 
 interface IAlertProps {
     alert: IAlert
@@ -44,16 +54,21 @@ const Alert: React.FC<IAlertProps> = ({ alert }) => {
         setFadingCSS("fading")
     }, [alert])
 
+
     return <div
-        className={`Alert ${fadingCSS}`}
+        className={`Alert ${fadingCSS} ${alert.severity}`}
     >
         <div
             className="content"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <Icon as={IoCheckmarkOutline} />
-            <span>{alert.message}</span>
+            <div className="leftIcon">
+                <Icon as={icons[alert.severity]} />
+            </div>
+            <div className='text'>
+                <div>{alert.message}</div>
+            </div>
             <div
                 className="cross"
                 onClick={handleCancelAlert}
