@@ -13,15 +13,15 @@ const Chat: React.FC = () => {
 
     const handleCreatePasskey = async () => {
         const { error } = await createPasskey(username, JWT)
-        if (error) {
-            console.error(error)
-        }
+        if (error) console.error(error)
+
     }
 
     return (
         <div className='Chat'>
             <div className="topBar">
                 <button onClick={handleCreatePasskey}>create passkey</button>
+                <button>hide left bar</button>
             </div>
             <div className="body">
                 <div className="left">

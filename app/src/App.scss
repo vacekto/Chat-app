@@ -3,7 +3,6 @@
   src: url(./util/fonts/JetBrainsMono-Regular.ttf);
 }
 
-
 * {
   padding: 0;
   margin: 0;
@@ -12,20 +11,26 @@
   font-family: jetBrainsRegular;
 }
 
+body {
+  height: 100%;
+}
+
 .App {
   width: 100vw;
   height: 100vh;
+  // max-height: 100%;
   flex-direction: column;
   background-color: #3a2c4d;
-  position: fixed;
+  position: absolute;
   top: 0;
-  overflow: scroll;
+  // overflow: scroll;
 
   .appFormContainer {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: auto;
   }
 }
 

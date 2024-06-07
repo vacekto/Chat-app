@@ -10,10 +10,9 @@ const ChatMessages: React.FC<IChatMessagesProps> = () => {
 
     return <div className="ChatMessages">
         <BorderContainer
-            title="Chat messages"
+            title={activeRoom.roomName}
         >
 
-            {activeRoom.roomName}
             {activeRoom.messages.map(msg => {
                 return <Message message={msg} key={msg.id} />
             })}

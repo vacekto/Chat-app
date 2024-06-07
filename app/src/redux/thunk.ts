@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { sendJSON } from "../util/functions"
-import { dataActions } from './slice/userData'
-import { alertActions } from './slice/alert'
+import { dataActions } from './slice/userDataSlice'
+import { alertActions } from './slice/alertSlice'
 import {
     ILoginResponseData,
     IRegisterResponseData,

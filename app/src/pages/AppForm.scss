@@ -1,3 +1,13 @@
+@font-face {
+  font-family: jetBrainsBold;
+  src: url(../util/fonts/JetBrainsMono-Bold.ttf);
+}
+
+@font-face {
+  font-family: roboto;
+  src: url(../util/test/Roboto-Black.ttf);
+}
+
 .AppForm {
   display: flex;
   flex-direction: column;
@@ -84,6 +94,8 @@
       transition: transform 200ms;
       transition-timing-function: cubic-bezier(.3, .31, .17, 1.04);
 
+      transform: translateZ(0) scale(1, 1);
+
       .formGroup {
         position: relative;
         display: flex;
@@ -137,6 +149,8 @@
         color: #102770;
         cursor: pointer;
         margin-top: 10px;
+        font-size: 18px;
+        font-family: roboto;
       }
     }
   }
