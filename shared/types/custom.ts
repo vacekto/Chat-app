@@ -34,11 +34,11 @@ export interface IMessage {
 }
 
 /**
- * participants are usernames
+ * users are usernames
  */
 export interface IRoom {
     roomName: string
     messages: IMessage[]
     id: string
-    participants: string[]
+    users: string[]
 }

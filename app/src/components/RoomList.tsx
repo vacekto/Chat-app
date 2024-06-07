@@ -1,18 +1,51 @@
 import './RoomList.scss';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { v4 as uuidv4 } from 'uuid';
+import { Icon } from '@chakra-ui/react';
+import { TbUser } from "react-icons/tb";
+import { TbUsersGroup } from "react-icons/tb";
 
 interface IRoomListProps { }
 
 const RoomList: React.FC<IRoomListProps> = () => {
-    const rooms = useAppSelector(state => state.messageReducer.rooms)
+    const users = useAppSelector(state => state.messageReducer.users)
+
+    const dispatch = useAppDispatch()
+
+    const handleUserClick = () => {
+        // messagesActions.selectRoom()
+    }
+    const arr: string[] = []
+    arr.length = 70
+    arr.fill("coiskdosi")
+
 
 
     return <div className="RoomList">
-        {rooms.map(room => {
-            return <div className='room' key={room.id}>
-                {room.roomName}
+
+        <div className="selectionBar">
+            <div className="icon">
+                <Icon as={TbUser} />
+                <div className="caption">messages</div>
             </div>
-        })}
+            <div className="icon">
+                <Icon as={TbUsersGroup} />
+                <div className="caption">groups</div>
+            </div>
+        </div>
+
+        <div className="list">
+            {arr.map(thing => <div>cosikdosi</div >)}
+
+            {/* {users.map(user => {
+                return <div
+                    onClick={handleUserClick}
+                    className='room'
+                    key={uuidv4()}>
+                    {user}
+                </div>
+            })} */}
+        </div>
     </div>
 }
 

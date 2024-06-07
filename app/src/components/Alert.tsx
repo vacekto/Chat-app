@@ -5,7 +5,7 @@ import { Icon } from '@chakra-ui/react';
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import { useAppDispatch } from '../redux/hooks';
-import { alertActions } from '../redux/slice/alert';
+import { alertActions } from '../redux/slice/alertSlice';
 import { CiWarning } from "react-icons/ci";
 import { MdOutlineErrorOutline } from "react-icons/md";
 import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";

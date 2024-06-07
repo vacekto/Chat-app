@@ -3,7 +3,7 @@ import BorderContainer from './BorderContainer';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import socket from '../util/socketSingleton';
 import { IMessage } from '@chatapp/shared';
-import { messagesActions } from '../redux/slice/messages';
+import { messagesActions } from '../redux/slice/messagesSlice';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangeEvent, KeyboardEventHandler, useState } from 'react';
 import { Button } from '@chakra-ui/react'
@@ -41,12 +41,10 @@ const ChatInput: React.FC<IChatInputProps> = () => {
     }
 
     const test = () => {
-        console.log("\n")
     }
 
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setText(e.target.value)
-        console.log(e.target.value === "\n")
     }
     return <div className="ChatInput">
         <BorderContainer

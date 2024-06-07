@@ -1,5 +1,5 @@
 import { Middleware, PayloadAction, isAction } from "@reduxjs/toolkit"
-import { TSetAlertTimeoutPayload, alertActions } from "./slice/alert"
+import { TSetAlertTimeoutPayload, alertActions } from "./slice/alertSlice"
 import { IAlert } from "../util/types"
 import { v4 as uuidv4 } from 'uuid';
 
