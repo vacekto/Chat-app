@@ -1,5 +1,5 @@
 import './RoomList.scss';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppSelector } from '../redux/hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { Icon } from '@chakra-ui/react';
 import { TbUser } from "react-icons/tb";
@@ -10,15 +10,11 @@ interface IRoomListProps { }
 const RoomList: React.FC<IRoomListProps> = () => {
     const users = useAppSelector(state => state.messageReducer.users)
 
-    const dispatch = useAppDispatch()
+    // const dispatch = useAppDispatch()
 
     const handleUserClick = () => {
         // messagesActions.selectRoom()
     }
-    const arr: string[] = []
-    arr.length = 70
-    arr.fill("coiskdosi")
-
 
 
     return <div className="RoomList">
@@ -35,7 +31,6 @@ const RoomList: React.FC<IRoomListProps> = () => {
         </div>
 
         <div className="list">
-            {arr.map(thing => <div key={Math.random()}>cosikdosi</div >)}
 
             {users.map(user => {
                 return <div
