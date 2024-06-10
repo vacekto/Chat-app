@@ -6,8 +6,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { redisClient } from "../Redis/connect";
 import { JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH } from "@chatapp/shared"
-import { COOKIE_SAMESITE } from "../util/config";
-import { getGoogleOAuthTokens, getGoogleOAuthURL } from "../util/functions";
+import { COOKIE_SAMESITE, GoogleOAuthURL } from "../util/config";
+import { getGoogleOAuthTokens } from "../util/functions";
 
 export const createPassKey: TUtilMiddleware = async (req, res) => {
     const { JWT } = req.body
@@ -241,18 +241,9 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {
-    res.cookie(
-        "testing",
-        "testing",
-        {
-            httpOnly: true,
-            sameSite: COOKIE_SAMESITE,
-            maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
-        })
-    res.redirect("back")
+    res.send()
 }
 
 export const googleLogin: TUtilMiddleware = async (req, res, next) => {
-    const url = getGoogleOAuthURL()
-    res.redirect(url)
+    res.redirect(GoogleOAuthURL)
 }

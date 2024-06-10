@@ -1,19 +1,10 @@
 import { TIOServer, TServerSocket } from "src/types";
-import { usersList } from "./server"
+import registerMessageEvents from "./events/messageEvents";
+import registerDisconnectionEvents from "./events/disconnectionEvents";
 
 export const registerEvents = (io: TIOServer) => (socket: TServerSocket) => {
-    usersList.set(socket.data.username, socket)
-    io.emit("usersUpdate", Array.from(usersList.keys()))
-
-    socket.on("message", msg => {
-        socket.broadcast.emit("message", msg)
-    })
-
-    socket.on("disconnecting", reason => {
-        usersList.delete(socket.data.username)
-        io.emit("usersUpdate", Array.from(usersList.keys()))
-    })
-
+    registerMessageEvents(io, socket)
+    registerDisconnectionEvents(io, socket)
 }
 
-
+export default registerEvents

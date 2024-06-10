@@ -53,5 +53,7 @@ export const userDataSlice = createSlice({
     },
 })
 
+export const selectUsername = (state: IUserDataState) => state.username;
+
 export const dataActions = userDataSlice.actions
 export default userDataSlice.reducer

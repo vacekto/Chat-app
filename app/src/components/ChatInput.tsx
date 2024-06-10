@@ -1,10 +1,5 @@
 import './ChatInput.scss';
 import BorderContainer from './BorderContainer';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import socket from '../util/socketSingleton';
-import { IMessage } from '@chatapp/shared';
-import { messagesActions } from '../redux/slice/messagesSlice';
-import { v4 as uuidv4 } from 'uuid';
 import { ChangeEvent, KeyboardEventHandler, useState } from 'react';
 import { Button } from '@chakra-ui/react'
 import { Textarea } from '@chakra-ui/react'
@@ -13,19 +8,9 @@ interface IChatInputProps { }
 
 const ChatInput: React.FC<IChatInputProps> = () => {
     const [text, setText] = useState<string>("")
-    const userData = useAppSelector(state => state.userData)
-    const roomId = useAppSelector(state => state.messageReducer.activeRoom!.id)
-    const dispatch = useAppDispatch()
 
-    const sendMessage = () => {
-        const message: IMessage = {
-            id: uuidv4(),
-            RoomId: roomId,
-            sender: userData.username,
-            text
-        }
-        dispatch(messagesActions.addMessage(message))
-        socket.emit("message", message)
+
+    const sendMessage = async () => {
 
     }
 

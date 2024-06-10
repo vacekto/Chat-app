@@ -50,9 +50,28 @@ export const loginApiZS = z.object({
     password: z.string()
 })
 
-// export const createPasskeyApiZS = z.object({
-//     username: usernameZS,
-//     password: z.string()
-// })
 
 
+export const message = z.object({
+    text: z.string(),
+    author: z.string(),
+    id: z.string(),
+    channelId: z.string()
+})
+
+export const directChannel = z.object({
+    id: z.string(),
+    messages: z.array(message),
+    users: z.array(z.string())
+})
+
+export const clientDirectChannel = directChannel.merge(z.object({
+    channelName: z.string(),
+}))
+
+export const groupChannel = z.object({
+    channelName: z.string(),
+    messages: z.array(message),
+    id: z.string(),
+    users: z.array(z.string())
+})

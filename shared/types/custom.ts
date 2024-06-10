@@ -1,3 +1,4 @@
+
 export interface IUser {
     username: string
     email: string
@@ -5,8 +6,8 @@ export interface IUser {
     id: string
 }
 
-export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-export type RequiredBy<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+export type PartialBy<T, P extends keyof T> = Omit<T, P> & Partial<Pick<T, P>>
+export type RequiredBy<T, P extends keyof T> = Omit<T, P> & Required<Pick<T, P>>
 
 export interface IResponseError {
     errorMessage: string,
@@ -24,21 +25,4 @@ export interface ILoginResponseData {
     email: string,
     jwt: string,
     id: string,
-}
-
-export interface IMessage {
-    text: string
-    sender: string
-    id: string,
-    RoomId: string
-}
-
-/**
- * users are usernames
- */
-export interface IRoom {
-    roomName: string
-    messages: IMessage[]
-    id: string
-    users: string[]
 }

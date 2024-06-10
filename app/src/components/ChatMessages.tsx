@@ -6,14 +6,14 @@ import Message from './Message';
 interface IChatMessagesProps { }
 
 const ChatMessages: React.FC<IChatMessagesProps> = () => {
-    const activeRoom = useAppSelector(state => state.messageReducer.activeRoom)!
+    const activeChannel = useAppSelector(state => state.message.activeChannel)
 
     return <div className="ChatMessages">
         <BorderContainer
-            title={activeRoom.roomName}
+            title={activeChannel?.channelName}
         >
 
-            {activeRoom.messages.map(msg => {
+            {activeChannel?.messages.map(msg => {
                 return <Message message={msg} key={msg.id} />
             })}
         </BorderContainer>

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 import { IUser, zodSchemas } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
 
 
-}, { versionKey: false })
+})
 
 userSchema.pre('validate', function () {
     this.id = uuidv4()

@@ -5,7 +5,6 @@ import { MongoError, MongoServerError, } from 'mongodb';
 import ResourceNotFoundError from '../util/errorClasses/ResourceNotFound'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
-import { error } from "console";
 
 type TErrorHandlers = TErrorMiddleware[]
 
@@ -85,12 +84,9 @@ const errorsHandlers: TErrorHandlers = [
         next(err)
     },
 
-    // TODO
     function logErrors(err, req, res, next) {
         next(err)
     }
-
-
 ]
 
 

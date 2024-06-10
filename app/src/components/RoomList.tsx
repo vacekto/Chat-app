@@ -1,19 +1,20 @@
 import './RoomList.scss';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { Icon } from '@chakra-ui/react';
 import { TbUser } from "react-icons/tb";
 import { TbUsersGroup } from "react-icons/tb";
+import { messagesActions } from '../redux/slice/messagesSlice';
 
 interface IRoomListProps { }
 
 const RoomList: React.FC<IRoomListProps> = () => {
-    const users = useAppSelector(state => state.messageReducer.users)
+    const directChannels = useAppSelector(state => state.message.directChannels)
 
-    // const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch()
 
     const handleUserClick = () => {
-        // messagesActions.selectRoom()
+        dispatch(messagesActions.selectDirectChannel(""))
     }
 
 
@@ -31,13 +32,12 @@ const RoomList: React.FC<IRoomListProps> = () => {
         </div>
 
         <div className="list">
-
-            {users.map(user => {
+            {directChannels.map(channel => {
                 return <div
                     onClick={handleUserClick}
                     className='room'
                     key={uuidv4()}>
-                    {user}
+                    {channel.channelName}
                 </div>
             })}
         </div>

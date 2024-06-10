@@ -4,7 +4,7 @@ import connectToMongo from './Mongo/connect'
 import connectToRedis from './Redis/connect'
 import router from './routes/router'
 import cookieParser from 'cookie-parser'
-import errorMiddleware from './middleware/errorHandler'
+import errorHandlers from './middleware/errorHandler'
 import { createServer } from "http";
 import { addSocketServer } from './sockets/server'
 import { CORS } from './util/config'
@@ -24,7 +24,7 @@ app.use('/', express.static(__dirname + '/SPA'))
 app.use(express.json());
 app.use(cookieParser());
 app.use(router)
-app.use(errorMiddleware)
+app.use(errorHandlers)
 
 httpServer.listen(process.env.PORT, () => {
     console.log('server running in mode: ' + process.env.NODE_ENV)

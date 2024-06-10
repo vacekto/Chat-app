@@ -8,7 +8,7 @@ export interface IChatProps { }
 
 const Chat: React.FC = () => {
 
-    const activeRoom = useAppSelector(state => state.messageReducer.activeRoom)!
+    const activeRoom = useAppSelector(state => state.message.activeChannel)!
     const { username, JWT } = useAppSelector(state => state.userData)!
 
     const handleCreatePasskey = async () => {

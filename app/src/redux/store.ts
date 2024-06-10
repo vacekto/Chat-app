@@ -8,7 +8,7 @@ import messageReducer from "./slice/messagesSlice"
 const rootReducer = combineReducers({
     userData: userDataReducer,
     alert: alertReducer,
-    messageReducer
+    message: messageReducer
 })
 
 const store = configureStore({

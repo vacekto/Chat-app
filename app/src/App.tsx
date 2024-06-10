@@ -28,23 +28,16 @@ function App() {
   }
 
   const onMessageEvent = (msg: IMessage) => {
-    dispatch(messagesActions.addMessage(msg))
+    dispatch(messagesActions.addDirectMessage(msg))
   }
 
   const onUsersUpdateEvent = (users: string[]) => {
     console.log("users update", users)
     users = users.filter(user => user !== username)
-    dispatch(messagesActions.usersUpdate(users))
+    dispatch(messagesActions.usersUpdate({ users: users, clientUsername: username }))
   }
 
   const handleTest = async () => {
-    socket.emit("test")
-    socket.emit("message", {
-      id: "1",
-      RoomId: "2",
-      sender: "3",
-      text: "4"
-    })
     dispatch(alertActions.addAlert({
       message: "testing",
       severity: 'success'

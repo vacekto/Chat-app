@@ -17,6 +17,5 @@ router.post('/passkeyLogin', middlewareErrorDecorator(controllers.passkeyLogin))
 router.post('/createPassKey', middlewareErrorDecorator(controllers.createPassKey))
 router.get('/OAuth', middlewareErrorDecorator(controllers.OAuth))
 router.get('/googleLogin', middlewareErrorDecorator(controllers.googleLogin))
-// router.get('/verify/:verificationId')
 
 export default router

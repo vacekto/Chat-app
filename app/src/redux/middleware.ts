@@ -32,5 +32,3 @@ export const setAlertTimeoutMiddleware: Middleware = api => next => action => {
 
     return next(action)
 }
-
-
