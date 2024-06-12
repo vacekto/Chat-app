@@ -6,7 +6,6 @@ export interface ServerToClientEvents {
     message: (msg: IMessage) => void
     directMessage: (msg: IMessage, jwt: string) => void
     groupMessage: (msg: IMessage, jwt: string) => void
-    usersUpdate: (users: string[]) => void
     test: () => void
 }
 

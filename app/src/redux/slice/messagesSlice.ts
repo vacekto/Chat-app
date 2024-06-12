@@ -2,11 +2,11 @@ import { IMessage, IGroupChannel } from '@chatapp/shared'
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { IClientDirectChannel } from '@chatapp/shared';
 
-const publicRoom: IGroupChannel = {
-    users: [],
-    id: "1",
-    messages: [],
-    channelName: "public",
+interface IAddDirectChannelPayload {
+    users: string[]
+    messages: []
+    clientUsername: string
+    channelId: string
 }
 
 export interface IMessagesState {
@@ -20,16 +20,11 @@ export interface IMessagesState {
     })
 }
 
-interface IUsersUpdatePayload {
-    users: string[]
-    clientUsername: string
-}
-
-interface IAddDirectChannelPayload {
-    users: string[]
-    messages: []
-    clientUsername: string
-    channelId: string
+const publicRoom: IGroupChannel = {
+    users: [],
+    id: "1",
+    messages: [],
+    channelName: "public",
 }
 
 const initialState: IMessagesState = {
@@ -54,11 +49,8 @@ export const messagesSlice = createSlice({
             const groupChannel = state.groupChannels.find(c => c.id === action.payload.channelId)
             groupChannel?.messages.push(action.payload)
         },
-        usersUpdate: (state: Draft<IMessagesState>, action: PayloadAction<IUsersUpdatePayload>) => {
-            state.users = action.payload.users.filter(u => u !== action.payload.clientUsername)
-        },
 
-        addDirecChannel: (state: Draft<IMessagesState>, action: PayloadAction<IAddDirectChannelPayload>) => {
+        addDirectChannel: (state: Draft<IMessagesState>, action: PayloadAction<IAddDirectChannelPayload>) => {
             const {
                 users,
                 messages,
@@ -67,7 +59,7 @@ export const messagesSlice = createSlice({
             } = action.payload
 
             const index = state.directChannels.findIndex(c => c.id === channelId)
-            if (index === -1) return
+            if (index > -1) return
 
             const channelName = users[0] === clientUsername ?
                 users[1] : users[0]
@@ -93,6 +85,10 @@ export const messagesSlice = createSlice({
             }
         },
 
+        /**
+         * 
+         * @param action payload expects channel id
+         */
         selectGroupChannel: (state: Draft<IMessagesState>, action: PayloadAction<string>) => {
             const index = state.groupChannels.findIndex(c => c.id === action.payload)
             if (index > -1) state.activeChannel = {
@@ -100,6 +96,8 @@ export const messagesSlice = createSlice({
                 kind: "group"
             }
         },
+
+
     },
 })
 

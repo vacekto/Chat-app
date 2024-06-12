@@ -16,7 +16,6 @@ import { alertActions } from './redux/slice/alertSlice'
 function App() {
 
   const connected = useAppSelector(state => state.userData.socketConnected)
-  const username = useAppSelector(state => state.userData.username)
   const dispatch = useAppDispatch()
 
   const onConnectEvent = () => {
@@ -31,11 +30,7 @@ function App() {
     dispatch(messagesActions.addDirectMessage(msg))
   }
 
-  const onUsersUpdateEvent = (users: string[]) => {
-    console.log("users update", users)
-    users = users.filter(user => user !== username)
-    dispatch(messagesActions.usersUpdate({ users: users, clientUsername: username }))
-  }
+
 
   const handleTest = async () => {
     dispatch(alertActions.addAlert({
@@ -79,7 +74,6 @@ function App() {
     socket.on('connect', onConnectEvent)
     socket.on('disconnect', onDisconnectEvent)
     socket.on("message", onMessageEvent)
-    socket.on("usersUpdate", onUsersUpdateEvent)
     socket.on("test", onTestEvent)
 
     const username = localStorage.getItem(CHAP_APP_LAST_ONLINE)
@@ -89,7 +83,6 @@ function App() {
       socket.off('connect', onConnectEvent)
       socket.off('disconnect', onDisconnectEvent)
       socket.off("message", onMessageEvent)
-      socket.off("usersUpdate", onUsersUpdateEvent)
       socket.off("test", onTestEvent)
     }
   }, [])

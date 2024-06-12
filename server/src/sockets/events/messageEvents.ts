@@ -5,6 +5,9 @@ const registerMessageEvents = (io: TIOServer, socket: TServerSocket) => {
 
     })
 
+    socket.on("groupMessage", (msg, jwt) => {
+
+    })
 }
 
 export default registerMessageEvents

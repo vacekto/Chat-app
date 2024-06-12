@@ -2,11 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IMessage } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
 
-type TMessageDB = Omit<IMessage, "roomId"> & {
-    roomId: Schema.Types.ObjectId
-}
-
-const messageSchema = new mongoose.Schema<TMessageDB>({
+const messageSchema = new mongoose.Schema<IMessage>({
     id: {
         type: String,
         required: true,
@@ -19,16 +15,12 @@ const messageSchema = new mongoose.Schema<TMessageDB>({
         trim: true
     },
     text: String,
-    roomId: {
-        required: true,
-        type: String
-    }
 })
 
 messageSchema.pre('save', function () {
     this.id = uuidv4()
 });
 
-const MessageModel = mongoose.model<TMessageDB>("Message", messageSchema)
+const MessageModel = mongoose.model<IMessage>("Message", messageSchema)
 
 export default MessageModel
