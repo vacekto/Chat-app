@@ -3,10 +3,8 @@ import { Server } from "socket.io"
 import { Server as HttpServer, IncomingMessage, ServerResponse } from "http"
 import { auth } from "./middleware"
 import { registerEvents } from "./registerEvents"
-import { TServerSocket } from "src/types"
 import { CORS } from "../util/config"
-
-export const usersList = new Map<string, TServerSocket>()
+import { usersList } from "./usersList"
 
 export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeof ServerResponse>) => {
 
@@ -26,7 +24,6 @@ export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeo
 
     io.on("connection", function (socket) {
         usersList.set(socket.data.username, socket)
-
-        registerEvents(io)
+        registerEvents(io)(socket)
     })
 }

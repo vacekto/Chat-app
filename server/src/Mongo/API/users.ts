@@ -19,3 +19,13 @@ export const createUser = (userData: Omit<IUser, "id">) => {
     const newUser: TMongoDoc<IUser> = new User(userData)
     return newUser.save()
 }
+
+type TGetUsersFuzzy = (username: string) => Promise<TMongoDoc<IUser>[]>
+export const getUsersFuzzy: TGetUsersFuzzy = (usernameSearch) => {
+    const pattern = `\\b\\w*${usernameSearch}\\w*\\b`
+    const regex = new RegExp(pattern, "i");
+    const query = User.find(
+        { "username": { $regex: regex } }
+    )
+    return query.exec()
+}

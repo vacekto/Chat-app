@@ -1,4 +1,6 @@
-FROM --platform=linux/amd64 node:20.9.0
+FROM node:20-alpine
+
+RUN apk update && apk add bash
 
 WORKDIR /chatapp
 

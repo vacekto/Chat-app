@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { TSocketIOMiddleware } from "../types"
 import { zodSchemas, getJWTPayload } from '@chatapp/shared'
-import { usersList } from "./server"
 
 export const auth: TSocketIOMiddleware = (socket, next) => {
     try {
