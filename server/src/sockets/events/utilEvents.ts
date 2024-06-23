@@ -1,13 +1,10 @@
 import { TIOServer, TServerSocket } from "src/types";
-import { getUsersFuzzy } from "src/Mongo/API";
+import { MongoAPI } from "src/Mongo/API";
 
-
-const registerUtilEvents = (io: TIOServer, socket: TServerSocket) => {
+export const registerUtilEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("requestUsersList", async (userSearch, cb) => {
-        const users = await getUsersFuzzy(userSearch)
+        const users = await MongoAPI.getUsersFuzzy(userSearch, true)
         const usernames = users.map(user => user.username)
         cb(usernames)
     })
 }
-
-export default registerUtilEvents

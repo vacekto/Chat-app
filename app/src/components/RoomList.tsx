@@ -12,7 +12,7 @@ import {
     AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
 import socket from '../util/socketSingleton';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface IRoomListProps { }
 
@@ -21,7 +21,7 @@ const RoomList: React.FC<IRoomListProps> = () => {
 
     const [options, setOptions] = useState<string[]>([])
     // const [isLoading, setIsLoading] = useState<boolean>(false)
-    const throttleTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
     const inputRef = useRef<HTMLInputElement>(null)
 
     const directChannels = useAppSelector(state => state.message.directChannels)
@@ -33,15 +33,16 @@ const RoomList: React.FC<IRoomListProps> = () => {
     }
 
     const handleChange = () => {
-
-        if (throttleTimeoutRef.current)
-            clearTimeout(throttleTimeoutRef.current)
-        throttleTimeoutRef.current = setTimeout(() => {
-            throttleTimeoutRef.current = null
+        const debounceCb = () => {
+            debounceTimeoutRef.current = null
             socket.emit("requestUsersList", inputRef.current!.value, users => {
                 setOptions(users)
             })
-        }, 300)
+        }
+
+        if (debounceTimeoutRef.current)
+            clearTimeout(debounceTimeoutRef.current)
+        debounceTimeoutRef.current = setTimeout(debounceCb, 300)
 
     }
 

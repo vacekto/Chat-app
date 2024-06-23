@@ -2,7 +2,7 @@ import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketDa
 import { Server } from "socket.io"
 import { Server as HttpServer, IncomingMessage, ServerResponse } from "http"
 import { auth } from "./middleware"
-import { registerEvents } from "./registerEvents"
+import registerEvents from "./registerEvents"
 import { CORS } from "../util/config"
 import { usersList } from "./usersList"
 

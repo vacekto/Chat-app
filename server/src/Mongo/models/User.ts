@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
 
 
-})
+}, { versionKey: false })
 
 userSchema.pre('validate', function () {
     this.id = uuidv4()

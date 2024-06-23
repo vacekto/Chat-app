@@ -1,13 +1,15 @@
 import { TIOServer, TServerSocket } from "src/types";
-import registerMessageEvents from "./events/messageEvents";
-import registerDisconnectionEvents from "./events/disconnectionEvents";
-import registerUtilEvents from "./events/utilEvents";
+import { MongoAPI } from "src/Mongo/API";
+import {
+    registerUtilEvents,
+    registerDisconnectionEvents,
+    registerMessageEvents
+} from "./events";
 
-export const registerEvents = (io: TIOServer) => (socket: TServerSocket) => {
+const registerEvents = (io: TIOServer) => (socket: TServerSocket) => {
     registerMessageEvents(io, socket)
     registerDisconnectionEvents(io, socket)
     registerUtilEvents(io, socket)
-
 }
 
 export default registerEvents

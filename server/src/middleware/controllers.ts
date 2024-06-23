@@ -1,5 +1,5 @@
 import { TUtilMiddleware } from "../types";
-import * as MongoAPI from '../Mongo/API'
+import { MongoAPI } from "src/Mongo/API";
 import { ILoginResponseData, zodSchemas, IRegisterResponseData, TTokenPayload, getJWTPayload, REFRESH_TOKEN } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';
@@ -53,7 +53,7 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
     const body = await verifyResponse.json();
 
     if (!body.success) throw new Error("some passkey login error")
-    const user = await MongoAPI.getUserLean({ id: body.userId })
+    const user = await MongoAPI.getUser({ id: body.userId }, true)
     if (!user) throw new Error("some passkey login error")
 
     const payload: TTokenPayload = {
@@ -205,7 +205,7 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
     const code = req.query.code as string
     const { access_token, id_token } = await getGoogleOAuthTokens(code)
     const OAuthPayloadayload = getJWTPayload(id_token)
-    const user = await MongoAPI.getUserLean({ email: OAuthPayloadayload.email })
+    const user = await MongoAPI.getUser({ email: OAuthPayloadayload.email }, true)
     const redirectUrl = process.env.NODE_ENV === "development" ?
         process.env.VITE_APP_URL as string :
         process.env.VITE_SERVER_URL as string
