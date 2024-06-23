@@ -1,5 +1,4 @@
 import { TIOServer, TServerSocket } from "src/types";
-import { MongoAPI } from "src/Mongo/API";
 import {
     registerUtilEvents,
     registerDisconnectionEvents,

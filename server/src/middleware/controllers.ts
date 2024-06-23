@@ -1,5 +1,5 @@
 import { TUtilMiddleware } from "../types";
-import { MongoAPI } from "src/Mongo/API";
+import { MongoAPI } from "../Mongo/API/index";
 import { ILoginResponseData, zodSchemas, IRegisterResponseData, TTokenPayload, getJWTPayload, REFRESH_TOKEN } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';

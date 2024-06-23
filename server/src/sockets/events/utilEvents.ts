@@ -1,5 +1,5 @@
 import { TIOServer, TServerSocket } from "src/types";
-import { MongoAPI } from "src/Mongo/API";
+import { MongoAPI } from "../../Mongo/API/index";
 
 export const registerUtilEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("requestUsersList", async (userSearch, cb) => {
