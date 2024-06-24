@@ -1,3 +1,4 @@
+import { IUser } from "./custom";
 import { IMessage } from "./zodInferred";
 
 export interface ServerToClientEvents {
@@ -15,8 +16,7 @@ export interface ClientToServerEvents {
     test: () => void
     directMessage: (msg: IMessage, author: string, recipient: string) => void
     groupMessage: (msg: IMessage, channelId: string) => void
-    requestUsersList: (userSearch: string, cb: (users: string[]) => void) => void
-
+    requestUsersList: (userSearch: string, cb: (users: IUser[]) => void) => void
 }
 
 export interface InterServerEvents {

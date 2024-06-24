@@ -21,12 +21,15 @@ export const createUser = (userData: Omit<IUser, "id">) => {
 export function getUsersFuzzySearch(usernameSearch: string, useLean?: false): Promise<TMongoDoc<IUser>[]>
 export function getUsersFuzzySearch(usernameSearch: string, useLean?: true): Promise<TMongoLean<IUser>[]>
 
-export function getUsersFuzzySearch(usernameSearch: string, useLean = false) {
+export async function getUsersFuzzySearch(usernameSearch: string, useLean = false) {
     const pattern = `\\b\\w*${usernameSearch}\\w*\\b`
     const regex = new RegExp(pattern, "i");
     const query = User.find(
         { "username": { $regex: regex } }
     )
     if (useLean) query.lean()
-    return query.exec()
+
+    const result = await query.exec()
+
+    return result
 }
