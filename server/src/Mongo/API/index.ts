@@ -1,5 +1,7 @@
 import * as users from './users'
 
-export const MongoAPI = {
+const MongoAPI = {
     ...users
 }
+
+export default MongoAPI

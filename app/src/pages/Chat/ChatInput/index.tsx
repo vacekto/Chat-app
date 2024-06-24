@@ -1,5 +1,5 @@
-import './ChatInput.scss';
-import BorderContainer from './BorderContainer';
+import './index.scss';
+import BorderContainer from '../../../components/BorderContainer';
 import { ChangeEvent, KeyboardEventHandler, useState } from 'react';
 import { Button } from '@chakra-ui/react'
 import { Textarea } from '@chakra-ui/react'

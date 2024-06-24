@@ -18,10 +18,10 @@ export const createUser = (userData: Omit<IUser, "id">) => {
     return newUser.save()
 }
 
-export function getUsersFuzzy(usernameSearch: string, useLean?: false): Promise<TMongoDoc<IUser>[]>
-export function getUsersFuzzy(usernameSearch: string, useLean?: true): Promise<TMongoLean<IUser>[]>
+export function getUsersFuzzySearch(usernameSearch: string, useLean?: false): Promise<TMongoDoc<IUser>[]>
+export function getUsersFuzzySearch(usernameSearch: string, useLean?: true): Promise<TMongoLean<IUser>[]>
 
-export function getUsersFuzzy(usernameSearch: string, useLean = false) {
+export function getUsersFuzzySearch(usernameSearch: string, useLean = false) {
     const pattern = `\\b\\w*${usernameSearch}\\w*\\b`
     const regex = new RegExp(pattern, "i");
     const query = User.find(

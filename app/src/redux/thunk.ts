@@ -14,7 +14,7 @@ import {
     isServerError,
 } from "@chatapp/shared"
 import { passwordless } from "../util/passwordlessClient";
-import socket from "../util/socketSingleton"
+import socket from "../util/socket"
 import { CHAP_APP_LAST_ONLINE } from "../util/constants"
 
 export const passwordLogin = createAsyncThunk(

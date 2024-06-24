@@ -1,36 +1,25 @@
-import './RoomList.scss';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { v4 as uuidv4 } from 'uuid';
+import './index.scss';
 import { Icon } from '@chakra-ui/react';
-import { TbUser } from "react-icons/tb";
-import { TbUsersGroup } from "react-icons/tb";
-import { messagesActions } from '../redux/slice/messagesSlice';
 import {
     AutoComplete,
     AutoCompleteInput,
     AutoCompleteItem,
     AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
-import socket from '../util/socketSingleton';
 import { useRef, useState } from 'react';
+import { TbUser } from "react-icons/tb";
+import { TbUsersGroup } from "react-icons/tb";
+import socket from '../../../../util/socket';
+import { v4 as uuidv4 } from 'uuid';
 
-interface IRoomListProps { }
+interface ITopBarProps { }
 
-
-const RoomList: React.FC<IRoomListProps> = () => {
+const SelectionBar: React.FC<ITopBarProps> = () => {
 
     const [options, setOptions] = useState<string[]>([])
-    // const [isLoading, setIsLoading] = useState<boolean>(false)
+
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
     const inputRef = useRef<HTMLInputElement>(null)
-
-    const directChannels = useAppSelector(state => state.message.directChannels)
-
-    const dispatch = useAppDispatch()
-
-    const handleUserClick = () => {
-        dispatch(messagesActions.selectDirectChannel(""))
-    }
 
     const handleChange = () => {
         const debounceCb = () => {
@@ -46,9 +35,8 @@ const RoomList: React.FC<IRoomListProps> = () => {
 
     }
 
-    return <div className="RoomList">
-
-        <div className="selectionBar">
+    return <div className="SelectionBar">
+        <div className="options">
             <div className="icon">
                 <Icon as={TbUser} />
                 <div className="caption">messages</div>
@@ -70,25 +58,13 @@ const RoomList: React.FC<IRoomListProps> = () => {
                     <AutoCompleteItem
                         key={uuidv4()}
                         value={user}
-                        textTransform="capitalize"
                     >
                         {user}
                     </AutoCompleteItem>
                 ))}
             </AutoCompleteList>
         </AutoComplete>
-
-        <div className="list">
-            {directChannels.map(channel => {
-                return <div
-                    onClick={handleUserClick}
-                    className='room'
-                    key={uuidv4()}>
-                    {channel.channelName}
-                </div>
-            })}
-        </div>
     </div>
 }
 
-export default RoomList
+export default SelectionBar

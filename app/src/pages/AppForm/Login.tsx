@@ -2,10 +2,10 @@ import { faUnlock, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { useRef } from 'react';
-import { useAppDispatch } from '../redux/hooks';
-import { passwordLogin } from '../redux/thunk';
-import BitWardenIcon from '../util/SVG/BitWardenSVG';
-import GoogleSVG from '../util/SVG/Google';
+import { useAppDispatch } from '../../redux/hooks';
+import { passwordLogin } from '../../redux/thunk';
+import BitWardenIcon from '../../util/SVG/BitWardenSVG';
+import GoogleSVG from '../../util/SVG/Google';
 
 interface ILoginFormProps { }
 

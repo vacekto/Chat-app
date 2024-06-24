@@ -24,6 +24,7 @@ export const addSocketServer = (server: HttpServer<typeof IncomingMessage, typeo
 
     io.on("connection", function (socket) {
         usersList.set(socket.data.username, socket)
+        console.log(`${socket.data.username} connected`)
         registerEvents(io)(socket)
     })
 }

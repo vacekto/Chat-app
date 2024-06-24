@@ -1,9 +1,9 @@
-import './AppForm.scss'
-import Switch from '../components/Switch'
-import LoginFrom from '../components/Login'
-import RegisterFrom from '../components/Register'
-import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { dataActions } from '../redux/slice/userDataSlice'
+import './index.scss'
+import Switch from '../../components/Switch'
+import LoginFrom from './Login'
+import RegisterFrom from './Register'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { dataActions } from '../../redux/slice/userDataSlice'
 
 export type TFormAction = 'loginAction' | 'registerAction'
 

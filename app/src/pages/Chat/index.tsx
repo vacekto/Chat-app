@@ -1,9 +1,9 @@
-import './Chat.scss'
-import RoomList from '../components/RoomList';
-import ChatMessages from '../components/ChatMessages';
-import ChatInput from '../components/ChatInput';
-import { useAppSelector } from '../redux/hooks';
-import { createPasskey } from '../util/functions';
+import './index.scss'
+import RoomList from './RoomList';
+import ChatMessages from './ChatMessages';
+import ChatInput from './ChatInput';
+import { useAppSelector } from '../../redux/hooks';
+import { createPasskey } from '../../util/functions';
 export interface IChatProps { }
 
 const Chat: React.FC = () => {

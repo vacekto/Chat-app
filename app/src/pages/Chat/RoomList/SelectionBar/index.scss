@@ -1,13 +1,6 @@
-.RoomList {
-    color: #ffeba7;
-    // flex-grow: 1;
-    // height: max-content;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.SelectionBar {
 
-
-    .selectionBar {
+    .options {
         display: flex;
         justify-content: space-around;
         padding: 30px 50px;
@@ -29,11 +22,5 @@
             height: 30px;
             width: 30px;
         }
-    }
-
-    .list {
-        border: 3px solid white;
-        flex-grow: 1;
-        overflow: auto;
     }
 }

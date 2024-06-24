@@ -1,6 +1,6 @@
-import { useAppSelector } from '../redux/hooks';
-import BorderContainer from './BorderContainer';
-import './ChatMessages.scss';
+import { useAppSelector } from '../../../redux/hooks';
+import BorderContainer from '../../../components/BorderContainer';
+import './index.scss';
 import Message from './Message';
 
 interface IChatMessagesProps { }

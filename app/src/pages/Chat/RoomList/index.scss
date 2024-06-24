@@ -1,0 +1,14 @@
+.RoomList {
+    color: #ffeba7;
+    // flex-grow: 1;
+    // height: max-content;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .list {
+        border: 3px solid white;
+        flex-grow: 1;
+        overflow: auto;
+    }
+}

@@ -1,5 +1,4 @@
 import { ClientToServerEvents, IUser, InterServerEvents, ServerToClientEvents, SocketData } from '@chatapp/shared'
-import { AuthenticatorTransportFuture, Base64URLString, CredentialDeviceType } from '@simplewebauthn/types'
 import { Request, Response, NextFunction } from 'express'
 import { Document, Types } from 'mongoose'
 import { FlattenMaps, Error as MongooseError } from 'mongoose'
