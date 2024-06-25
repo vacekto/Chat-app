@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import { IUser, zodSchemas } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
 
+
+
 const userSchema = new mongoose.Schema<IUser>({
 
     id: {
@@ -42,6 +44,7 @@ const userSchema = new mongoose.Schema<IUser>({
     password: {
         type: String,
         required: true,
+        trim: true
     },
 
 

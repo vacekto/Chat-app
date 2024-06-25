@@ -15,12 +15,17 @@ const messageSchema = new mongoose.Schema<IMessage>({
         trim: true
     },
     text: String,
+    channelId: {
+        type: String,
+        required: true,
+        trim: true,
+    }
 })
 
 messageSchema.pre('save', function () {
     this.id = uuidv4()
 });
 
-const MessageModel = mongoose.model<IMessage>("Message", messageSchema)
+const Message = mongoose.model<IMessage>("Message", messageSchema)
 
-export default MessageModel
+export default Message

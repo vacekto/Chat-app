@@ -26,11 +26,6 @@ const SelectionBar: React.FC<ITopBarProps> = () => {
         const debounceCb = () => {
             debounceTimeoutRef.current = null
             socket.emit("requestUsersList", inputRef.current!.value, users => {
-                // const usernames = users.map(user => {
-                //     // delete user.test
-                //     return user.username
-                // })
-
                 setOptions(users)
             })
         }

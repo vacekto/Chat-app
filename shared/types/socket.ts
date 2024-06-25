@@ -17,6 +17,7 @@ export interface ClientToServerEvents {
     directMessage: (msg: IMessage, author: string, recipient: string) => void
     groupMessage: (msg: IMessage, channelId: string) => void
     requestUsersList: (userSearch: string, cb: (users: IUser[]) => void) => void
+    requestDirectChanel: ((usernames: [string, string], cb: () => void) => void)
 }
 
 export interface InterServerEvents {

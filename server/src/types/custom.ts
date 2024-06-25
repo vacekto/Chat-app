@@ -1,4 +1,4 @@
-import { ClientToServerEvents, IUser, InterServerEvents, ServerToClientEvents, SocketData } from '@chatapp/shared'
+import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from '@chatapp/shared'
 import { Request, Response, NextFunction } from 'express'
 import { Document, Types } from 'mongoose'
 import { FlattenMaps, Error as MongooseError } from 'mongoose'
@@ -23,7 +23,7 @@ export type TIOServer = Server<
     InterServerEvents,
     SocketData
 >
-// internal socket.io interface, could not be imported for some reason
+
 export interface ExtendedError extends Error {
     data?: any
 }

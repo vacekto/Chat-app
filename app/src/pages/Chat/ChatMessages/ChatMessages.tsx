@@ -10,10 +10,10 @@ const ChatMessages: React.FC<IChatMessagesProps> = () => {
 
     return <div className="ChatMessages">
         <BorderContainer
-            title={activeChannel?.channelName}
+            title={activeChannel.channelName}
         >
 
-            {activeChannel?.messages.map(msg => {
+            {activeChannel.messages.map(msg => {
                 return <Message message={msg} key={msg.id} />
             })}
         </BorderContainer>

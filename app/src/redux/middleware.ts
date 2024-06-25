@@ -14,7 +14,6 @@ export const addAlertMiddleware: Middleware = api => next => action => {
         alertId: newAlert.id,
         delay: 5000
     }))
-
 }
 
 export const setAlertTimeoutMiddleware: Middleware = api => next => action => {

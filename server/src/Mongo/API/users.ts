@@ -4,8 +4,13 @@ import { TMongoDoc, TMongoLean } from "../../types";
 import { ObjectId } from "mongoose";
 
 type TUserArg = Partial<IUser> & { _id?: string | ObjectId }
-export function getUser(user: TUserArg, useLean?: false): Promise<TMongoDoc<IUser> | null>
-export function getUser(user: TUserArg, useLean?: true): Promise<TMongoLean<IUser> | null>
+
+export function getUser<UseLean extends boolean = false>(
+    users: TUserArg, useLean?: UseLean
+): Promise<UseLean extends true ?
+    TMongoLean<IUser> | null :
+    TMongoDoc<IUser> | null
+>
 
 export function getUser(user: TUserArg, useLean: boolean = false) {
     const query = User.findOne(user)
@@ -18,18 +23,19 @@ export const createUser = (userData: Omit<IUser, "id">) => {
     return newUser.save()
 }
 
-export function getUsersFuzzySearch(usernameSearch: string, useLean?: false): Promise<TMongoDoc<IUser>[]>
-export function getUsersFuzzySearch(usernameSearch: string, useLean?: true): Promise<TMongoLean<IUser>[]>
+export function getUsersFuzzySearch<UseLean extends boolean = false>(
+    usernameSearch: string, useLean?: UseLean
+): Promise<UseLean extends true ?
+    TMongoLean<IUser>[] :
+    TMongoDoc<IUser>[]
+>
 
-export async function getUsersFuzzySearch(usernameSearch: string, useLean = false) {
+export async function getUsersFuzzySearch(usernameSearch: string, useLean: boolean = false) {
     const pattern = `\\b\\w*${usernameSearch}\\w*\\b`
     const regex = new RegExp(pattern, "i");
     const query = User.find(
         { "username": { $regex: regex } }
     )
     if (useLean) query.lean()
-
-    const result = await query.exec()
-
-    return result
+    return query.exec()
 }

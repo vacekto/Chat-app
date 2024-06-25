@@ -30,6 +30,6 @@ groupChannelSchema.pre('save', function () {
     this.id = uuidv4()
 });
 
-const GroupChannelModel = mongoose.model<TGroupChannelDB>("GroupChannel", groupChannelSchema)
+const GroupChannel = mongoose.model<TGroupChannelDB>("GroupChannel", groupChannelSchema)
 
-export default GroupChannelModel
+export default GroupChannel

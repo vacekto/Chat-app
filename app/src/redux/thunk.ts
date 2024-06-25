@@ -16,15 +16,17 @@ import {
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socket"
 import { CHAP_APP_LAST_ONLINE } from "../util/constants"
+import { TRootState } from "./store"
+import { messagesActions } from "./slice/messagesSlice"
 
-export const passwordLogin = createAsyncThunk(
+export const passwordLogin = createAsyncThunk<ILoginResponseData, TLoginData, { state: TRootState }>(
     "userData/passwordLogin",
-    async (data: TLoginData, { dispatch }) => {
-        const res: Response = await sendJSON("/passwordLogin", data)
+    async (args, thunkAPI) => {
+        const res: Response = await sendJSON("/passwordLogin", args)
         const responseData: ILoginResponseData | IResponseError = await res.json()
 
         if (isServerError(responseData)) {
-            dispatch(alertActions.addAlert({
+            thunkAPI.dispatch(alertActions.addAlert({
                 message: responseData.errorMessage,
                 severity: "error"
             }))
@@ -33,8 +35,8 @@ export const passwordLogin = createAsyncThunk(
 
         socket.connect(responseData.jwt)
         localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
-        dispatch(dataActions.connect(responseData))
-        dispatch(alertActions.addAlert({
+        thunkAPI.dispatch(dataActions.connect(responseData))
+        thunkAPI.dispatch(alertActions.addAlert({
             message: "Login succesfull",
             severity: "success"
         }))
@@ -43,49 +45,49 @@ export const passwordLogin = createAsyncThunk(
     }
 )
 
-export const register = createAsyncThunk(
+export const register = createAsyncThunk<void, PartialBy<TRegisterData, "repeatPassword">, { state: TRootState }>(
     "userData/register",
-    async (data: PartialBy<TRegisterData, "repeatPassword">, { dispatch }) => {
-        delete data.repeatPassword
-        const res: Response = await sendJSON("/register", data)
+    async (args, thunkAPI) => {
+        delete args.repeatPassword
+        const res: Response = await sendJSON("/register", args)
         const responseData: IRegisterResponseData | IResponseError = await res.json()
 
         if (isServerError(responseData)) {
-            dispatch(alertActions.addAlert({
+            thunkAPI.dispatch(alertActions.addAlert({
                 message: responseData.errorMessage,
                 severity: "error"
             }))
             throw new Error(responseData.errorMessage)
         }
 
-        dispatch(dataActions.setFormAction("loginAction"))
-        dispatch(alertActions.addAlert({
+        thunkAPI.dispatch(dataActions.setFormAction("loginAction"))
+        thunkAPI.dispatch(alertActions.addAlert({
             message: "Registered succesfully",
             severity: "success"
         }))
     }
 )
 
-export const logout = createAsyncThunk(
+export const logout = createAsyncThunk<void, void, { state: TRootState }>(
     "userData/logout",
-    async (_, { dispatch }) => {
+    async (_, thunkAPI) => {
         await fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
             method: "POST",
             credentials: 'include'
         })
         socket.disconnect()
         localStorage.removeItem(CHAP_APP_LAST_ONLINE)
-        dispatch(dataActions.disconnect())
-        dispatch(alertActions.addAlert({
+        thunkAPI.dispatch(dataActions.disconnect())
+        thunkAPI.dispatch(alertActions.addAlert({
             message: "You are now logged out",
             severity: "success"
         }))
     }
 )
 
-export const passkeyLogin = createAsyncThunk(
+export const passkeyLogin = createAsyncThunk<ILoginResponseData, void, { state: TRootState }>(
     "userData/passkeyLogin",
-    async (_, { dispatch }) => {
+    async (_, thunkAPI) => {
         const { token } = await passwordless.signinWithDiscoverable()
         if (!token) {
             alertActions.addAlert({
@@ -97,29 +99,29 @@ export const passkeyLogin = createAsyncThunk(
         const response = await sendJSON("/passkeyLogin", { token })
         const responseData: ILoginResponseData | IResponseError = await response.json()
         if (isServerError(responseData)) {
-            dispatch(alertActions.addAlert({
+            thunkAPI.dispatch(alertActions.addAlert({
                 message: responseData.errorMessage,
                 severity: "error"
             }))
             throw new Error(responseData.errorMessage)
         }
 
-        dispatch(alertActions.addAlert({
+        thunkAPI.dispatch(alertActions.addAlert({
             message: "Login succesfull",
             severity: "success"
         }))
         socket.connect(responseData.jwt)
         localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
-        dispatch(dataActions.connect(responseData))
+        thunkAPI.dispatch(dataActions.connect(responseData))
 
         return responseData
     }
 )
 
 
-export const OAuthLogin = createAsyncThunk(
+export const OAuthLogin = createAsyncThunk<void, void, { state: TRootState }>(
     "userData/OAuthLogin",
-    async (_, { dispatch }) => {
+    async (_, thunkAPI) => {
 
         const url = `${import.meta.env.VITE_SERVER_URL}/refreshToken`
         const options: RequestInit = {
@@ -137,7 +139,28 @@ export const OAuthLogin = createAsyncThunk(
         }
         socket.connect(JWT)
         localStorage.setItem(CHAP_APP_LAST_ONLINE, loginData.username)
-        dispatch(dataActions.connect(loginData))
+        thunkAPI.dispatch(dataActions.connect(loginData))
+    }
+)
 
+export const fetchDirectChannel = createAsyncThunk<void, [string, string], { state: TRootState }>(
+    "message/selectDirectChannel",
+    async (args, thunkAPI) => {
+        const state = thunkAPI.getState()
+        const channel = state.message.directChannels.find(c => {
+            return (
+                c.users.includes(args[0]) &&
+                c.users.includes(args[1])
+            )
+        })
+
+        if (channel) {
+            thunkAPI.dispatch(messagesActions.selectDirectChannel(channel.id))
+            return
+        }
+
+        socket.emit("requestDirectChanel", args, () => {
+            // challback func
+        })
     }
 )

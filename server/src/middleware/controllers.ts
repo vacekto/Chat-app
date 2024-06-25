@@ -51,9 +51,8 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
 
     const verifyResponse = await fetch(url, options);
     const body = await verifyResponse.json();
-
     if (!body.success) throw new Error("some passkey login error")
-    const user = await MongoAPI.getUser({ id: body.userId }, true)
+    const user = await MongoAPI.users.getUser({ id: body.userId }, true)
     if (!user) throw new Error("some passkey login error")
 
     const payload: TTokenPayload = {
@@ -95,7 +94,7 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)
-    const user = await MongoAPI.createUser(registerData)
+    const user = await MongoAPI.users.createUser(registerData)
 
     const response: IRegisterResponseData = {
         username: user.username,
@@ -107,7 +106,7 @@ export const register: TUtilMiddleware = async (req, res, next) => {
 
 export const passwordLogin: TUtilMiddleware = async (req, res) => {
     const loginData = zodSchemas.loginApiZS.parse(req.body)
-    const user = await MongoAPI.getUser({ username: loginData.username })
+    const user = await MongoAPI.users.getUser({ username: loginData.username })
     if (!user) throw new BadUserInput(`User with username ${loginData.username} does not exist.`)
     const isMatch = await bcrypt.compare(loginData.password, user.password!)
     if (!isMatch) throw new BadUserInput('Incorrect password')
@@ -205,7 +204,7 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
     const code = req.query.code as string
     const { access_token, id_token } = await getGoogleOAuthTokens(code)
     const OAuthPayloadayload = getJWTPayload(id_token)
-    const user = await MongoAPI.getUser({ email: OAuthPayloadayload.email }, true)
+    const user = await MongoAPI.users.getUser({ email: OAuthPayloadayload.email }, true)
     const redirectUrl = process.env.NODE_ENV === "development" ?
         process.env.VITE_APP_URL as string :
         process.env.VITE_SERVER_URL as string
