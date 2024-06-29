@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IDirectChannel, IMessage } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
 import User from "./User";
-import { TMongoDoc, TMongoLean } from "src/types";
+import { TMongoDoc, TMongoLean } from "../../types";
 
 
 type TDirectChannelDB = Omit<IDirectChannel, "messages"> & {

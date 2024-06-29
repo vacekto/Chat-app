@@ -1,6 +1,6 @@
-import { TIOServer, TServerSocket } from "src/types";
+import { TIOServer, TServerSocket } from "../../types";
 import MongoAPI from "../../Mongo/API/index";
-import { trimMongoObj } from "src/util/functions";
+import { trimMongoObj } from "../../util/functions";
 import { IMessage } from "@chatapp/shared";
 
 export const registerUtilEvents = (io: TIOServer, socket: TServerSocket) => {

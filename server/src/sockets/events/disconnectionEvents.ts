@@ -1,4 +1,4 @@
-import { TIOServer, TServerSocket } from "src/types"
+import { TIOServer, TServerSocket } from "../../types"
 
 export const registerDisconnectionEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("disconnecting", (msg, jwt) => {
