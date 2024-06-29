@@ -23,3 +23,18 @@ export const getGoogleOAuthTokens = async (code: string): Promise<IGoogleTokenRe
     const res = await fetch(url, options)
     return res.json()
 }
+
+export const trimMongoObj = (obj: any) => {
+    if (typeof obj !== "object") return obj
+    delete obj._id
+    delete obj.__v
+
+    for (let prop in obj) {
+        if (
+            obj[prop] instanceof Array &&
+            typeof obj[prop][0] === "object"
+        ) for (let item of obj[prop])
+                trimMongoObj(item)
+    }
+    return obj
+}

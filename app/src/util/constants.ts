@@ -1,7 +1,7 @@
 /**
  * local storage prop with username, 
  */
-export const CHAP_APP_LAST_ONLINE = "chatAppLastOnline"
+export const LS_CHAP_APP_LAST_ONLINE = "chatAppLastOnline"
 /**
  * described in seconds
  */

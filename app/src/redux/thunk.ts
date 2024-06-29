@@ -9,13 +9,13 @@ import {
     PartialBy,
     TLoginData,
     TRegisterData,
-    TTokenPayload,
+    ITokenPayload,
     getJWTPayload,
     isServerError,
 } from "@chatapp/shared"
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socket"
-import { CHAP_APP_LAST_ONLINE } from "../util/constants"
+import { LS_CHAP_APP_LAST_ONLINE } from "../util/constants"
 import { TRootState } from "./store"
 import { messagesActions } from "./slice/messagesSlice"
 
@@ -34,7 +34,7 @@ export const passwordLogin = createAsyncThunk<ILoginResponseData, TLoginData, { 
         }
 
         socket.connect(responseData.jwt)
-        localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
+        localStorage.setItem(LS_CHAP_APP_LAST_ONLINE, responseData.username)
         thunkAPI.dispatch(dataActions.connect(responseData))
         thunkAPI.dispatch(alertActions.addAlert({
             message: "Login succesfull",
@@ -76,7 +76,7 @@ export const logout = createAsyncThunk<void, void, { state: TRootState }>(
             credentials: 'include'
         })
         socket.disconnect()
-        localStorage.removeItem(CHAP_APP_LAST_ONLINE)
+        localStorage.removeItem(LS_CHAP_APP_LAST_ONLINE)
         thunkAPI.dispatch(dataActions.disconnect())
         thunkAPI.dispatch(alertActions.addAlert({
             message: "You are now logged out",
@@ -111,7 +111,7 @@ export const passkeyLogin = createAsyncThunk<ILoginResponseData, void, { state: 
             severity: "success"
         }))
         socket.connect(responseData.jwt)
-        localStorage.setItem(CHAP_APP_LAST_ONLINE, responseData.username)
+        localStorage.setItem(LS_CHAP_APP_LAST_ONLINE, responseData.username)
         thunkAPI.dispatch(dataActions.connect(responseData))
 
         return responseData
@@ -130,7 +130,7 @@ export const OAuthLogin = createAsyncThunk<void, void, { state: TRootState }>(
         }
         const res = await fetch(url, options)
         const { JWT } = await res.json()
-        const data: TTokenPayload = getJWTPayload(JWT)
+        const data: ITokenPayload = getJWTPayload(JWT)
         const loginData: ILoginResponseData = {
             email: data.email,
             jwt: JWT,
@@ -138,19 +138,19 @@ export const OAuthLogin = createAsyncThunk<void, void, { state: TRootState }>(
             username: data.username
         }
         socket.connect(JWT)
-        localStorage.setItem(CHAP_APP_LAST_ONLINE, loginData.username)
+        localStorage.setItem(LS_CHAP_APP_LAST_ONLINE, loginData.username)
         thunkAPI.dispatch(dataActions.connect(loginData))
     }
 )
 
 export const fetchDirectChannel = createAsyncThunk<void, [string, string], { state: TRootState }>(
     "message/selectDirectChannel",
-    async (args, thunkAPI) => {
+    async (usernames, thunkAPI) => {
         const state = thunkAPI.getState()
         const channel = state.message.directChannels.find(c => {
             return (
-                c.users.includes(args[0]) &&
-                c.users.includes(args[1])
+                c.users.includes(usernames[0]) &&
+                c.users.includes(usernames[1])
             )
         })
 
@@ -159,8 +159,15 @@ export const fetchDirectChannel = createAsyncThunk<void, [string, string], { sta
             return
         }
 
-        socket.emit("requestDirectChanel", args, () => {
-            // challback func
+        socket.emit("requestDirectChanel", usernames, (channel) => {
+            console.log("channel")
+            thunkAPI.dispatch(messagesActions.addDirectChannel({
+                channelId: channel.id,
+                messages: channel.messages,
+                users: channel.users,
+                clientUsername: state.userData.username
+            }))
+            thunkAPI.dispatch(messagesActions.selectDirectChannel(channel.id))
         })
     }
 )

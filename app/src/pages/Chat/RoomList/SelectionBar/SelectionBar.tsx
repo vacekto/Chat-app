@@ -12,28 +12,37 @@ import { TbUsersGroup } from "react-icons/tb";
 import socket from '../../../../util/socket';
 import { v4 as uuidv4 } from 'uuid';
 import { IUser } from '@chatapp/shared';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { fetchDirectChannel } from '../../../../redux/thunk';
 
 interface ITopBarProps { }
 
 const SelectionBar: React.FC<ITopBarProps> = () => {
 
     const [options, setOptions] = useState<IUser[]>([])
-
-    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const clientUsername = useAppSelector(state => state.userData.username)
     const inputRef = useRef<HTMLInputElement>(null)
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const dispatch = useAppDispatch()
 
-    const handleChange = () => {
+    const fetchOptions = () => {
+
         const debounceCb = () => {
             debounceTimeoutRef.current = null
-            socket.emit("requestUsersList", inputRef.current!.value, users => {
+            const eventCb = (users: IUser[]) => {
+                users = users.filter(u => u.username !== clientUsername)
                 setOptions(users)
-            })
+            }
+            socket.emit("requestUsersList", inputRef.current!.value, eventCb)
         }
 
         if (debounceTimeoutRef.current)
             clearTimeout(debounceTimeoutRef.current)
         debounceTimeoutRef.current = setTimeout(debounceCb, 300)
+    }
 
+    const selectOption = (username: string) => {
+        dispatch(fetchDirectChannel([username, clientUsername]))
     }
 
     return <div className="SelectionBar">
@@ -48,14 +57,18 @@ const SelectionBar: React.FC<ITopBarProps> = () => {
             </div>
         </div>
 
-        <AutoComplete openOnFocus>
+        <AutoComplete
+            openOnFocus
+            onChange={selectOption}
+        >
             <AutoCompleteInput
                 variant="filled"
-                onChange={handleChange}
+                onChange={fetchOptions}
                 ref={inputRef}
+
             />
             <AutoCompleteList>
-                {options.map((user) => (
+                {options.map(user => (
                     <AutoCompleteItem
                         key={uuidv4()}
                         value={user.username}

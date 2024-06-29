@@ -2,8 +2,8 @@ import * as users from './users'
 import * as directChannels from './directChannels'
 
 const MongoAPI = {
-    users,
-    directChannels
+    ...users,
+    ...directChannels
 }
 
 export default MongoAPI

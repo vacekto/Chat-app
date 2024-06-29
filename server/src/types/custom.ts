@@ -29,3 +29,16 @@ export interface ExtendedError extends Error {
 }
 
 export type TSocketIOMiddleware = (socket: TServerSocket, next: (err?: ExtendedError | undefined) => void) => void
+
+// export type TDirectChannelDB<
+//     populated extends boolean = false,
+//     lean extends boolean = false
+// > = Omit<IDirectChannel, "messages"> & {
+//     messages: populated extends false ?
+//     Schema.Types.ObjectId[] :
+//     (
+//         lean extends true ?
+//         TMongoLean<IMessage>[] :
+//         TMongoDoc<IMessage>[]
+//     )
+// }

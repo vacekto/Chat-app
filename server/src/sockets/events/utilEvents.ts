@@ -1,17 +1,23 @@
-import { TIOServer, TMongoLean, TServerSocket } from "src/types";
+import { TIOServer, TServerSocket } from "src/types";
 import MongoAPI from "../../Mongo/API/index";
-import { IUser, PartialBy } from "@chatapp/shared";
+import { trimMongoObj } from "src/util/functions";
+import { IMessage } from "@chatapp/shared";
 
 export const registerUtilEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("requestUsersList", async (userSearch, cb) => {
-        const users = await MongoAPI.users.getUsersFuzzySearch(userSearch, true)
-        users.forEach((user: PartialBy<TMongoLean<IUser>, "_id">) => {
-            delete user._id
-        })
+        const users = await MongoAPI.getUsersFuzzySearch(userSearch, true)
+        users.forEach(trimMongoObj)
         cb(users)
     })
 
-    socket.on("requestDirectChanel", (usernaes) => {
-
+    socket.on("requestDirectChanel", async (usernames, cb) => {
+        let channel = await MongoAPI.getDirectChannelByUsers(usernames, true, true)
+        if (!channel) channel = await MongoAPI.createDirectChannel(usernames)
+        trimMongoObj(channel)
+        cb({
+            id: channel.id,
+            messages: (channel.messages as IMessage[]),
+            users: channel.users
+        })
     })
 }

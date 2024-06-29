@@ -4,7 +4,7 @@ import { IClientDirectChannel } from '@chatapp/shared';
 
 interface IAddDirectChannelPayload {
     users: string[]
-    messages: []
+    messages: IMessage[]
     clientUsername: string
     channelId: string
 }

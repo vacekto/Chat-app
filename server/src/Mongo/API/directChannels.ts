@@ -1,20 +1,6 @@
-import { TMongoDoc, TMongoLean } from "../../types";
-import DirectChannel, { TDirectChannelDB } from "../models/DirectChannel";
+import DirectChannel from "../models/DirectChannel";
 
-export function getDirectChannelByUsers<
-    Populate extends boolean = false,
-    UseLean extends boolean = false
->(
-    users: [string, string],
-    populate?: Populate,
-    useLean?: UseLean
-):
-    Promise<UseLean extends true ?
-        TMongoLean<TDirectChannelDB<Populate>> | null :
-        TMongoDoc<TDirectChannelDB<Populate>> | null
-    >
-
-export async function getDirectChannelByUsers(users: [string, string], useLean?: boolean, populate?: boolean) {
+export const getDirectChannelByUsers = async (users: [string, string], useLean?: boolean, populate?: boolean) => {
     const query = DirectChannel.findOne({
         "users": { $all: users }
     })
@@ -23,3 +9,8 @@ export async function getDirectChannelByUsers(users: [string, string], useLean?:
     return query.exec()
 }
 
+export async function createDirectChannel(users: [string, string]) {
+    let channel = new DirectChannel({ users })
+    await channel.save()
+    return channel
+}

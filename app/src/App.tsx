@@ -7,14 +7,14 @@ import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
 import { logout } from './redux/thunk'
-import { IMessage } from '@chatapp/shared'
+import { IMessage, getJWTPayload } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messagesSlice'
-import { CHAP_APP_LAST_ONLINE } from './util/constants'
+import { LS_CHAP_APP_LAST_ONLINE } from './util/constants'
 import { refreshTokens } from './util/functions'
-
 
 function App() {
   const connected = useAppSelector(state => state.userData.socketConnected)
+  const JWT = useAppSelector(state => state.userData.JWT)
   const dispatch = useAppDispatch()
 
   const onConnectEvent = () => {
@@ -29,14 +29,13 @@ function App() {
     dispatch(messagesActions.addDirectMessage(msg))
   }
 
-
   const handleTest = async () => {
-
+    const payload = getJWTPayload(JWT, true)
+    console.log(payload)
   }
 
   const handleLogout = () => {
     dispatch(logout())
-
   }
 
   const onTestEvent = () => {
@@ -46,11 +45,11 @@ function App() {
   const connectSocket = async () => {
     const JWT = await refreshTokens()
     if (!JWT) {
-      localStorage.removeItem(CHAP_APP_LAST_ONLINE)
+      localStorage.removeItem(LS_CHAP_APP_LAST_ONLINE)
       return
     }
-    dispatch(dataActions.setJWT(JWT))
     socket.connect(JWT)
+    dispatch(dataActions.setJWT(JWT))
   }
 
   useEffect(() => {
@@ -59,8 +58,9 @@ function App() {
     socket.on("message", onMessageEvent)
     socket.on("test", onTestEvent)
 
-    const username = localStorage.getItem(CHAP_APP_LAST_ONLINE)
+    const username = localStorage.getItem(LS_CHAP_APP_LAST_ONLINE)
     if (username) connectSocket()
+
     return () => {
       socket.disconnect()
       socket.off('connect', onConnectEvent)

@@ -4,7 +4,7 @@ export const CORS = [
     process.env.VITE_SERVER_URL as string
 ]
 
-export const GoogleOAuthURL = (function () {
+export const GOOGLE_OAUTH_URL = (function () {
     const params = {
         redirect_uri: process.env.VITE_GOOGLE_OAUTH_REDIRECT_URL as string,
         client_id: process.env.VITE_GOOGLE_CLIENT_ID as string,

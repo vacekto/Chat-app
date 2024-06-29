@@ -1,10 +1,16 @@
-import { IResponseError } from "../types";
+import { ITokenPayload, ITokenPayloadExtended } from "../types"
 
-export const getJWTPayload = (token: string) => {
+type TGetJWTPayload = <T extends boolean = false>(
+    token: string, extended?: T
+) => T extends true ?
+    ITokenPayloadExtended :
+    ITokenPayload
+
+export const getJWTPayload: TGetJWTPayload = (token, extended) => {
     const tokenPayload = token.split('.')[1]
-    return JSON.parse(atob(tokenPayload))
-}
-
-export function isServerError(data: Object): data is IResponseError {
-    return typeof (data as any).errorMessage === "string"
+    const payload = JSON.parse(atob(tokenPayload))
+    if (extended) return payload
+    delete payload.exp
+    delete payload.iat
+    return payload
 }

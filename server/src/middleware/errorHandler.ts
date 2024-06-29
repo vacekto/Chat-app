@@ -9,6 +9,7 @@ import { ZodError } from "zod";
 type TErrorHandlers = TErrorMiddleware[]
 
 const errorsHandlers: TErrorHandlers = [
+
     function customErrors(err, req, res, next) {
         let responseError: IResponseError = {
             errorMessage: "",

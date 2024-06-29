@@ -5,18 +5,37 @@ import { ObjectId } from "mongoose";
 
 type TUserArg = Partial<IUser> & { _id?: string | ObjectId }
 
-export function getUser<UseLean extends boolean = false>(
-    users: TUserArg, useLean?: UseLean
-): Promise<UseLean extends true ?
-    TMongoLean<IUser> | null :
-    TMongoDoc<IUser> | null
->
+export function getUser
+    <UseLean extends boolean = false>(
+        users: TUserArg, useLean?: UseLean
+    ): Promise<UseLean extends true ?
+        TMongoLean<IUser> | null :
+        TMongoDoc<IUser> | null
+    >
 
 export function getUser(user: TUserArg, useLean: boolean = false) {
     const query = User.findOne(user)
     if (useLean) query.lean()
     return query.exec()
 }
+
+export function getUsers
+    <UseLean extends boolean = false>(
+        usernames: string[], useLean?: UseLean
+    ): Promise<UseLean extends true ?
+        TMongoLean<IUser>[] :
+        TMongoDoc<IUser>[]
+    >
+
+export function getUsers(usernames: string[], useLean: boolean = false) {
+    const query = User.find({
+        "username": { $all: usernames }
+    })
+    if (useLean) query.lean()
+    return query.exec()
+}
+
+
 
 export const createUser = (userData: Omit<IUser, "id">) => {
     const newUser: TMongoDoc<IUser> = new User(userData)

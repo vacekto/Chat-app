@@ -1,5 +1,8 @@
-import { IUser } from "./custom";
-import { IMessage } from "./zodInferred";
+import {
+    IUser,
+    IDirectChannel,
+    IMessage
+} from "./custom";
 
 export interface ServerToClientEvents {
     noArg: () => void;
@@ -14,10 +17,10 @@ export interface ClientToServerEvents {
     hello: () => void
     message: (msg: IMessage) => void
     test: () => void
-    directMessage: (msg: IMessage, author: string, recipient: string) => void
-    groupMessage: (msg: IMessage, channelId: string) => void
+    directMessage: (msg: IMessage) => void
+    groupMessage: (msg: IMessage) => void
     requestUsersList: (userSearch: string, cb: (users: IUser[]) => void) => void
-    requestDirectChanel: ((usernames: [string, string], cb: () => void) => void)
+    requestDirectChanel: ((usernames: [string, string], cb: (channel: IDirectChannel) => void) => void)
 }
 
 export interface InterServerEvents {

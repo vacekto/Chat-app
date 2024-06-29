@@ -1,4 +1,4 @@
-import { io, } from "socket.io-client";
+import { io } from "socket.io-client";
 import { TClientSocket } from './types'
 
 interface ISocketProxy extends TClientSocket {
@@ -21,9 +21,8 @@ const createSocketProxy = (socket: TClientSocket) => {
 
     const onProxy = new Proxy(socket.on, {
         apply(target, thisArg, args) {
-            if (!socket.hasListeners(args[0]))
-                return Reflect.apply(target, thisArg, args)
-            return socket
+            if (socket.hasListeners(args[0])) return socket
+            return Reflect.apply(target, thisArg, args)
         }
     })
 

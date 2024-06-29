@@ -1,12 +1,12 @@
 import { TUtilMiddleware } from "../types";
 import MongoAPI from "../Mongo/API/index";
-import { ILoginResponseData, zodSchemas, IRegisterResponseData, TTokenPayload, getJWTPayload, REFRESH_TOKEN } from '@chatapp/shared'
+import { ILoginResponseData, zodSchemas, IRegisterResponseData, ITokenPayload, getJWTPayload, REFRESH_TOKEN } from '@chatapp/shared'
 import BadUserInput from "../util/errorClasses/BadUserInput";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { redisClient } from "../Redis/connect";
 import { JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH } from "@chatapp/shared"
-import { COOKIE_SAMESITE, GoogleOAuthURL } from "../util/config";
+import { COOKIE_SAMESITE, GOOGLE_OAUTH_URL } from "../util/config";
 import { getGoogleOAuthTokens } from "../util/functions";
 
 export const createPassKey: TUtilMiddleware = async (req, res) => {
@@ -52,10 +52,10 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
     const verifyResponse = await fetch(url, options);
     const body = await verifyResponse.json();
     if (!body.success) throw new Error("some passkey login error")
-    const user = await MongoAPI.users.getUser({ id: body.userId }, true)
+    const user = await MongoAPI.getUser({ id: body.userId }, true)
     if (!user) throw new Error("some passkey login error")
 
-    const payload: TTokenPayload = {
+    const payload: ITokenPayload = {
         email: user.email,
         id: user.id,
         username: user.username,
@@ -94,7 +94,7 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)
-    const user = await MongoAPI.users.createUser(registerData)
+    const user = await MongoAPI.createUser(registerData)
 
     const response: IRegisterResponseData = {
         username: user.username,
@@ -106,7 +106,7 @@ export const register: TUtilMiddleware = async (req, res, next) => {
 
 export const passwordLogin: TUtilMiddleware = async (req, res) => {
     const loginData = zodSchemas.loginApiZS.parse(req.body)
-    const user = await MongoAPI.users.getUser({ username: loginData.username })
+    const user = await MongoAPI.getUser({ username: loginData.username })
     if (!user) throw new BadUserInput(`User with username ${loginData.username} does not exist.`)
     const isMatch = await bcrypt.compare(loginData.password, user.password!)
     if (!isMatch) throw new BadUserInput('Incorrect password')
@@ -156,7 +156,7 @@ export const refreshToken: TUtilMiddleware = async (req, res) => {
         refreshToken,
         process.env.AUTH_TOKEN_SECRET as string,
     )
-    let payload: TTokenPayload = getJWTPayload(refreshToken)
+    let payload: ITokenPayload = getJWTPayload(refreshToken)
     payload = {
         username: payload.username,
         email: payload.email,
@@ -194,7 +194,7 @@ export const refreshToken: TUtilMiddleware = async (req, res) => {
 
 export const logout: TUtilMiddleware = async (req, res) => {
     const token = req.cookies[REFRESH_TOKEN]
-    const paylaod: TTokenPayload = getJWTPayload(token)
+    const paylaod: ITokenPayload = getJWTPayload(token)
     res.clearCookie(REFRESH_TOKEN)
     await redisClient.del(paylaod.username);
     res.status(200).send(paylaod)
@@ -204,7 +204,7 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
     const code = req.query.code as string
     const { access_token, id_token } = await getGoogleOAuthTokens(code)
     const OAuthPayloadayload = getJWTPayload(id_token)
-    const user = await MongoAPI.users.getUser({ email: OAuthPayloadayload.email }, true)
+    const user = await MongoAPI.getUser({ email: OAuthPayloadayload.email }, true)
     const redirectUrl = process.env.NODE_ENV === "development" ?
         process.env.VITE_APP_URL as string :
         process.env.VITE_SERVER_URL as string
@@ -214,7 +214,7 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
         res.redirect(`${redirectUrl}/notRegistered`)
         return
     }
-    const payload: TTokenPayload = {
+    const payload: ITokenPayload = {
         email: user.email,
         id: user.id,
         username: user.username
@@ -225,6 +225,7 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
         { expiresIn: JWT_REFRESH_VALIDATION_LENGTH }
     )
     res.cookie(
+
         REFRESH_TOKEN,
         newRefreshToken,
         {
@@ -240,9 +241,19 @@ export const OAuth: TUtilMiddleware = async (req, res) => {
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {
-    res.send()
+    // await MongoAPI.createDirectChannel(["pumpkinSlayer", "nekdodalsi"])
+    const user = await MongoAPI.getUser({
+        username: "hahaha"
+    })
+    console.log(user)
+    // const user = await MongoAPI.users.getUser({ username: "magicTurtle" }, true)
+    // if (user) {
+    //     const json = JSON.stringify(user)
+    //     console.log(json)
+    // }
+    // res.send()
 }
 
 export const googleLogin: TUtilMiddleware = async (req, res, next) => {
-    res.redirect(GoogleOAuthURL)
+    res.redirect(GOOGLE_OAUTH_URL)
 }

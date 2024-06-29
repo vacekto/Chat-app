@@ -3,8 +3,6 @@ import bcrypt from 'bcrypt';
 import { IUser, zodSchemas } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
 
-
-
 const userSchema = new mongoose.Schema<IUser>({
 
     id: {
@@ -34,9 +32,9 @@ const userSchema = new mongoose.Schema<IUser>({
         unique: true,
         trim: true,
         validate: {
-            validator: function (email: string) {
-                return zodSchemas.emailZS.safeParse(email).success
-            },
+            validator: (email: string) => (
+                zodSchemas.emailZS.safeParse(email).success
+            ),
             message: props => `${props.value} is not a valid email!`
         }
     },
@@ -48,11 +46,12 @@ const userSchema = new mongoose.Schema<IUser>({
     },
 
 
-}, { versionKey: false })
+})
 
 userSchema.pre('validate', function () {
     this.id = uuidv4()
 });
+
 userSchema.pre('save', async function () {
     this.id = uuidv4()
     if (!this.password) throw new Error("password required")
