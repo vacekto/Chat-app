@@ -1,9 +1,9 @@
-import { TErrorMiddleware } from "../types"
+import { TErrorMiddleware } from "../../types"
 import { IResponseError } from "@chatapp/shared"
 import mongoose from "mongoose"
 import { MongoError, MongoServerError, } from 'mongodb';
-import ResourceNotFoundError from '../util/errorClasses/ResourceNotFound'
-import BadUserInputError from "../util/errorClasses/BadUserInput";
+import ResourceNotFoundError from '../../util/errorClasses/ResourceNotFound'
+import BadUserInputError from "../../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
 
 type TErrorHandlers = TErrorMiddleware[]

@@ -1,8 +1,8 @@
 import { ILoginResponseData, ITokenPayload, getTokenPayload } from "@chatapp/shared"
-import MongoAPI from "../Mongo/API"
-import { TUtilMiddleware } from "../types"
-import { setRefreshTokenCookie, signTokens } from "../util/functions"
-import { redisClient } from "../Redis/connect"
+import MongoAPI from "../../Mongo/API"
+import { TUtilMiddleware } from "../../types"
+import { setRefreshTokenCookie, signTokens } from "../../util/functions"
+import { redisClient } from "../../Redis/connect"
 import jwt from 'jsonwebtoken'
 
 export const createPassKey: TUtilMiddleware = async (req, res) => {

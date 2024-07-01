@@ -1,11 +1,10 @@
 import { ILoginResponseData, IRegisterResponseData, ITokenPayload, REFRESH_TOKEN_COOKIE, getTokenPayload, zodSchemas } from "@chatapp/shared"
-import MongoAPI from "../Mongo/API"
-import { TUtilMiddleware } from "../types"
-import { setRefreshTokenCookie, signTokens } from "../util/functions"
-import { redisClient } from "../Redis/connect"
-import BadUserInputError from "../util/errorClasses/BadUserInput"
+import MongoAPI from "../../Mongo/API"
+import { TUtilMiddleware } from "../../types"
+import { setRefreshTokenCookie, signTokens } from "../../util/functions"
+import { redisClient } from "../../Redis/connect"
+import BadUserInputError from "../../util/errorClasses/BadUserInput"
 import bcrypt from 'bcrypt';
-import { COOKIE_SAMESITE } from "../util/config"
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)

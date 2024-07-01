@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as controllers from '../controllers'
-import { middlewareErrorDecorator } from '../middleware/decorator'
+import { middlewareErrorDecorator } from '../middleware/errorDecorator'
 
 const router = Router()
 

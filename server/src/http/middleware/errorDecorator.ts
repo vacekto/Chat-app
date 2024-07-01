@@ -1,4 +1,4 @@
-import { TUtilMiddleware } from '../types'
+import { TUtilMiddleware } from '../../types'
 
 // Express version 4 doesn't catch async errors in middleware by itself, this decoretor ensures that it does.
 export const middlewareErrorDecorator = (middleware: TUtilMiddleware) => (async (req, res, next) => {

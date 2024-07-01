@@ -1,9 +1,9 @@
 import { ITokenPayload, getTokenPayload } from "@chatapp/shared"
-import MongoAPI from "../Mongo/API"
-import { TUtilMiddleware } from "../types"
-import { getGoogleOAuthTokens, setRefreshTokenCookie, signTokens } from "../util/functions"
-import { redisClient } from "../Redis/connect"
-import { GOOGLE_OAUTH_URL } from "../util/config"
+import MongoAPI from "../../Mongo/API"
+import { TUtilMiddleware } from "../../types"
+import { getGoogleOAuthTokens, setRefreshTokenCookie, signTokens } from "../../util/functions"
+import { redisClient } from "../../Redis/connect"
+import { GOOGLE_OAUTH_URL } from "../../util/config"
 
 export const OAuth2Callback: TUtilMiddleware = async (req, res) => {
     const code = req.query.code as string

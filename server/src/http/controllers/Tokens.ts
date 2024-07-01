@@ -1,7 +1,7 @@
 import { ITokenPayload, REFRESH_TOKEN_COOKIE, getTokenPayload, } from "@chatapp/shared"
-import { TUtilMiddleware } from "../types"
-import { setRefreshTokenCookie, signTokens } from "../util/functions"
-import { redisClient } from "../Redis/connect"
+import { TUtilMiddleware } from "../../types"
+import { setRefreshTokenCookie, signTokens } from "../../util/functions"
+import { redisClient } from "../../Redis/connect"
 import jwt from 'jsonwebtoken'
 
 export const refreshToken: TUtilMiddleware = async (req, res) => {
