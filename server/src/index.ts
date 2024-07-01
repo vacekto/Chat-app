@@ -1,11 +1,11 @@
+import { createServer } from "http";
 import express from 'express'
 import cors from 'cors'
 import connectToMongo from './Mongo/connect'
 import connectToRedis from './Redis/connect'
-import router from './http/routes/router'
+import router from './httpServices/routes/router'
 import cookieParser from 'cookie-parser'
-import errorHandlers from './http/middleware/errorHandler'
-import { createServer } from "http";
+import errorHandlers from './httpServices/middleware/errorHandler'
 import { addSocketServer } from './sockets/server'
 import { CORS } from './util/config'
 

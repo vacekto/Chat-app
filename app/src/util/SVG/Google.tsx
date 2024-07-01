@@ -11,10 +11,6 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
     const popupRef = useRef<Window | null>(null)
     const dispatch = useAppDispatch()
 
-    const handleLogin = async () => {
-        dispatch(OAuthLogin())
-    }
-
     const handleClick = () => {
         if (popupRef.current) return
 
@@ -36,7 +32,7 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
                 popupRef.current.close()
                 popupRef.current = null
                 clearInterval(popupInterval)
-                handleLogin()
+                dispatch(OAuthLogin())
             }
         }, 50)
     }
