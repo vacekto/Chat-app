@@ -5,7 +5,7 @@ import { setRefreshTokenCookie, signTokens } from "../util/functions"
 import { redisClient } from "../Redis/connect"
 import BadUserInputError from "../util/errorClasses/BadUserInput"
 import bcrypt from 'bcrypt';
-import { COOKIE_SAMESITE } from "src/util/config"
+import { COOKIE_SAMESITE } from "../util/config"
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)
