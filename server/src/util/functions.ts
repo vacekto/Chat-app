@@ -1,3 +1,8 @@
+import { ITokenPayload, JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH, REFRESH_TOKEN_COOKIE } from '@chatapp/shared'
+import { Response } from 'express'
+import jwt from 'jsonwebtoken'
+import { COOKIE_SAMESITE } from './config'
+
 interface IGoogleTokenResult {
     access_token: string,
     expires_in: number,
@@ -30,11 +35,40 @@ export const trimMongoObj = (obj: any) => {
     delete obj.__v
 
     for (let prop in obj) {
-        if (
-            obj[prop] instanceof Array &&
-            typeof obj[prop][0] === "object"
-        ) for (let item of obj[prop])
-                trimMongoObj(item)
+        trimMongoObj(obj[prop])
     }
     return obj
+}
+
+export const signTokens = (payload: ITokenPayload) => {
+    const accessToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: JWT_ACCESS_VALIDATION_LENGTH }
+    )
+
+    const refreshToken = jwt.sign(
+        payload,
+        process.env.AUTH_TOKEN_SECRET as string,
+        { expiresIn: JWT_REFRESH_VALIDATION_LENGTH }
+    )
+
+    return {
+        accessToken: accessToken,
+        refreshToken: refreshToken
+    }
+}
+
+export const setRefreshTokenCookie = (
+    res: Response<any, Record<string, any>>,
+    refreshToken: string
+) => {
+    res.cookie(
+        REFRESH_TOKEN_COOKIE,
+        refreshToken,
+        {
+            httpOnly: true,
+            sameSite: COOKIE_SAMESITE,
+            maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
+        })
 }

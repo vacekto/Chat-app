@@ -22,7 +22,7 @@ export const sendJSON = (
     return fetch(url, options)
 }
 
-export const refreshTokens = async () => {
+export const refreshTokens = async (): Promise<string> => {
     const url = `${import.meta.env.VITE_SERVER_URL}/refreshToken`
     const options: RequestInit = {
         method: "POST",

@@ -6,7 +6,7 @@ type TGetJWTPayload = <T extends boolean = false>(
     ITokenPayloadExtended :
     ITokenPayload
 
-export const getJWTPayload: TGetJWTPayload = (token, extended) => {
+export const getTokenPayload: TGetJWTPayload = (token, extended) => {
     const tokenPayload = token.split('.')[1]
     const payload = JSON.parse(atob(tokenPayload))
     if (extended) return payload

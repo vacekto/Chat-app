@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as controllers from '../middleware/controllers'
+import * as controllers from '../controllers'
 import { middlewareErrorDecorator } from '../middleware/decorator'
 
 const router = Router()
@@ -15,7 +15,7 @@ router.post('/register', middlewareErrorDecorator(controllers.register))
 router.post('/passwordLogin', middlewareErrorDecorator(controllers.passwordLogin))
 router.post('/passkeyLogin', middlewareErrorDecorator(controllers.passkeyLogin))
 router.post('/createPassKey', middlewareErrorDecorator(controllers.createPassKey))
-router.get('/OAuth', middlewareErrorDecorator(controllers.OAuth))
+router.get('/OAuth', middlewareErrorDecorator(controllers.OAuth2Callback))
 router.get('/googleLogin', middlewareErrorDecorator(controllers.googleLogin))
 
 export default router

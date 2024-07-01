@@ -3,7 +3,7 @@ import MongoAPI from "../../Mongo/API/index";
 import { trimMongoObj } from "../../util/functions";
 import { IMessage } from "@chatapp/shared";
 
-export const registerUtilEvents = (io: TIOServer, socket: TServerSocket) => {
+export const utilEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("requestUsersList", async (userSearch, cb) => {
         const users = await MongoAPI.getUsersFuzzySearch(userSearch, true)
         users.forEach(trimMongoObj)

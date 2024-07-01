@@ -1,7 +1,7 @@
-class BadUserInput extends Error {
+class BadUserInputError extends Error {
     constructor(message?: string) {
         super(message)
     }
 }
 
-export default BadUserInput
+export default BadUserInputError

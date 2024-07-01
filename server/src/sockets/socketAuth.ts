@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { TSocketIOMiddleware } from "../types"
-import { zodSchemas, getJWTPayload } from '@chatapp/shared'
+import { zodSchemas, getTokenPayload } from '@chatapp/shared'
+import AuthTokenError from 'src/util/errorClasses/AuthTokenError';
 
 export const auth: TSocketIOMiddleware = (socket, next) => {
     try {
@@ -11,14 +12,21 @@ export const auth: TSocketIOMiddleware = (socket, next) => {
             process.env.AUTH_TOKEN_SECRET as string,
         )
 
-        const payload = getJWTPayload(token)
+        const payload = getTokenPayload(token)
         const userData = zodSchemas.tokenPayloadZS.parse(payload)
 
         socket.data.username = userData.username
         next()
 
     } catch (err: any) {
-        // should log error in prod
+
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError" ||
+            err.name === "NotBeforeError"
+        ) {
+            err = new AuthTokenError()
+        }
         next(err)
     }
 }

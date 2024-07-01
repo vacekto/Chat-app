@@ -3,7 +3,7 @@ import { IResponseError } from "@chatapp/shared"
 import mongoose from "mongoose"
 import { MongoError, MongoServerError, } from 'mongodb';
 import ResourceNotFoundError from '../util/errorClasses/ResourceNotFound'
-import BadUserInput from "../util/errorClasses/BadUserInput";
+import BadUserInputError from "../util/errorClasses/BadUserInput";
 import { ZodError } from "zod";
 
 type TErrorHandlers = TErrorMiddleware[]
@@ -21,7 +21,7 @@ const errorsHandlers: TErrorHandlers = [
             return
         }
 
-        if (err instanceof BadUserInput) {
+        if (err instanceof BadUserInputError) {
             responseError.errorMessage = err.message
             res.status(409).send(responseError)
             return

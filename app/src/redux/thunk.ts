@@ -10,12 +10,12 @@ import {
     TLoginData,
     TRegisterData,
     ITokenPayload,
-    getJWTPayload,
+    getTokenPayload,
     isServerError,
 } from "@chatapp/shared"
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socket"
-import { LS_CHAP_APP_LAST_ONLINE } from "../util/constants"
+import { LS_CHAP_APP_ACCESS_TOKEN } from "../util/constants"
 import { TRootState } from "./store"
 import { messagesActions } from "./slice/messagesSlice"
 
@@ -34,7 +34,7 @@ export const passwordLogin = createAsyncThunk<ILoginResponseData, TLoginData, { 
         }
 
         socket.connect(responseData.jwt)
-        localStorage.setItem(LS_CHAP_APP_LAST_ONLINE, responseData.username)
+        localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, responseData.jwt)
         thunkAPI.dispatch(dataActions.connect(responseData))
         thunkAPI.dispatch(alertActions.addAlert({
             message: "Login succesfull",
@@ -76,7 +76,7 @@ export const logout = createAsyncThunk<void, void, { state: TRootState }>(
             credentials: 'include'
         })
         socket.disconnect()
-        localStorage.removeItem(LS_CHAP_APP_LAST_ONLINE)
+        localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
         thunkAPI.dispatch(dataActions.disconnect())
         thunkAPI.dispatch(alertActions.addAlert({
             message: "You are now logged out",
@@ -111,7 +111,7 @@ export const passkeyLogin = createAsyncThunk<ILoginResponseData, void, { state: 
             severity: "success"
         }))
         socket.connect(responseData.jwt)
-        localStorage.setItem(LS_CHAP_APP_LAST_ONLINE, responseData.username)
+        localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, responseData.jwt)
         thunkAPI.dispatch(dataActions.connect(responseData))
 
         return responseData
@@ -130,7 +130,7 @@ export const OAuthLogin = createAsyncThunk<void, void, { state: TRootState }>(
         }
         const res = await fetch(url, options)
         const { JWT } = await res.json()
-        const data: ITokenPayload = getJWTPayload(JWT)
+        const data: ITokenPayload = getTokenPayload(JWT)
         const loginData: ILoginResponseData = {
             email: data.email,
             jwt: JWT,
@@ -138,7 +138,7 @@ export const OAuthLogin = createAsyncThunk<void, void, { state: TRootState }>(
             username: data.username
         }
         socket.connect(JWT)
-        localStorage.setItem(LS_CHAP_APP_LAST_ONLINE, loginData.username)
+        localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, loginData.jwt)
         thunkAPI.dispatch(dataActions.connect(loginData))
     }
 )

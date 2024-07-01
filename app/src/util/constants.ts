@@ -1,7 +1,7 @@
 /**
- * local storage prop with username, 
+ * key of local storage prop with JWT access token, 
  */
-export const LS_CHAP_APP_LAST_ONLINE = "chatAppLastOnline"
+export const LS_CHAP_APP_ACCESS_TOKEN = "chatAppLastOnline"
 /**
  * described in seconds
  */

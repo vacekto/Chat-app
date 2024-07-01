@@ -1,6 +1,6 @@
 import { TIOServer, TServerSocket } from "../../types";
 
-export const registerMessageEvents = (io: TIOServer, socket: TServerSocket) => {
+export const messageEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("directMessage", (msg) => {
 
     })

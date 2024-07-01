@@ -5,7 +5,6 @@ export const middlewareErrorDecorator = (middleware: TUtilMiddleware) => (async 
     try {
         await middleware(req, res, next)
     } catch (err) {
-        console.log("ahahahah")
         next(err)
     }
 }) as TUtilMiddleware

@@ -1,14 +1,16 @@
 import { TIOServer, TServerSocket } from "../types";
 import {
-    registerUtilEvents,
-    registerDisconnectionEvents,
-    registerMessageEvents
+    utilEvents,
+    disconnectionEvents,
+    messageEvents,
+    connectCb
 } from "./events";
 
 const registerEvents = (io: TIOServer) => (socket: TServerSocket) => {
-    registerMessageEvents(io, socket)
-    registerDisconnectionEvents(io, socket)
-    registerUtilEvents(io, socket)
+    connectCb(io, socket)
+    messageEvents(io, socket)
+    disconnectionEvents(io, socket)
+    utilEvents(io, socket)
 }
 
 export default registerEvents
