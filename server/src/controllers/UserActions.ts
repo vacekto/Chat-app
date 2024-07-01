@@ -5,6 +5,7 @@ import { setRefreshTokenCookie, signTokens } from "../util/functions"
 import { redisClient } from "../Redis/connect"
 import BadUserInputError from "../util/errorClasses/BadUserInput"
 import bcrypt from 'bcrypt';
+import { COOKIE_SAMESITE } from "src/util/config"
 
 export const register: TUtilMiddleware = async (req, res, next) => {
     const registerData = zodSchemas.registerApiZS.parse(req.body)
@@ -48,7 +49,9 @@ export const passwordLogin: TUtilMiddleware = async (req, res) => {
 export const logout: TUtilMiddleware = async (req, res) => {
     const token = req.cookies[REFRESH_TOKEN_COOKIE]
     const paylaod: ITokenPayload = getTokenPayload(token)
-    res.clearCookie(REFRESH_TOKEN_COOKIE)
+    res.clearCookie(REFRESH_TOKEN_COOKIE, {
+        sameSite: "lax"
+    })
     await redisClient.del(paylaod.username);
     res.status(200).send(paylaod)
 }
