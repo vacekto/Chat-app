@@ -18,7 +18,9 @@ function App() {
   const dispatch = useAppDispatch()
 
   const handleTest = async () => {
-
+    const url = `${import.meta.env.VITE_SERVER_URL}/test`
+    await fetch(url)
+    console.log("fetched")
   }
 
   const handleLogout = () => {

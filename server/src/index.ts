@@ -6,7 +6,7 @@ import connectToRedis from './Redis/connect'
 import router from './httpServices/routes/router'
 import cookieParser from 'cookie-parser'
 import errorHandlers from './httpServices/middleware/errorHandler'
-import { addSocketServer } from './sockets/server'
+import { addSocketServer } from './socketServices/server'
 import { CORS } from './util/config'
 
 const app = express()
