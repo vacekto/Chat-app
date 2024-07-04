@@ -9,11 +9,11 @@ export interface IChatProps { }
 const Chat: React.FC = () => {
 
     const activeRoom = useAppSelector(state => state.message.activeChannel)!
-    const { username, JWT } = useAppSelector(state => state.userData)!
+    const { username, accessToken: JWT } = useAppSelector(state => state.userData)!
 
     const handleCreatePasskey = async () => {
-        const { error } = await createPasskey(username, JWT)
-        if (error) console.error(error)
+        const { ok, res } = await createPasskey(username, JWT)
+        if (!ok) console.error(res)
 
     }
 

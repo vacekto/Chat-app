@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
 import { TSocketIOMiddleware } from "../types"
 import { zodSchemas, getTokenPayload } from '@chatapp/shared'
-import AuthTokenError from "../util/errorClasses/AuthTokenError";
 
 export const auth: TSocketIOMiddleware = (socket, next) => {
     try {
+        console.log("socket connecting")
         const token = socket.handshake.auth.token;
 
         jwt.verify(
@@ -19,14 +19,6 @@ export const auth: TSocketIOMiddleware = (socket, next) => {
         next()
 
     } catch (err: any) {
-
-        if (
-            err.name === "TokenExpiredError" ||
-            err.name === "JsonWebTokenError" ||
-            err.name === "NotBeforeError"
-        ) {
-            err = new AuthTokenError()
-        }
         next(err)
     }
 }

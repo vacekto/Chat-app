@@ -1,5 +1,5 @@
 import './App.scss'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { dataActions } from './redux/slice/userDataSlice'
 import socket from './util/socket'
@@ -7,20 +7,23 @@ import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
 import { logout } from './redux/thunk'
-import { IMessage } from '@chatapp/shared'
+import { IMessage, IUserData } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messagesSlice'
 import { LS_CHAP_APP_ACCESS_TOKEN } from './util/constants'
 import { refreshTokens } from './util/functions'
+import { alertActions } from './redux/slice/alertSlice'
 
 function App() {
   const connected = useAppSelector(state => state.userData.socketConnected)
-  const tokenPlaceholder = useRef<string>("")
   const dispatch = useAppDispatch()
 
   const handleTest = async () => {
     const url = `${import.meta.env.VITE_SERVER_URL}/test`
-    await fetch(url)
-    console.log("fetched")
+    const res = await fetch(url)
+    const users: any[] = await res.json()
+    console.log(users.map(u => u.username))
+    const jwt = localStorage.getItem(LS_CHAP_APP_ACCESS_TOKEN)
+    console.log(jwt)
   }
 
   const handleLogout = () => {
@@ -31,33 +34,36 @@ function App() {
     console.log("test from server")
   }
 
-
-  const connectSocket = () => {
-    const JWT = localStorage.getItem(LS_CHAP_APP_ACCESS_TOKEN)
-    if (JWT) socket.connect(JWT)
-  }
-
   const onErrorEvent = async (err: Error) => {
     if (err.message.includes("jwt expired")) {
-      const JWT = await refreshTokens()
-      socket.connect(JWT)
-    } else {
-      localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
+      const { accessToken } = await refreshTokens()
+      dispatch(dataActions.login(accessToken))
+      return
     }
+
   }
 
   const onConnectEvent = () => {
     dispatch(dataActions.setSocketConnected(true))
-    dispatch(dataActions.setJWT(tokenPlaceholder.current))
+
   }
 
   const onDisconnectEvent = () => {
     dispatch(dataActions.setSocketConnected(false))
+    dispatch(alertActions.addAlert({
+      message: "You are now logged out",
+      severity: "success"
+    }))
   }
 
   const onMessageEvent = (msg: IMessage) => {
     dispatch(messagesActions.addDirectMessage(msg))
   }
+
+  const onUserData = (data: IUserData) => {
+    dispatch(dataActions.setUserData(data))
+  }
+
 
   useEffect(() => {
 
@@ -66,8 +72,10 @@ function App() {
     socket.on('disconnect', onDisconnectEvent)
     socket.on("message", onMessageEvent)
     socket.on("test", onTestEvent)
+    socket.on("useData", onUserData)
 
-    connectSocket()
+    const token = localStorage.getItem(LS_CHAP_APP_ACCESS_TOKEN)
+    if (token) dispatch(dataActions.login(token))
 
     return () => {
       socket.disconnect()

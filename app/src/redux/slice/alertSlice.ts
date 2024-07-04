@@ -1,6 +1,5 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { IAlert } from '../../util/types'
-import { PartialBy } from '@chatapp/shared'
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -26,7 +25,7 @@ export const alertSlice = createSlice({
     name: 'alert',
     initialState,
     reducers: {
-        addAlert: (state: Draft<IAlertState>, action: PayloadAction<PartialBy<IAlert, "id" | "fading">>) => {
+        addAlert: (state: Draft<IAlertState>, action: PayloadAction<Omit<IAlert, "id" | "fading">>) => {
             const newAlert: IAlert = {
                 id: uuidv4(),
                 fading: false,

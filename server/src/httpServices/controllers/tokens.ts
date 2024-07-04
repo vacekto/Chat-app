@@ -1,4 +1,4 @@
-import { ITokenPayload, REFRESH_TOKEN_COOKIE, getTokenPayload, } from "@chatapp/shared"
+import { IRefreshTokenResponse, ITokenPayload, REFRESH_TOKEN_COOKIE, getTokenPayload, } from "@chatapp/shared"
 import { TUtilMiddleware } from "../../types"
 import { setRefreshTokenCookie, signTokens } from "../../util/functions"
 import { redisClient } from "../../Redis/connect"
@@ -25,11 +25,14 @@ export const refreshToken: TUtilMiddleware = async (req, res) => {
     }
 
     const {
-        accessToken: newAccess,
-        refreshToken: newRefresh
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken
     } = signTokens(payload)
 
-    setRefreshTokenCookie(res, newRefresh)
-    await redisClient.set(payload.username, newRefresh);
-    res.send({ JWT: newAccess })
+    setRefreshTokenCookie(res, newRefreshToken)
+    await redisClient.set(payload.username, newRefreshToken);
+    const response: IRefreshTokenResponse = {
+        accessToken: newAccessToken
+    }
+    res.send(response)
 }

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { sendJSON } from "../util/functions"
+import { refreshTokens, sendJSON } from "../util/functions"
 import { dataActions } from './slice/userDataSlice'
 import { alertActions } from './slice/alertSlice'
 import {
@@ -9,17 +9,15 @@ import {
     PartialBy,
     TLoginData,
     TRegisterData,
-    ITokenPayload,
-    getTokenPayload,
     isServerError,
 } from "@chatapp/shared"
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socket"
-import { LS_CHAP_APP_ACCESS_TOKEN } from "../util/constants"
 import { TRootState } from "./store"
 import { messagesActions } from "./slice/messagesSlice"
+import { LS_CHAP_APP_ACCESS_TOKEN } from "../util/constants"
 
-export const passwordLogin = createAsyncThunk<ILoginResponseData, TLoginData, { state: TRootState }>(
+export const passwordAuth = createAsyncThunk<void, TLoginData, { state: TRootState }>(
     "userData/passwordLogin",
     async (args, thunkAPI) => {
         const res: Response = await sendJSON("/passwordLogin", args)
@@ -33,15 +31,7 @@ export const passwordLogin = createAsyncThunk<ILoginResponseData, TLoginData, { 
             throw new Error(responseData.errorMessage)
         }
 
-        socket.connect(responseData.jwt)
-        localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, responseData.jwt)
-        thunkAPI.dispatch(dataActions.connect(responseData))
-        thunkAPI.dispatch(alertActions.addAlert({
-            message: "Login succesfull",
-            severity: "success"
-        }))
-
-        return responseData
+        thunkAPI.dispatch(dataActions.login(responseData.accessToken))
     }
 )
 
@@ -75,17 +65,13 @@ export const logout = createAsyncThunk<void, void, { state: TRootState }>(
             method: "POST",
             credentials: 'include'
         })
-        socket.disconnect()
         localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
-        thunkAPI.dispatch(dataActions.disconnect())
-        thunkAPI.dispatch(alertActions.addAlert({
-            message: "You are now logged out",
-            severity: "success"
-        }))
+        if (socket.connected) socket.disconnect()
+        thunkAPI.dispatch(dataActions.logout())
     }
 )
 
-export const passkeyLogin = createAsyncThunk<ILoginResponseData, void, { state: TRootState }>(
+export const passkeyAuth = createAsyncThunk<void, void, { state: TRootState }>(
     "userData/passkeyLogin",
     async (_, thunkAPI) => {
         const { token } = await passwordless.signinWithDiscoverable()
@@ -106,40 +92,16 @@ export const passkeyLogin = createAsyncThunk<ILoginResponseData, void, { state: 
             throw new Error(responseData.errorMessage)
         }
 
-        thunkAPI.dispatch(alertActions.addAlert({
-            message: "Login succesfull",
-            severity: "success"
-        }))
-        socket.connect(responseData.jwt)
-        localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, responseData.jwt)
-        thunkAPI.dispatch(dataActions.connect(responseData))
-
-        return responseData
+        thunkAPI.dispatch(dataActions.login(responseData.accessToken))
     }
 )
 
 
-export const OAuthLogin = createAsyncThunk<void, void, { state: TRootState }>(
+export const GoogleAuth = createAsyncThunk<void, void, { state: TRootState }>(
     "userData/OAuthLogin",
     async (_, thunkAPI) => {
-
-        const url = `${import.meta.env.VITE_SERVER_URL}/refreshToken`
-        const options: RequestInit = {
-            method: "POST",
-            credentials: 'include'
-        }
-        const res = await fetch(url, options)
-        const { JWT } = await res.json()
-        const data: ITokenPayload = getTokenPayload(JWT)
-        const loginData: ILoginResponseData = {
-            email: data.email,
-            jwt: JWT,
-            id: data.id,
-            username: data.username
-        }
-        socket.connect(JWT)
-        localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, loginData.jwt)
-        thunkAPI.dispatch(dataActions.connect(loginData))
+        const { accessToken } = await refreshTokens()
+        thunkAPI.dispatch(dataActions.login(accessToken))
     }
 )
 

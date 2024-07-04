@@ -1,15 +1,14 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { ILoginResponseData } from '@chatapp/shared'
+import { IUserData } from '@chatapp/shared'
 import { TFormAction } from '../../pages/AppForm'
+import { LS_CHAP_APP_ACCESS_TOKEN } from '../../util/constants'
+import socket from '../../util/socket'
 
-export interface IUserDataState {
+export interface IUserDataState extends IUserData {
     socketConnected: boolean,
-    username: string,
-    email: string,
     formAction: TFormAction,
-    JWT: string,
+    accessToken: string,
     generalChatUsers: string[],
-    id: string
 }
 
 const initialState: IUserDataState = {
@@ -17,7 +16,7 @@ const initialState: IUserDataState = {
     username: "",
     email: "",
     formAction: "loginAction",
-    JWT: "",
+    accessToken: "",
     generalChatUsers: [],
     id: ""
 }
@@ -32,24 +31,25 @@ export const userDataSlice = createSlice({
         setFormAction: ((state: Draft<IUserDataState>, action: PayloadAction<TFormAction>) => {
             state.formAction = action.payload
         }),
-        setJWT: ((state: Draft<IUserDataState>, action: PayloadAction<string>) => {
-            state.JWT = action.payload
-        }),
-        connect: ((state: Draft<IUserDataState>, action: PayloadAction<ILoginResponseData>) => {
+        setUserData: ((state: Draft<IUserDataState>, action: PayloadAction<IUserData>) => {
             state.username = action.payload.username
             state.email = action.payload.email
-            state.JWT = action.payload.jwt
             state.id = action.payload.id
         }),
-        disconnect: ((state: Draft<IUserDataState>) => {
-            state.email = ""
-            state.formAction = "loginAction"
-            state.JWT = ""
-            state.username = ""
-            state.id = ""
-        })
-
-
+        /**
+         * expects JWT access token as payload
+        */
+        login: ((state: Draft<IUserDataState>, action: PayloadAction<string>) => {
+            const token = action.payload
+            state.accessToken = token
+            localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, token)
+            socket.connect(token)
+        }),
+        logout: ((state: Draft<IUserDataState>) => {
+            if (socket.connected) socket.disconnect()
+            localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
+            state = initialState
+        }),
     },
 })
 

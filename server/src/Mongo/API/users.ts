@@ -27,10 +27,17 @@ export function getUsers
         TMongoDoc<IUser>[]
     >
 
+/**
+ * 
+ * @param usernames if usernames is empty, fetches all users
+ * @returns 
+ */
 export function getUsers(usernames: string[], useLean: boolean = false) {
-    const query = User.find({
-        "username": { $all: usernames }
-    })
+    const query = usernames.length === 0 ?
+        User.find() :
+        User.find({
+            "username": { $in: usernames }
+        })
     if (useLean) query.lean()
     return query.exec()
 }

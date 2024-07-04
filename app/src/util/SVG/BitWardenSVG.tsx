@@ -1,5 +1,5 @@
 import "./BitWardenSVG.scss"
-import { passkeyLogin } from "../../redux/thunk";
+import { passkeyAuth } from "../../redux/thunk";
 import { useAppDispatch } from "../../redux/hooks";
 
 interface IBitWardenSVGProps { }
@@ -8,7 +8,7 @@ const BitWardenIcon: React.FC<IBitWardenSVGProps> = () => {
     const dispatch = useAppDispatch()
 
     const handleClick = async () => {
-        dispatch(passkeyLogin())
+        dispatch(passkeyAuth())
     }
     return <div className="BitWardenSVG" onClick={handleClick}>
         <svg xmlns="http://www.w3.org/2000/svg"

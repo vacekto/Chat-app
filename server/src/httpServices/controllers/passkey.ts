@@ -49,7 +49,7 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
     const body = await verifyResponse.json();
     if (!body.success) throw new Error("some passkey login error")
     const user = await MongoAPI.getUser({ id: body.userId }, true)
-    if (!user) throw new Error("Passkey is vadli but user was not found in DB")
+    if (!user) throw new Error("Passkey is valid but user was not found in DB")
 
     const payload: ITokenPayload = {
         email: user.email,
@@ -62,10 +62,7 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
     await redisClient.set(user.username, refreshToken);
 
     const response: ILoginResponseData = {
-        username: user.username,
-        email: user.email,
-        jwt: accessToken,
-        id: user.id,
+        accessToken: accessToken,
     }
 
     res.send(response)

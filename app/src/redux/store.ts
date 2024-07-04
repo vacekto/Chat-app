@@ -1,5 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { addAlertMiddleware, setAlertTimeoutMiddleware } from './middleware'
+import {
+    addAlertMiddleware,
+    setAlertTimeoutMiddleware,
+    loginMiddleware,
+} from './middleware'
 import userDataReducer from './slice/userDataSlice'
 import alertReducer from './slice/alertSlice'
 import messageReducer from "./slice/messagesSlice"
@@ -16,6 +20,7 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware()
         .concat(setAlertTimeoutMiddleware)
         .concat(addAlertMiddleware)
+        .concat(loginMiddleware)
     // .concat(logger)
 })
 

@@ -1,7 +1,8 @@
 import {
     IUser,
     IDirectChannel,
-    IMessage
+    IMessage,
+    IUserData
 } from "./custom";
 
 export interface ServerToClientEvents {
@@ -10,6 +11,7 @@ export interface ServerToClientEvents {
     message: (msg: IMessage) => void
     directMessage: (msg: IMessage, jwt: string) => void
     groupMessage: (msg: IMessage, jwt: string) => void
+    useData: (data: IUserData) => void
     test: () => void
 }
 

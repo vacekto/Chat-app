@@ -22,9 +22,12 @@ export interface IRegisterResponseData {
 }
 
 export interface ILoginResponseData {
+    accessToken: string,
+}
+
+export interface IUserData {
     username: string,
     email: string,
-    jwt: string,
     id: string,
 }
 
@@ -41,3 +44,14 @@ export interface IDirectChannel extends z.infer<typeof schemas.directChannel> { 
 export interface IMessage extends z.infer<typeof schemas.message> { }
 export interface IGroupChannel extends z.infer<typeof schemas.groupChannel> { }
 
+export type TResult<R = any, E = Error> = {
+    res: R,
+    ok: true
+} | {
+    res: E,
+    ok: false
+}
+
+export interface IRefreshTokenResponse {
+    accessToken: string
+}

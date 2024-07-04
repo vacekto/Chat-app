@@ -12,8 +12,7 @@ import { TbUsersGroup } from "react-icons/tb";
 import socket from '../../../../util/socket';
 import { v4 as uuidv4 } from 'uuid';
 import { IUser } from '@chatapp/shared';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { fetchDirectChannel } from '../../../../redux/thunk';
+import { useAppSelector } from '../../../../redux/hooks';
 
 interface ITopBarProps { }
 
@@ -23,7 +22,6 @@ const SelectionBar: React.FC<ITopBarProps> = () => {
     const clientUsername = useAppSelector(state => state.userData.username)
     const inputRef = useRef<HTMLInputElement>(null)
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-    const dispatch = useAppDispatch()
 
     const fetchOptions = () => {
 
@@ -42,7 +40,8 @@ const SelectionBar: React.FC<ITopBarProps> = () => {
     }
 
     const selectOption = (username: string) => {
-        dispatch(fetchDirectChannel([username, clientUsername]))
+        console.log(username, clientUsername)
+        // dispatch(fetchDirectChannel([username, clientUsername]))
     }
 
     return <div className="SelectionBar">

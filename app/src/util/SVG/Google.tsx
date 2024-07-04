@@ -2,7 +2,7 @@ import './GoogleSVG.scss';
 import { useRef } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { alertActions } from '../../redux/slice/alertSlice';
-import { OAuthLogin } from '../../redux/thunk';
+import { GoogleAuth } from '../../redux/thunk';
 
 interface IGoogleSVGProps { }
 
@@ -19,20 +19,21 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
 
         const popupInterval = setInterval(() => {
             if (popupRef.current?.location.href.includes(`/notRegistered`)) {
-                popupRef.current.close()
-                popupRef.current = null
-                clearInterval(popupInterval)
                 dispatch(alertActions.addAlert({
                     message: "You are not registered, please create account before logging in.",
                     severity: "info"
                 }))
+
+                popupRef.current.close()
+                popupRef.current = null
+                clearInterval(popupInterval)
                 return
             }
             if (popupRef.current?.location.href.includes(import.meta.env.VITE_APP_DOMAIN)) {
                 popupRef.current.close()
                 popupRef.current = null
                 clearInterval(popupInterval)
-                dispatch(OAuthLogin())
+                dispatch(GoogleAuth())
             }
         }, 50)
     }

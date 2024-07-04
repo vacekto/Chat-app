@@ -1,4 +1,6 @@
+import { IRefreshTokenResponse, TResult as TFuncResult } from "@chatapp/shared"
 import { passwordless } from "./passwordlessClient"
+import { ProblemDetails } from "@passwordlessdev/passwordless-client/dist/types"
 
 /**
  * @param path must start with /
@@ -22,19 +24,17 @@ export const sendJSON = (
     return fetch(url, options)
 }
 
-export const refreshTokens = async (): Promise<string> => {
+export const refreshTokens = async (): Promise<IRefreshTokenResponse> => {
     const url = `${import.meta.env.VITE_SERVER_URL}/refreshToken`
     const options: RequestInit = {
         method: "POST",
         credentials: 'include',
     }
     let response = await fetch(url, options)
-    if (response.status !== 200) return ""
-    const { JWT } = await response.json()
-    return JWT
+    return response.json()
 }
 
-export const createPasskey = async (username: string, JWT: string) => {
+export const createPasskey = async (username: string, JWT: string): Promise<TFuncResult<string, ProblemDetails>> => {
     const url = `${import.meta.env.VITE_SERVER_URL}/createPasskey`
     const options: RequestInit = {
         method: "POST",
@@ -48,5 +48,14 @@ export const createPasskey = async (username: string, JWT: string) => {
 
     const credentialNickname = `chatApp-${username}`
     const { token, error } = await passwordless.register(registerToken, credentialNickname);
-    return { token, error }
+
+    if (error) return {
+        res: error,
+        ok: false,
+    }
+
+    return {
+        res: token,
+        ok: true,
+    }
 }

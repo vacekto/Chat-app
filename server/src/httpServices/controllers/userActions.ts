@@ -36,10 +36,7 @@ export const passwordLogin: TUtilMiddleware = async (req, res) => {
     await redisClient.set(user.username, refreshToken);
 
     const response: ILoginResponseData = {
-        username: user.username,
-        email: user.email,
-        jwt: accessToken,
-        id: user.id,
+        accessToken: accessToken,
     }
 
     res.send(response)
@@ -57,5 +54,6 @@ export const logout: TUtilMiddleware = async (req, res) => {
 
 export const test: TUtilMiddleware = async (req, res, next) => {
     console.log("test")
-    res.send()
+    const users = await MongoAPI.getUsers([], true)
+    res.send(users)
 }

@@ -31,3 +31,20 @@ export const setAlertTimeoutMiddleware: Middleware = api => next => action => {
 
     return next(action)
 }
+
+export const loginMiddleware: Middleware = api => next => action => {
+    if (!isAction(action) || action.type !== "userData/login") return next(action)
+    api.dispatch(alertActions.addAlert({
+        message: "Login successful",
+        severity: "success"
+    }))
+
+    return next(action)
+}
+
+
+
+// dispatch(alertActions.addAlert({
+//     message: "Login succesfull",
+//     severity: "success"
+//   }))
