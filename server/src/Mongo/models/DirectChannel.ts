@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from 'uuid';
 import User from "./User";
 import { TDirectChannelDB } from "../../types";
+import MongoAPI from "../API";
 
 const directChannelSchema = new mongoose.Schema<TDirectChannelDB>({
 
@@ -33,6 +34,7 @@ directChannelSchema.pre("validate", function () {
 })
 
 directChannelSchema.pre('save', async function () {
+    console.log(this.id)
     const channelQuery = {
         "users": { $all: this.users }
     }
@@ -43,6 +45,8 @@ directChannelSchema.pre('save', async function () {
     }
     const count = await User.countDocuments(userQuery)
     if (count !== 2) throw new Error("At least one of specified users does not exist in database!")
+    MongoAPI.addDirectChannelId(this.users as [string, string], this.id)
+
 });
 
 const DirectChannel = mongoose.model<TDirectChannelDB>("DirectChannel", directChannelSchema)

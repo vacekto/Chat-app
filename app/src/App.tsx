@@ -35,7 +35,10 @@ function App() {
   const onErrorEvent = async (err: Error) => {
     if (err.message.includes("jwt expired")) {
       const data = await refreshTokens()
-      if (!data.ok) return
+      if (!data.ok) {
+        dispatch(logout)
+        return
+      }
       const accessToken = data.res.accessToken
       dispatch(dataActions.setAccessToken(accessToken))
       localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, accessToken)

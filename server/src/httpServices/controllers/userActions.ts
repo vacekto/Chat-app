@@ -58,5 +58,6 @@ export const logout: TUtilMiddleware = async (req, res) => {
 
 export const test: TUtilMiddleware = async (req, res, next) => {
     const users = await MongoAPI.getUsersLean("*")
+    console.log("hahaha")
     res.send(users)
 }

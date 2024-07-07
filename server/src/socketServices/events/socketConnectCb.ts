@@ -1,3 +1,4 @@
+import { trimUserDB } from "../../util/functions"
 import MongoAPI from "../../Mongo/API"
 import { TIOServer, TServerSocket } from "../../types"
 import { usersList } from "../usersList"
@@ -8,16 +9,22 @@ export const socketConnectCb = async (io: TIOServer, socket: TServerSocket) => {
     usersList.set(username, socket)
     console.log(`${username} connected`)
 
-    const DBuser = await MongoAPI.getUserLean({ username })
+    const userDB = await MongoAPI.getUserLean({ username })
 
-    if (!DBuser) {
+    if (!userDB) {
         socket.disconnect(true)
         return
     }
 
-    socket.emit("useData", {
-        email: DBuser.email,
-        id: DBuser.id,
-        username
+    userDB.directChannelsIds.forEach(c_id => {
+        socket.join(c_id)
     })
+
+    userDB.groupChannelsIds.forEach(c_id => {
+        socket.join(c_id)
+    })
+
+    console.log(socket.rooms, userDB.directChannelsIds)
+
+    socket.emit("useData", trimUserDB(userDB))
 }

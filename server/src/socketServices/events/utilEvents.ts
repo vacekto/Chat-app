@@ -4,7 +4,7 @@ import { trimMongoObj, trimUserDB } from "../../util/functions";
 
 export const utilEvents = (io: TIOServer, socket: TServerSocket) => {
     socket.on("requestUsersList", async (userSearch, cb) => {
-        const users = await MongoAPI.getUsersFuzzySearch(userSearch, true)
+        const users = await MongoAPI.getUsersFuzzySearch(userSearch)
         cb(users.map(trimUserDB))
     })
 

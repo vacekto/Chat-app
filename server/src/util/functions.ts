@@ -2,7 +2,7 @@ import { ITokenPayload, IUser, JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDAT
 import { Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { COOKIE_SAMESITE } from './config'
-import { IUserDB, TMongoDoc, TMongoLean } from 'src/types'
+import { IUserDB, TMongoDoc, TMongoLean } from '../types'
 
 interface IGoogleTokenResult {
     access_token: string,
@@ -31,13 +31,16 @@ export const getGoogleOAuthTokens = async (code: string): Promise<IGoogleTokenRe
 }
 
 export const trimMongoObj = (obj: any, maxDepth = 10) => {
-    if (maxDepth === 0) return obj
     if (typeof obj !== "object") return obj
     delete obj._id
     delete obj.__v
 
+    maxDepth -= 1
+    if (maxDepth === 0) return obj
+
     for (let prop in obj) {
-        trimMongoObj(obj[prop], --maxDepth)
+        if (!(obj[prop] instanceof Array)) continue
+        for (let item of obj[prop]) trimMongoObj(item, maxDepth)
     }
     return obj
 }
