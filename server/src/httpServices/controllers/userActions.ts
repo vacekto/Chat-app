@@ -44,16 +44,19 @@ export const passwordLogin: TUtilMiddleware = async (req, res) => {
 
 export const logout: TUtilMiddleware = async (req, res) => {
     const token = req.cookies[REFRESH_TOKEN_COOKIE]
+    if (!token) {
+        res.status(200).send()
+        return
+    }
     const paylaod: ITokenPayload = getTokenPayload(token)
     res.clearCookie(REFRESH_TOKEN_COOKIE, {
         sameSite: "lax"
     })
     await redisClient.del(paylaod.username);
-    res.status(200).send(paylaod)
+    res.status(200).send()
 }
 
 export const test: TUtilMiddleware = async (req, res, next) => {
-    console.log("test")
-    const users = await MongoAPI.getUsers([], true)
+    const users = await MongoAPI.getUsersLean("*")
     res.send(users)
 }

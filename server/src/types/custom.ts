@@ -1,6 +1,6 @@
-import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from '@chatapp/shared'
+import { ClientToServerEvents, IDirectChannel, IGroupChannel, IMessage, InterServerEvents, IUser, ServerToClientEvents, SocketData } from '@chatapp/shared'
 import { Request, Response, NextFunction } from 'express'
-import { Document, Types } from 'mongoose'
+import { Document, Schema, Types } from 'mongoose'
 import { FlattenMaps, Error as MongooseError } from 'mongoose'
 import { Server, Socket } from 'socket.io'
 
@@ -26,6 +26,22 @@ export type TIOServer = Server<
 
 export interface ExtendedError extends Error {
     data?: any
+}
+
+export type TDirectChannelDB<
+    M extends (TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[])
+    = TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[]
+> = Omit<IDirectChannel, "messages"> & {
+    messages: M
+}
+
+export interface IUserDB extends IUser {
+    directChannelsIds: string[]
+    groupChannelsIds: string[]
+}
+
+export type TGroupChannelDB = Omit<IGroupChannel, "messages"> & {
+    messages: TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[]
 }
 
 export type TSocketIOMiddleware = (socket: TServerSocket, next: (err?: ExtendedError | undefined) => void) => void

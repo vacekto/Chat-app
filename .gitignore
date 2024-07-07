@@ -5,3 +5,4 @@ shared/dist
 .env
 app/tsconfig.tsbuildinfo
 server/tsconfig.tsbuildinfo
+server/launch.json

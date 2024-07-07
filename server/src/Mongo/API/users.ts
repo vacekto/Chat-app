@@ -1,67 +1,60 @@
 import { IUser } from "@chatapp/shared"
 import User from "../models/User"
-import { TMongoDoc, TMongoLean } from "../../types";
+import { IUserDB, TMongoDoc, TMongoLean } from "../../types";
 import { ObjectId } from "mongoose";
 
 type TUserArg = Partial<IUser> & { _id?: string | ObjectId }
 
-export function getUser
-    <UseLean extends boolean = false>(
-        users: TUserArg, useLean?: UseLean
-    ): Promise<UseLean extends true ?
-        TMongoLean<IUser> | null :
-        TMongoDoc<IUser> | null
-    >
-
-export function getUser(user: TUserArg, useLean: boolean = false) {
+export function getUser(user: TUserArg): Promise<null | TMongoDoc<IUserDB>> {
     const query = User.findOne(user)
-    if (useLean) query.lean()
     return query.exec()
 }
 
-export function getUsers
-    <UseLean extends boolean = false>(
-        usernames: string[], useLean?: UseLean
-    ): Promise<UseLean extends true ?
-        TMongoLean<IUser>[] :
-        TMongoDoc<IUser>[]
-    >
+export function getUserLean(user: TUserArg): Promise<null | TMongoLean<IUserDB>> {
+    const query = User.findOne(user).lean()
+    return query.exec()
+}
 
-/**
- * 
- * @param usernames if usernames is empty, fetches all users
- * @returns 
- */
-export function getUsers(usernames: string[], useLean: boolean = false) {
-    const query = usernames.length === 0 ?
+
+export function getUsers(usernames: string[] | "*"): Promise<TMongoDoc<IUserDB>[]> {
+    const query = usernames === "*" ?
         User.find() :
         User.find({
             "username": { $in: usernames }
         })
-    if (useLean) query.lean()
     return query.exec()
 }
 
-
+export function getUsersLean(usernames: string[] | "*"): Promise<TMongoLean<IUserDB>[]> {
+    const query = usernames === "*" ?
+        User.find() :
+        User.find({
+            "username": { $in: usernames }
+        })
+    query.lean()
+    return query.exec()
+}
 
 export const createUser = (userData: Omit<IUser, "id">) => {
     const newUser: TMongoDoc<IUser> = new User(userData)
     return newUser.save()
 }
 
-export function getUsersFuzzySearch<UseLean extends boolean = false>(
-    usernameSearch: string, useLean?: UseLean
-): Promise<UseLean extends true ?
-    TMongoLean<IUser>[] :
-    TMongoDoc<IUser>[]
->
-
-export async function getUsersFuzzySearch(usernameSearch: string, useLean: boolean = false) {
+export async function getUsersFuzzySearch(usernameSearch: string, useLean: boolean = false): Promise<TMongoDoc<IUserDB>[]> {
     const pattern = `\\b\\w*${usernameSearch}\\w*\\b`
     const regex = new RegExp(pattern, "i");
     const query = User.find(
         { "username": { $regex: regex } }
     )
-    if (useLean) query.lean()
     return query.exec()
+}
+
+export async function getUsersLeanFuzzySearch(usernameSearch: string, useLean: boolean = false): Promise<TMongoLean<IUserDB>[]> {
+    const pattern = `\\b\\w*${usernameSearch}\\w*\\b`
+    const regex = new RegExp(pattern, "i");
+    const query = User.find(
+        { "username": { $regex: regex } }
+    )
+
+    return query.lean().exec()
 }

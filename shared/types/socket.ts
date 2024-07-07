@@ -9,8 +9,8 @@ export interface ServerToClientEvents {
     noArg: () => void;
     withAck: (d: string, callback: (e: number) => void) => void;
     message: (msg: IMessage) => void
-    directMessage: (msg: IMessage, jwt: string) => void
-    groupMessage: (msg: IMessage, jwt: string) => void
+    directMessage: (msg: IMessage) => void
+    groupMessage: (msg: IMessage) => void
     useData: (data: IUserData) => void
     test: () => void
 }

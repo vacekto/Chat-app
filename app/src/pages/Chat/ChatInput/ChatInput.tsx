@@ -16,16 +16,17 @@ const ChatInput: React.FC<IChatInputProps> = () => {
     const username = useAppSelector(state => state.userData.username)
 
     const sendMessage = () => {
-        const event = activeChannel.kind === "direct channel" ?
-            "directMessage" :
-            "groupMessage"
-
         const message: IMessage = {
             author: username,
             id: uuidv4(),
             channelId: activeChannel.id,
             text
         }
+
+        const event = activeChannel.kind === "direct" ?
+            "directMessage" :
+            "groupMessage"
+
         socket.emit(event, message)
     }
 

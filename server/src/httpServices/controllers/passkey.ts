@@ -48,7 +48,8 @@ export const passkeyLogin: TUtilMiddleware = async (req, res) => {
     const verifyResponse = await fetch(url, options);
     const body = await verifyResponse.json();
     if (!body.success) throw new Error("some passkey login error")
-    const user = await MongoAPI.getUser({ id: body.userId }, true)
+    let user = await MongoAPI.getUserLean({ id: body.userId })
+
     if (!user) throw new Error("Passkey is valid but user was not found in DB")
 
     const payload: ITokenPayload = {

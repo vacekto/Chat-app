@@ -1,7 +1,8 @@
-import { ITokenPayload, JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH, REFRESH_TOKEN_COOKIE } from '@chatapp/shared'
+import { ITokenPayload, IUser, JWT_ACCESS_VALIDATION_LENGTH, JWT_REFRESH_VALIDATION_LENGTH, REFRESH_TOKEN_COOKIE } from '@chatapp/shared'
 import { Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { COOKIE_SAMESITE } from './config'
+import { IUserDB, TMongoDoc, TMongoLean } from 'src/types'
 
 interface IGoogleTokenResult {
     access_token: string,
@@ -29,13 +30,14 @@ export const getGoogleOAuthTokens = async (code: string): Promise<IGoogleTokenRe
     return res.json()
 }
 
-export const trimMongoObj = (obj: any) => {
+export const trimMongoObj = (obj: any, maxDepth = 10) => {
+    if (maxDepth === 0) return obj
     if (typeof obj !== "object") return obj
     delete obj._id
     delete obj.__v
 
     for (let prop in obj) {
-        trimMongoObj(obj[prop])
+        trimMongoObj(obj[prop], --maxDepth)
     }
     return obj
 }
@@ -71,4 +73,13 @@ export const setRefreshTokenCookie = (
             sameSite: COOKIE_SAMESITE,
             maxAge: JWT_REFRESH_VALIDATION_LENGTH * 1000
         })
+}
+
+export const trimUserDB = (user: TMongoDoc<IUserDB> | TMongoLean<IUserDB> | IUserDB): IUser => {
+    return {
+        email: user.email,
+        username: user.username,
+        id: user.id
+    }
+
 }

@@ -11,6 +11,7 @@ services:
     ports:
       - ${PORT_CLIENT}:5173
       - ${PORT}:3000
+      - 3001:3001
     volumes:
       - ./package.json:/chatapp/package.json
       - ./package-lock.json:/chatapp/package-lock.json

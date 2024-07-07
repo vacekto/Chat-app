@@ -44,7 +44,7 @@ export interface IDirectChannel extends z.infer<typeof schemas.directChannel> { 
 export interface IMessage extends z.infer<typeof schemas.message> { }
 export interface IGroupChannel extends z.infer<typeof schemas.groupChannel> { }
 
-export type TResult<R = any, E = Error> = {
+export type TFuncResult<R = any, E = Error> = {
     res: R,
     ok: true
 } | {
@@ -55,3 +55,5 @@ export type TResult<R = any, E = Error> = {
 export interface IRefreshTokenResponse {
     accessToken: string
 }
+
+export type TChannelKind = "direct" | "group"

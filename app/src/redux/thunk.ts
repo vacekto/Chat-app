@@ -60,14 +60,14 @@ export const register = createAsyncThunk<void, PartialBy<TRegisterData, "repeatP
 
 export const logout = createAsyncThunk<void, void, { state: TRootState }>(
     "userData/logout",
-    async (_, thunkAPI) => {
+    async () => {
         await fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
             method: "POST",
             credentials: 'include'
         })
-        localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
+
         if (socket.connected) socket.disconnect()
-        thunkAPI.dispatch(dataActions.logout())
+        localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
     }
 )
 
@@ -100,8 +100,9 @@ export const passkeyAuth = createAsyncThunk<void, void, { state: TRootState }>(
 export const GoogleAuth = createAsyncThunk<void, void, { state: TRootState }>(
     "userData/OAuthLogin",
     async (_, thunkAPI) => {
-        const { accessToken } = await refreshTokens()
-        thunkAPI.dispatch(dataActions.login(accessToken))
+        const fetchedData = await refreshTokens()
+        if (fetchedData.ok)
+            thunkAPI.dispatch(dataActions.login(fetchedData.res.accessToken))
     }
 )
 
@@ -122,7 +123,6 @@ export const fetchDirectChannel = createAsyncThunk<void, [string, string], { sta
         }
 
         socket.emit("requestDirectChanel", usernames, (channel) => {
-            console.log("channel")
             thunkAPI.dispatch(messagesActions.addDirectChannel({
                 channelId: channel.id,
                 messages: channel.messages,

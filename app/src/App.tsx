@@ -7,7 +7,7 @@ import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
 import { logout } from './redux/thunk'
-import { IMessage, IUserData } from '@chatapp/shared'
+import { IMessage, IUser, IUserData } from '@chatapp/shared'
 import { messagesActions } from './redux/slice/messagesSlice'
 import { LS_CHAP_APP_ACCESS_TOKEN } from './util/constants'
 import { refreshTokens } from './util/functions'
@@ -20,10 +20,8 @@ function App() {
   const handleTest = async () => {
     const url = `${import.meta.env.VITE_SERVER_URL}/test`
     const res = await fetch(url)
-    const users: any[] = await res.json()
+    const users: IUser[] = await res.json()
     console.log(users.map(u => u.username))
-    const jwt = localStorage.getItem(LS_CHAP_APP_ACCESS_TOKEN)
-    console.log(jwt)
   }
 
   const handleLogout = () => {
@@ -36,11 +34,13 @@ function App() {
 
   const onErrorEvent = async (err: Error) => {
     if (err.message.includes("jwt expired")) {
-      const { accessToken } = await refreshTokens()
-      dispatch(dataActions.login(accessToken))
-      return
+      const data = await refreshTokens()
+      if (!data.ok) return
+      const accessToken = data.res.accessToken
+      dispatch(dataActions.setAccessToken(accessToken))
+      localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, accessToken)
+      socket.connect(accessToken)
     }
-
   }
 
   const onConnectEvent = () => {
@@ -75,7 +75,7 @@ function App() {
     socket.on("useData", onUserData)
 
     const token = localStorage.getItem(LS_CHAP_APP_ACCESS_TOKEN)
-    if (token) dispatch(dataActions.login(token))
+    if (token) socket.connect(token)
 
     return () => {
       socket.disconnect()

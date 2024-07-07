@@ -7,16 +7,17 @@ import { GOOGLE_OAUTH_URL } from "../../util/config"
 
 export const OAuth2Callback: TUtilMiddleware = async (req, res) => {
     const code = req.query.code as string
-    const { access_token, id_token } = await getGoogleOAuthTokens(code)
+    const { id_token } = await getGoogleOAuthTokens(code)
 
     const OAuthPayload = getTokenPayload(id_token)
-    const user = await MongoAPI.getUser({ email: OAuthPayload.email }, true)
-    const redirectUrl = process.env.NODE_ENV === "development" ?
-        process.env.VITE_APP_URL as string :
-        process.env.VITE_SERVER_URL as string
+    const user = await MongoAPI.getUserLean({ email: OAuthPayload.email })
+
+    const redirectDomain = process.env.NODE_ENV === "development" ?
+        `${process.env.VITE_APP_URL}` :
+        `${process.env.VITE_SERVER_URL}`
 
     if (!user) {
-        res.redirect(`${redirectUrl}/notRegistered`)
+        res.redirect(`${redirectDomain}/notRegistered`)
         return
     }
     const payload: ITokenPayload = {
@@ -25,12 +26,12 @@ export const OAuth2Callback: TUtilMiddleware = async (req, res) => {
         username: user.username
     }
 
-    const { refreshToken: newRefreshToken } = signTokens(payload)
+    const { refreshToken } = signTokens(payload)
 
-    setRefreshTokenCookie(res, newRefreshToken)
-    await redisClient.set(payload.username, newRefreshToken);
+    setRefreshTokenCookie(res, refreshToken)
+    await redisClient.set(payload.username, refreshToken);
 
-    res.redirect(redirectUrl)
+    res.redirect(redirectDomain)
 }
 
 export const googleLogin: TUtilMiddleware = async (req, res, next) => {

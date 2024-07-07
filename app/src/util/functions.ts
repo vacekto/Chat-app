@@ -1,4 +1,4 @@
-import { IRefreshTokenResponse, TResult as TFuncResult } from "@chatapp/shared"
+import { IRefreshTokenResponse, TFuncResult } from "@chatapp/shared"
 import { passwordless } from "./passwordlessClient"
 import { ProblemDetails } from "@passwordlessdev/passwordless-client/dist/types"
 
@@ -24,14 +24,22 @@ export const sendJSON = (
     return fetch(url, options)
 }
 
-export const refreshTokens = async (): Promise<IRefreshTokenResponse> => {
+export const refreshTokens = async (): Promise<TFuncResult<IRefreshTokenResponse, string>> => {
     const url = `${import.meta.env.VITE_SERVER_URL}/refreshToken`
     const options: RequestInit = {
         method: "POST",
         credentials: 'include',
     }
     let response = await fetch(url, options)
-    return response.json()
+    if (response.status === 400) return {
+        ok: false,
+        res: "no refresh token"
+    }
+    const data: IRefreshTokenResponse = await response.json()
+    return {
+        ok: true,
+        res: data
+    }
 }
 
 export const createPasskey = async (username: string, JWT: string): Promise<TFuncResult<string, ProblemDetails>> => {

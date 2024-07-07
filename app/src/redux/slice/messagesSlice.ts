@@ -16,7 +16,7 @@ export interface IMessagesState {
     activeChannel: (IGroupChannel & {
         kind: "group"
     }) | (IClientDirectChannel & {
-        kind: "direct channel"
+        kind: "direct"
     })
 }
 
@@ -81,7 +81,7 @@ export const messagesSlice = createSlice({
             const index = state.directChannels.findIndex(c => c.id === action.payload)
             if (index > -1) state.activeChannel = {
                 ...state.directChannels[index],
-                kind: 'direct channel'
+                kind: 'direct'
             }
         },
 

@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
-import { IUser, zodSchemas } from "@chatapp/shared";
+import { zodSchemas } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
+import { IUserDB } from "../../types";
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema = new mongoose.Schema<IUserDB>({
 
     id: {
         type: String,
@@ -45,7 +46,15 @@ const userSchema = new mongoose.Schema<IUser>({
         trim: true
     },
 
+    directChannelsIds: [{
+        type: String,
+        trim: true
+    }],
 
+    groupChannelsIds: [{
+        type: String,
+        trim: true
+    }],
 })
 
 userSchema.pre('validate', function () {
@@ -55,12 +64,10 @@ userSchema.pre('validate', function () {
 userSchema.pre('save', async function () {
     this.id = uuidv4()
     if (!this.password) throw new Error("password required")
-    const password = this.password.trim()
-    const passwordHash = await bcrypt.hash(password, 10)
-    this.password = passwordHash
+    this.password = await bcrypt.hash(this.password.trim(), 10)
 });
 
 
-const User = mongoose.model<IUser>("User", userSchema)
+const User = mongoose.model<IUserDB>("User", userSchema)
 
 export default User

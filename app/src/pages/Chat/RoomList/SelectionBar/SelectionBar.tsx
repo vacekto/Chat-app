@@ -11,24 +11,28 @@ import { TbUser } from "react-icons/tb";
 import { TbUsersGroup } from "react-icons/tb";
 import socket from '../../../../util/socket';
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from '@chatapp/shared';
-import { useAppSelector } from '../../../../redux/hooks';
+import { IUser, TChannelKind } from '@chatapp/shared';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { fetchDirectChannel } from '../../../../redux/thunk';
 
-interface ITopBarProps { }
+interface ITopBarProps {
+    selectChannelKind: React.Dispatch<React.SetStateAction<TChannelKind>>
+}
 
-const SelectionBar: React.FC<ITopBarProps> = () => {
+const SelectionBar: React.FC<ITopBarProps> = ({ selectChannelKind }) => {
 
     const [options, setOptions] = useState<IUser[]>([])
     const clientUsername = useAppSelector(state => state.userData.username)
     const inputRef = useRef<HTMLInputElement>(null)
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-
+    const dispatch = useAppDispatch()
     const fetchOptions = () => {
 
         const debounceCb = () => {
             debounceTimeoutRef.current = null
             const eventCb = (users: IUser[]) => {
                 users = users.filter(u => u.username !== clientUsername)
+                console.log(users)
                 setOptions(users)
             }
             socket.emit("requestUsersList", inputRef.current!.value, eventCb)
@@ -41,16 +45,22 @@ const SelectionBar: React.FC<ITopBarProps> = () => {
 
     const selectOption = (username: string) => {
         console.log(username, clientUsername)
-        // dispatch(fetchDirectChannel([username, clientUsername]))
+        dispatch(fetchDirectChannel([username, clientUsername]))
     }
 
     return <div className="SelectionBar">
         <div className="options">
-            <div className="icon">
+            <div
+                className="icon"
+                onClick={() => selectChannelKind("direct")}
+            >
                 <Icon as={TbUser} />
                 <div className="caption">messages</div>
             </div>
-            <div className="icon">
+            <div
+                className="icon"
+                onClick={() => selectChannelKind("group")}
+            >
                 <Icon as={TbUsersGroup} />
                 <div className="caption">groups</div>
             </div>

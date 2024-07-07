@@ -4,7 +4,6 @@ import { zodSchemas, getTokenPayload } from '@chatapp/shared'
 
 export const auth: TSocketIOMiddleware = (socket, next) => {
     try {
-        console.log("socket connecting")
         const token = socket.handshake.auth.token;
 
         jwt.verify(

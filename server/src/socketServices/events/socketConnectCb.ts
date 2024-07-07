@@ -8,16 +8,16 @@ export const socketConnectCb = async (io: TIOServer, socket: TServerSocket) => {
     usersList.set(username, socket)
     console.log(`${username} connected`)
 
-    const user = await MongoAPI.getUser({ username }, true)
+    const DBuser = await MongoAPI.getUserLean({ username })
 
-    if (!user) {
+    if (!DBuser) {
         socket.disconnect(true)
         return
     }
 
     socket.emit("useData", {
-        email: user.email,
-        id: user.id,
+        email: DBuser.email,
+        id: DBuser.id,
         username
     })
 }

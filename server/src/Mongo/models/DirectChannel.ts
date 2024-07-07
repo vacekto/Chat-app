@@ -1,13 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { IDirectChannel, IMessage } from "@chatapp/shared";
 import { v4 as uuidv4 } from 'uuid';
 import User from "./User";
-import { TMongoDoc, TMongoLean } from "../../types";
-
-
-type TDirectChannelDB = Omit<IDirectChannel, "messages"> & {
-    messages: TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[]
-}
+import { TDirectChannelDB } from "../../types";
 
 const directChannelSchema = new mongoose.Schema<TDirectChannelDB>({
 

@@ -1,7 +1,7 @@
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from "@chatapp/shared"
 import { Server } from "socket.io"
 import { Server as HttpServer, IncomingMessage, ServerResponse } from "http"
-import { auth } from "./socketAuth"
+import { auth } from "./socketMiddleware"
 import registerEvents from "./registerEvents"
 import { CORS } from "../util/config"
 

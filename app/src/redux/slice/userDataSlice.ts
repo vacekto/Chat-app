@@ -3,7 +3,10 @@ import { IUserData } from '@chatapp/shared'
 import { TFormAction } from '../../pages/AppForm'
 import { LS_CHAP_APP_ACCESS_TOKEN } from '../../util/constants'
 import socket from '../../util/socket'
+import { logout } from '../thunk'
 
+
+type TAccessToken = string
 export interface IUserDataState extends IUserData {
     socketConnected: boolean,
     formAction: TFormAction,
@@ -36,24 +39,25 @@ export const userDataSlice = createSlice({
             state.email = action.payload.email
             state.id = action.payload.id
         }),
-        /**
-         * expects JWT access token as payload
-        */
-        login: ((state: Draft<IUserDataState>, action: PayloadAction<string>) => {
+        setAccessToken: (state: Draft<IUserDataState>, action: PayloadAction<TAccessToken>) => {
+            state.accessToken = action.payload
+        },
+
+        login: ((state, action: PayloadAction<TAccessToken>) => {
             const token = action.payload
             state.accessToken = token
             localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, token)
             socket.connect(token)
         }),
-        logout: ((state: Draft<IUserDataState>) => {
-            if (socket.connected) socket.disconnect()
-            localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
+
+    },
+    extraReducers: (builder) => {
+        builder.addCase(logout.fulfilled, (state) => {
             state = initialState
-        }),
+        })
     },
 })
 
-export const selectUsername = (state: IUserDataState) => state.username;
 
 export const dataActions = userDataSlice.actions
 export default userDataSlice.reducer

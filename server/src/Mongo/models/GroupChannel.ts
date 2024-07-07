@@ -1,10 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { IGroupChannel } from "@chatapp/shared";
+import { TGroupChannelDB } from "../../types";
 import { v4 as uuidv4 } from 'uuid';
-
-type TGroupChannelDB = Omit<IGroupChannel, "messages"> & {
-    messages: Schema.Types.ObjectId[]
-}
 
 const groupChannelSchema = new mongoose.Schema<TGroupChannelDB>({
 

@@ -24,9 +24,9 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
                     severity: "info"
                 }))
 
+                clearInterval(popupInterval)
                 popupRef.current.close()
                 popupRef.current = null
-                clearInterval(popupInterval)
                 return
             }
             if (popupRef.current?.location.href.includes(import.meta.env.VITE_APP_DOMAIN)) {
