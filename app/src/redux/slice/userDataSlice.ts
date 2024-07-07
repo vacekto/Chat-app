@@ -52,7 +52,8 @@ export const userDataSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.addCase(logout.fulfilled, (state) => {
+        builder.addCase(logout.fulfilled, state => {
+            console.log(state)
             state = initialState
         })
     },
