@@ -4,6 +4,7 @@ import { dataActions } from './slice/userDataSlice'
 import { alertActions } from './slice/alertSlice'
 import {
     ILoginResponseData,
+    IMessage,
     IRegisterResponseData,
     IResponseError,
     PartialBy,
@@ -122,7 +123,7 @@ export const fetchDirectChannel = createAsyncThunk<void, [string, string], { sta
             return
         }
 
-        socket.emit("requestDirectChanel", usernames, (channel) => {
+        socket.emit("requestDirectChanelByUsernames", usernames, (channel) => {
             thunkAPI.dispatch(messagesActions.addDirectChannel({
                 channelId: channel.id,
                 messages: channel.messages,
@@ -131,5 +132,24 @@ export const fetchDirectChannel = createAsyncThunk<void, [string, string], { sta
             }))
             thunkAPI.dispatch(messagesActions.selectDirectChannel(channel.id))
         })
+    }
+)
+
+export const addDirectMessage = createAsyncThunk<IMessage, IMessage, { state: TRootState }>(
+    "userData/logout",
+    async (message, thunkAPI) => {
+        const state = thunkAPI.getState()
+        const index = state.message.directChannels.findIndex(c => c.id === message.channelId)
+        if (index > -1) return message
+        socket.emit("requestDirectChanelById", message.channelId, channel => {
+            if (!channel) return
+            thunkAPI.dispatch(messagesActions.addDirectChannel({
+                channelId: channel.id,
+                messages: channel.messages,
+                users: channel.users,
+                clientUsername: state.userData.username
+            }))
+        })
+        return message
     }
 )

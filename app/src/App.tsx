@@ -6,9 +6,8 @@ import socket from './util/socket'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { logout } from './redux/thunk'
-import { IMessage, IUser, IUserData } from '@chatapp/shared'
-import { messagesActions } from './redux/slice/messagesSlice'
+import { addDirectMessage, logout } from './redux/thunk'
+import { IMessage, IUserData } from '@chatapp/shared'
 import { LS_CHAP_APP_ACCESS_TOKEN } from './util/constants'
 import { refreshTokens } from './util/functions'
 import { alertActions } from './redux/slice/alertSlice'
@@ -16,12 +15,14 @@ import { alertActions } from './redux/slice/alertSlice'
 function App() {
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
+  const activeChannel = useAppSelector(state => state.message.activeChannel)
 
   const handleTest = async () => {
-    const url = `${import.meta.env.VITE_SERVER_URL}/test`
-    const res = await fetch(url)
-    const users: IUser[] = await res.json()
-    console.log(users.map(u => u.username))
+    // const url = `${import.meta.env.VITE_SERVER_URL}/test`
+    // const res = await fetch(url)
+    // const users: IUser[] = await res.json()
+    // console.log(users.map(u => u.username))
+    console.log(activeChannel)
   }
 
   const handleLogout = () => {
@@ -36,7 +37,7 @@ function App() {
     if (err.message.includes("jwt expired")) {
       const data = await refreshTokens()
       if (!data.ok) {
-        dispatch(logout)
+        dispatch(logout())
         return
       }
       const accessToken = data.res.accessToken
@@ -59,8 +60,8 @@ function App() {
     }))
   }
 
-  const onMessageEvent = (msg: IMessage) => {
-    dispatch(messagesActions.addDirectMessage(msg))
+  const onDirectMessageEvent = (msg: IMessage) => {
+    dispatch(addDirectMessage(msg))
   }
 
   const onUserData = (data: IUserData) => {
@@ -73,7 +74,7 @@ function App() {
     socket.on("connect_error", onErrorEvent)
     socket.on('connect', onConnectEvent)
     socket.on('disconnect', onDisconnectEvent)
-    socket.on("message", onMessageEvent)
+    socket.on("directMessage", onDirectMessageEvent)
     socket.on("test", onTestEvent)
     socket.on("useData", onUserData)
 
@@ -84,7 +85,7 @@ function App() {
       socket.disconnect()
       socket.off('connect', onConnectEvent)
       socket.off('disconnect', onDisconnectEvent)
-      socket.off("message", onMessageEvent)
+      socket.off("message", onDirectMessageEvent)
       socket.off("test", onTestEvent)
       socket.off("connect_error", onErrorEvent)
     }

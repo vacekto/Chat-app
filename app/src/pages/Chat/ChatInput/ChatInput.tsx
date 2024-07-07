@@ -3,10 +3,11 @@ import BorderContainer from '../../../components/BorderContainer';
 import { ChangeEvent, KeyboardEventHandler, useState } from 'react';
 import { Button } from '@chakra-ui/react'
 import { Textarea } from '@chakra-ui/react'
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import socket from '../../../util/socket';
 import { v4 as uuidv4 } from 'uuid';
 import { IMessage } from '@chatapp/shared';
+import { addDirectMessage } from '../../../redux/thunk';
 
 interface IChatInputProps { }
 
@@ -14,7 +15,7 @@ const ChatInput: React.FC<IChatInputProps> = () => {
     const [text, setText] = useState<string>("")
     const activeChannel = useAppSelector(state => state.message.activeChannel)
     const username = useAppSelector(state => state.userData.username)
-
+    const dispatch = useAppDispatch()
     const sendMessage = () => {
         const message: IMessage = {
             author: username,
@@ -23,11 +24,13 @@ const ChatInput: React.FC<IChatInputProps> = () => {
             text
         }
 
-        const event = activeChannel.kind === "direct" ?
-            "directMessage" :
-            "groupMessage"
+        if (activeChannel.kind === "direct") {
+            socket.emit("directMessage", message)
+            dispatch(addDirectMessage(message))
+            return
+        }
 
-        socket.emit(event, message)
+        // TODO send group message
     }
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {

@@ -1,6 +1,7 @@
 import { IMessage, IGroupChannel } from '@chatapp/shared'
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { IClientDirectChannel } from '@chatapp/shared';
+import { addDirectMessage } from '../thunk';
 
 interface IAddDirectChannelPayload {
     users: string[]
@@ -19,6 +20,8 @@ export interface IMessagesState {
         kind: "direct"
     })
 }
+
+type TChannelId = string
 
 const publicRoom: IGroupChannel = {
     users: [],
@@ -41,10 +44,6 @@ export const messagesSlice = createSlice({
     name: 'messages',
     initialState,
     reducers: {
-        addDirectMessage: (state: Draft<IMessagesState>, action: PayloadAction<IMessage>) => {
-            const directChannel = state.directChannels.find(c => c.id === action.payload.channelId)
-            directChannel?.messages.push(action.payload)
-        },
         addGroupMessage: (state: Draft<IMessagesState>, action: PayloadAction<IMessage>) => {
             const groupChannel = state.groupChannels.find(c => c.id === action.payload.channelId)
             groupChannel?.messages.push(action.payload)
@@ -73,11 +72,7 @@ export const messagesSlice = createSlice({
             state.directChannels.push(newDirectChannel)
         },
 
-        /**
-         * 
-         * @param action payload expects channel id
-         */
-        selectDirectChannel: (state: Draft<IMessagesState>, action: PayloadAction<string>) => {
+        selectDirectChannel: (state: Draft<IMessagesState>, action: PayloadAction<TChannelId>) => {
             const index = state.directChannels.findIndex(c => c.id === action.payload)
             if (index > -1) state.activeChannel = {
                 ...state.directChannels[index],
@@ -85,17 +80,21 @@ export const messagesSlice = createSlice({
             }
         },
 
-        /**
-         * 
-         * @param action payload expects channel id
-         */
-        selectGroupChannel: (state: Draft<IMessagesState>, action: PayloadAction<string>) => {
+        selectGroupChannel: (state: Draft<IMessagesState>, action: PayloadAction<TChannelId>) => {
             const index = state.groupChannels.findIndex(c => c.id === action.payload)
             if (index > -1) state.activeChannel = {
                 ...state.groupChannels[index],
                 kind: "group"
             }
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(addDirectMessage.fulfilled, (state, action) => {
+            const channel = state.directChannels.find(c => c.id === action.payload.channelId)
+            channel?.messages.push(action.payload)
+            if (channel?.id === state.activeChannel.id)
+                state.activeChannel.messages.push(action.payload)
+        })
     },
 })
 

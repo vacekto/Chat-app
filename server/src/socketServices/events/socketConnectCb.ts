@@ -24,7 +24,5 @@ export const socketConnectCb = async (io: TIOServer, socket: TServerSocket) => {
         socket.join(c_id)
     })
 
-    console.log(socket.rooms, userDB.directChannelsIds)
-
     socket.emit("useData", trimUserDB(userDB))
 }

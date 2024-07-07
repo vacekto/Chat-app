@@ -22,7 +22,11 @@ export interface ClientToServerEvents {
     directMessage: (msg: IMessage) => void
     groupMessage: (msg: IMessage) => void
     requestUsersList: (userSearch: string, cb: (users: IUser[]) => void) => void
-    requestDirectChanel: ((usernames: [string, string], cb: (channel: IDirectChannel) => void) => void)
+    /**
+     * fetches direct channel from server, creates one in DB it doesnt already exist
+     */
+    requestDirectChanelByUsernames: ((usernames: [string, string], cb: (channel: IDirectChannel) => void) => void)
+    requestDirectChanelById: ((channelId: string, cb: (channel: IDirectChannel | null) => void) => void)
 }
 
 export interface InterServerEvents {
