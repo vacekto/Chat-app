@@ -2,7 +2,8 @@ import {
     IUser,
     IDirectChannel,
     IMessage,
-    IUserData
+    IUserData,
+    IGroupChannel
 } from "./custom";
 
 export interface ServerToClientEvents {
@@ -27,6 +28,7 @@ export interface ClientToServerEvents {
      */
     requestDirectChanelByUsernames: ((usernames: [string, string], cb: (channel: IDirectChannel) => void) => void)
     requestDirectChanelById: ((channelId: string, cb: (channel: IDirectChannel | null) => void) => void)
+    requestGroupChanelById: ((channelId: string, cb: (channel: IGroupChannel | null) => void) => void)
 }
 
 export interface InterServerEvents {

@@ -62,7 +62,7 @@ userSchema.pre('validate', function () {
 });
 
 userSchema.pre('save', async function () {
-    this.id = uuidv4()
+    this.groupChannelsIds = ["1"]
     if (!this.password) throw new Error("password required")
     this.password = await bcrypt.hash(this.password.trim(), 10)
 });

@@ -40,9 +40,13 @@ export interface IUserDB extends IUser {
     groupChannelsIds: string[]
 }
 
-export type TGroupChannelDB = Omit<IGroupChannel, "messages"> & {
-    messages: TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[]
+export type TGroupChannelDB<
+    M extends (TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[])
+    = TMongoDoc<IMessage>[] | TMongoLean<IMessage>[] | Schema.Types.ObjectId[]
+> = Omit<IGroupChannel, "messages"> & {
+    messages: M
 }
+
 
 export type TSocketIOMiddleware = (socket: TServerSocket, next: (err?: ExtendedError | undefined) => void) => void
 

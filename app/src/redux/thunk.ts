@@ -11,6 +11,7 @@ import {
     TLoginData,
     TRegisterData,
     isServerError,
+    logger,
 } from "@chatapp/shared"
 import { passwordless } from "../util/passwordlessClient";
 import socket from "../util/socket"
@@ -136,7 +137,7 @@ export const fetchDirectChannel = createAsyncThunk<void, [string, string], { sta
 )
 
 export const addDirectMessage = createAsyncThunk<IMessage, IMessage, { state: TRootState }>(
-    "userData/logout",
+    "userData/addDirectMessage",
     async (message, thunkAPI) => {
         const state = thunkAPI.getState()
         const index = state.message.directChannels.findIndex(c => c.id === message.channelId)
@@ -149,6 +150,23 @@ export const addDirectMessage = createAsyncThunk<IMessage, IMessage, { state: TR
                 users: channel.users,
                 clientUsername: state.userData.username
             }))
+        })
+        return message
+    }
+)
+
+export const addGroupMessage = createAsyncThunk<IMessage, IMessage, { state: TRootState }>(
+    "userData/addGroupMessage",
+    async (message, thunkAPI) => {
+        const state = thunkAPI.getState()
+        const index = state.message.groupChannels.findIndex(c => c.id === message.channelId)
+        if (index > -1) return message
+        socket.emit("requestGroupChanelById", message.channelId, channel => {
+            if (!channel) {
+                logger("channel should not be null")
+                return
+            }
+            thunkAPI.dispatch(messagesActions.addGroupChannel(channel))
         })
         return message
     }

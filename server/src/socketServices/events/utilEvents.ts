@@ -24,6 +24,12 @@ export const utilEvents = (io: TIOServer, socket: TServerSocket) => {
 
     socket.on("requestDirectChanelById", async (channelId, cb) => {
         let channel = await MongoAPI.getDirectChannelByIdPopulatedLean(channelId)
-        cb(trimMongoObj(channel))
+        cb((channel))
+    })
+
+    socket.on("requestGroupChanelById", async (channelId, cb) => {
+        let channel = await MongoAPI.getGroupChannelByIdPopulatedLean(channelId)
+
+        cb((channel))
     })
 }

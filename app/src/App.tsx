@@ -6,8 +6,8 @@ import socket from './util/socket'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { addDirectMessage, logout } from './redux/thunk'
-import { IMessage, IUserData } from '@chatapp/shared'
+import { addDirectMessage, addGroupMessage, logout } from './redux/thunk'
+import { IMessage, IUserData, logger } from '@chatapp/shared'
 import { LS_CHAP_APP_ACCESS_TOKEN } from './util/constants'
 import { refreshTokens } from './util/functions'
 import { alertActions } from './redux/slice/alertSlice'
@@ -15,14 +15,14 @@ import { alertActions } from './redux/slice/alertSlice'
 function App() {
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
-  const activeChannel = useAppSelector(state => state.message.activeChannel)
 
   const handleTest = async () => {
     // const url = `${import.meta.env.VITE_SERVER_URL}/test`
     // const res = await fetch(url)
     // const users: IUser[] = await res.json()
     // console.log(users.map(u => u.username))
-    console.log(activeChannel)
+    console.log("test")
+    logger()
   }
 
   const handleLogout = () => {
@@ -64,6 +64,10 @@ function App() {
     dispatch(addDirectMessage(msg))
   }
 
+  const onGroupMessageEvent = (msg: IMessage) => {
+    dispatch(addGroupMessage(msg))
+  }
+
   const onUserData = (data: IUserData) => {
     dispatch(dataActions.setUserData(data))
   }
@@ -75,6 +79,7 @@ function App() {
     socket.on('connect', onConnectEvent)
     socket.on('disconnect', onDisconnectEvent)
     socket.on("directMessage", onDirectMessageEvent)
+    socket.on("groupMessage", onGroupMessageEvent)
     socket.on("test", onTestEvent)
     socket.on("useData", onUserData)
 
@@ -83,11 +88,7 @@ function App() {
 
     return () => {
       socket.disconnect()
-      socket.off('connect', onConnectEvent)
-      socket.off('disconnect', onDisconnectEvent)
-      socket.off("message", onDirectMessageEvent)
-      socket.off("test", onTestEvent)
-      socket.off("connect_error", onErrorEvent)
+      socket.offAny()
     }
   }, [])
 
