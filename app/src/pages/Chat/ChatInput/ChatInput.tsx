@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import socket from '../../../util/socket';
 import { v4 as uuidv4 } from 'uuid';
 import { IMessage } from '@chatapp/shared';
-import { addDirectMessage, addGroupMessage } from '../../../redux/thunk';
+import thunk from '../../../redux/thunk';
 
 interface IChatInputProps { }
 
@@ -26,14 +26,12 @@ const ChatInput: React.FC<IChatInputProps> = () => {
 
         if (activeChannel.kind === "direct") {
             socket.emit("directMessage", message)
-            dispatch(addDirectMessage(message))
+            dispatch(thunk.addDirectMessage(message))
             return
         }
 
         socket.emit("groupMessage", message)
-        dispatch(addGroupMessage(message))
-
-        // TODO send group message
+        dispatch(thunk.addGroupMessage(message))
     }
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {

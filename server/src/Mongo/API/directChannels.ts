@@ -24,8 +24,6 @@ export const getDirectChannelByUsersLean = async (usernames: [string, string]) =
     return (query.exec() as Promise<null | TMongoLean<TDirectChannelDB<Schema.Types.ObjectId[]>>>)
 }
 
-type hihi = TDirectChannelDB<TMongoLean<IMessage>[]>
-
 export const getDirectChannelByUsersPopulated = async (usernames: [string, string]): Promise<null | TMongoLean<TDirectChannelDB<TMongoLean<IMessage>[]>>> => {
     const query = DirectChannel.findOne({
         "users": { $all: usernames }

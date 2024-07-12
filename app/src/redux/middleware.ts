@@ -50,9 +50,21 @@ export const loginMiddleware: Middleware = api => next => action => {
     return next(action)
 }
 
+export const logoutMiddleware: Middleware = api => next => action => {
+    if (!isAction(action) || action.type !== "userData/logout") return next(action)
 
+    fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
+        method: "POST",
+        credentials: 'include'
+    })
 
-// dispatch(alertActions.addAlert({
-//     message: "Login succesfull",
-//     severity: "success"
-//   }))
+    if (socket.connected) socket.disconnect()
+    localStorage.removeItem(LS_CHAP_APP_ACCESS_TOKEN)
+
+    api.dispatch(alertActions.addAlert({
+        message: "Logout successful",
+        severity: "success"
+    }))
+
+    return next(action)
+}

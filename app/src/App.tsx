@@ -1,32 +1,32 @@
 import './App.scss'
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
-import { dataActions } from './redux/slice/userDataSlice'
 import socket from './util/socket'
 import AppForm from './pages/AppForm'
 import Chat from './pages/Chat'
 import Alerts from './components/Alerts'
-import { addDirectMessage, addGroupMessage, logout } from './redux/thunk'
-import { IMessage, IUserData, logger } from '@chatapp/shared'
+import { IMessage, IUserData } from '@chatapp/shared'
 import { LS_CHAP_APP_ACCESS_TOKEN } from './util/constants'
 import { refreshTokens } from './util/functions'
-import { alertActions } from './redux/slice/alertSlice'
+import { userDataActions } from './redux/slice/userDataSlice'
+import thunk from './redux/thunk'
 
 function App() {
   const connected = useAppSelector(state => state.userData.socketConnected)
   const dispatch = useAppDispatch()
+  const state = useAppSelector(state => state.userData)
+
 
   const handleTest = async () => {
     // const url = `${import.meta.env.VITE_SERVER_URL}/test`
     // const res = await fetch(url)
     // const users: IUser[] = await res.json()
     // console.log(users.map(u => u.username))
-    console.log("test")
-    logger()
+    console.log(state)
   }
 
   const handleLogout = () => {
-    dispatch(logout())
+    dispatch(userDataActions.logout())
   }
 
   const onTestEvent = () => {
@@ -37,39 +37,35 @@ function App() {
     if (err.message.includes("jwt expired")) {
       const data = await refreshTokens()
       if (!data.ok) {
-        dispatch(logout())
+        dispatch(userDataActions.logout())
         return
       }
       const accessToken = data.res.accessToken
-      dispatch(dataActions.setAccessToken(accessToken))
+      dispatch(userDataActions.setAccessToken(accessToken))
       localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, accessToken)
       socket.connect(accessToken)
     }
   }
 
   const onConnectEvent = () => {
-    dispatch(dataActions.setSocketConnected(true))
+    dispatch(userDataActions.setSocketConnected(true))
 
   }
 
   const onDisconnectEvent = () => {
-    dispatch(dataActions.setSocketConnected(false))
-    dispatch(alertActions.addAlert({
-      message: "You are now logged out",
-      severity: "success"
-    }))
+    dispatch(userDataActions.setSocketConnected(false))
   }
 
   const onDirectMessageEvent = (msg: IMessage) => {
-    dispatch(addDirectMessage(msg))
+    dispatch(thunk.addDirectMessage(msg))
   }
 
   const onGroupMessageEvent = (msg: IMessage) => {
-    dispatch(addGroupMessage(msg))
+    dispatch(thunk.addGroupMessage(msg))
   }
 
   const onUserData = (data: IUserData) => {
-    dispatch(dataActions.setUserData(data))
+    dispatch(userDataActions.setUserData(data))
   }
 
 

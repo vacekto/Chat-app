@@ -3,6 +3,7 @@ import {
     addAlertMiddleware,
     setAlertTimeoutMiddleware,
     loginMiddleware,
+    logoutMiddleware,
 } from './middleware'
 import userDataReducer from './slice/userDataSlice'
 import alertReducer from './slice/alertSlice'
@@ -21,6 +22,7 @@ const store = configureStore({
         .concat(setAlertTimeoutMiddleware)
         .concat(addAlertMiddleware)
         .concat(loginMiddleware)
+        .concat(logoutMiddleware)
     // .concat(logger)
 })
 

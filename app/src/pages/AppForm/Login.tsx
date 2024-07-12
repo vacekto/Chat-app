@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { useRef } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
-import { passwordAuth } from '../../redux/thunk';
+import thunk from '../../redux/thunk';
 import BitWardenIcon from '../../util/SVG/BitWardenSVG';
 import GoogleSVG from '../../util/SVG/Google';
 
@@ -22,7 +22,7 @@ const LoginFrom: React.FC<ILoginFormProps> = () => {
             username: usernameRef.current!.value,
             password: sha3_256(passwordRef.current!.value)
         }
-        dispatch(passwordAuth(data))
+        dispatch(thunk.passwordAuth(data))
     }
 
     return <form autoComplete='off' onSubmit={handleSubmit} className='LoginForm'>

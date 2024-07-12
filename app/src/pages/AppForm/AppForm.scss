@@ -1,0 +1,179 @@
+@font-face {
+    font-family: jetBrainsBold;
+    src: url(../../util/fonts/JetBrainsMono-Bold.ttf);
+}
+
+@font-face {
+    font-family: roboto;
+    src: url(../../util/fonts/JetBrainsMono-Regular.ttf);
+}
+
+.AppForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0 0 0;
+    height: fit-content;
+    overflow: hidden;
+    margin: auto;
+    width: 400px;
+    height: 700px;
+    background-color: #171529;
+    border-radius: 10px;
+
+    .header {
+        margin-top: 10px;
+        width: 100%;
+
+        .headerText {
+            display: flex;
+            width: 300px;
+            margin: auto;
+            justify-content: space-around;
+
+            div {
+                color: white;
+                font-size: 25px;
+                letter-spacing: normal;
+                font-weight: 600;
+                cursor: pointer;
+
+                &:hover {
+                    color: #ffeba7;
+                    text-shadow: 0 0px 2px #ffeba7;
+                }
+            }
+
+        }
+
+        .Switch {
+            margin: auto;
+            margin-top: 30px;
+        }
+    }
+
+    .formContainer {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-top: 20px;
+        padding: 0 70px;
+        height: 400px;
+
+        .forms {
+            display: flex;
+        }
+
+        .icons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+
+        &.registerAction {
+            .LoginForm {
+                position: absolute;
+                transform: translateX(410px);
+            }
+        }
+
+        &.loginAction {
+            .RegisterForm {
+                position: absolute;
+                transform: translateX(-410px);
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: min-content;
+            padding-top: 20px;
+
+            transition: transform 200ms;
+            transition-timing-function: cubic-bezier(.3, .31, .17, 1.04);
+
+            transform: translateZ(0) scale(1, 1);
+
+            .formGroup {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+
+                .inputContainer {
+                    margin-bottom: 45px;
+                    display: flex;
+                    align-items: center;
+
+                    .inputIcon {
+                        position: absolute;
+                        left: 20px;
+                        margin: auto;
+                        color: #ffeba7;
+                    }
+
+                    input {
+                        padding: 13px 20px 13px 55px;
+                        height: 50px;
+                        width: 250px;
+                        line-height: 22px;
+                        font-weight: 500;
+                        font-size: 16px;
+                        letter-spacing: 0.5px;
+                        outline: none;
+                        border-radius: 4px;
+                        color: #ffeba7;
+                        background-color: #ffeaa71a;
+                        box-shadow: 0 4px 8px 0 rgba(21, 21, 21, .2);
+                        border: none;
+                    }
+                }
+
+                .errorMessage {
+                    margin-top: 55px;
+                    width: 100%;
+                    color: #ff3d3d;
+                    position: absolute;
+                    text-align: start;
+                    font-size: 13px;
+                }
+            }
+
+            button {
+                border-radius: 4px;
+                height: 44px;
+                padding: 0 30px;
+                border: none;
+                background-color: #ffeba7;
+                color: #102770;
+                cursor: pointer;
+                margin-top: 10px;
+                font-size: 18px;
+                font-family: roboto;
+            }
+        }
+    }
+}
+
+@media (height < 800px) {
+    .AppForm {
+        height: 100vh;
+    }
+}
+
+@media (width <=500px) {
+    .AppForm {
+        width: 100vw;
+
+        .header {
+            width: 100%;
+        }
+    }
+}
+
+@media (height < 800px) and (width <=500px) {
+    .AppForm {
+        border-radius: 0;
+    }
+}

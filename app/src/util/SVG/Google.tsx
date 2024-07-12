@@ -2,7 +2,7 @@ import './GoogleSVG.scss';
 import { useRef } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { alertActions } from '../../redux/slice/alertSlice';
-import { GoogleAuth } from '../../redux/thunk';
+import thunk from '../../redux/thunk';
 
 interface IGoogleSVGProps { }
 
@@ -33,7 +33,7 @@ const GoogleSVG: React.FC<IGoogleSVGProps> = () => {
                 popupRef.current.close()
                 popupRef.current = null
                 clearInterval(popupInterval)
-                dispatch(GoogleAuth())
+                dispatch(thunk.GoogleAuth())
             }
         }, 50)
     }

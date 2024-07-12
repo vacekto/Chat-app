@@ -13,7 +13,7 @@ import socket from '../../../../util/socket';
 import { v4 as uuidv4 } from 'uuid';
 import { IUser, TChannelKind } from '@chatapp/shared';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { fetchDirectChannel } from '../../../../redux/thunk';
+import thunk from '../../../../redux/thunk';
 
 interface ITopBarProps {
     selectChannelKind: React.Dispatch<React.SetStateAction<TChannelKind>>
@@ -45,7 +45,7 @@ const SelectionBar: React.FC<ITopBarProps> = ({ selectChannelKind }) => {
 
     const selectOption = (username: string) => {
         console.log(username, clientUsername)
-        dispatch(fetchDirectChannel([username, clientUsername]))
+        dispatch(thunk.fetchDirectChannel([username, clientUsername]))
     }
 
     return <div className="SelectionBar">

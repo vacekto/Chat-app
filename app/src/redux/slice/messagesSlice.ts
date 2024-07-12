@@ -1,7 +1,7 @@
 import { IMessage, IGroupChannel } from '@chatapp/shared'
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { IClientDirectChannel } from '@chatapp/shared';
-import { addDirectMessage, addGroupMessage } from '../thunk';
+import thunk from '../thunk';
 
 interface IAddDirectChannelPayload {
     users: string[]
@@ -93,13 +93,13 @@ export const messagesSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(addDirectMessage.fulfilled, (state, action) => {
+        builder.addCase(thunk.addDirectMessage.fulfilled, (state, action) => {
             const channel = state.directChannels.find(c => c.id === action.payload.channelId)
             channel?.messages.push(action.payload)
             if (channel?.id === state.activeChannel.id)
                 state.activeChannel.messages.push(action.payload)
         })
-        builder.addCase(addGroupMessage.fulfilled, (state, action) => {
+        builder.addCase(thunk.addGroupMessage.fulfilled, (state, action) => {
             const channel = state.groupChannels.find(c => c.id === action.payload.channelId)
             channel?.messages.push(action.payload)
             if (channel?.id === state.activeChannel.id)

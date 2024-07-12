@@ -1,9 +1,6 @@
 import { Draft, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { IUserData } from '@chatapp/shared'
-import { TFormAction } from '../../pages/AppForm'
-import { LS_CHAP_APP_ACCESS_TOKEN } from '../../util/constants'
-import socket from '../../util/socket'
-import { logout } from '../thunk'
+import { TFormAction } from '../../pages/AppForm/AppForm'
 
 
 type TAccessToken = string
@@ -11,7 +8,6 @@ export interface IUserDataState extends IUserData {
     socketConnected: boolean,
     formAction: TFormAction,
     accessToken: string,
-    generalChatUsers: string[],
 }
 
 const initialState: IUserDataState = {
@@ -20,7 +16,6 @@ const initialState: IUserDataState = {
     email: "",
     formAction: "loginAction",
     accessToken: "",
-    generalChatUsers: [],
     id: ""
 }
 
@@ -44,21 +39,15 @@ export const userDataSlice = createSlice({
         },
 
         login: ((state, action: PayloadAction<TAccessToken>) => {
-            const token = action.payload
-            state.accessToken = token
-            localStorage.setItem(LS_CHAP_APP_ACCESS_TOKEN, token)
-            socket.connect(token)
+            state.accessToken = action.payload
         }),
 
-    },
-    extraReducers: (builder) => {
-        builder.addCase(logout.fulfilled, state => {
-            state
+        logout: ((state) => {
             state = initialState
-        })
+        }),
     },
 })
 
 
-export const dataActions = userDataSlice.actions
+export const userDataActions = userDataSlice.actions
 export default userDataSlice.reducer
