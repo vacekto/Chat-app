@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sha3_256 } from "js-sha3"
 import { useAppDispatch } from '../../redux/hooks'
-import * as thunk from '../../redux/thunk'
+import thunk from '../../redux/thunk'
 
 type Inputs = z.infer<typeof zodSchemas.registerFormZS>
 interface IRegisterFormProps { }

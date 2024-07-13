@@ -42,8 +42,9 @@ export const userDataSlice = createSlice({
             state.accessToken = action.payload
         }),
 
-        logout: ((state) => {
+        logout: (state => {
             state = initialState
+            state
         }),
     },
 })

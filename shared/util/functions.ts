@@ -19,10 +19,9 @@ export const getTokenPayload: TGetJWTPayload = (token, extended) => {
 
 export function logger(message?: string) {
     if (process.env.NODE_ENV !== "production") throw new Error(message)
-    // const haha = console.trace("stack trace")
     const trace = getFormattedStackTrace()
-
     // todo: handle production logging
+    console.log(trace)
 }
 
 function getFormattedStackTrace() {

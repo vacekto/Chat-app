@@ -1,4 +1,4 @@
-import './index.scss'
+import './AppForm.scss'
 import Switch from '../../components/Switch'
 import LoginFrom from './Login'
 import RegisterFrom from './Register'
